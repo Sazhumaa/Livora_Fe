@@ -1,0 +1,151 @@
+---
+import RootLayout from '../../layouts/RootLayout.astro';
+import { MOCK_EVENTS } from '../../data/mockEvents';
+import { MOCK_CATEGORIES } from '../../data/mockCategories';
+import Footer from '../../components/landing/Footer.astro';
+
+function formatRupiah(amount: number) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+---
+
+<RootLayout 
+  title="Discover Events — AFTERGLOW" 
+  description="Jelajahi seluruh jadwal konser, festival musik, dan tur arena di Indonesia dengan garansi tiket resmi."
+>
+  <div class="pt-32 pb-24 px-6 lg:px-12 max-w-7xl mx-auto w-full">
+    <!-- Header Banner -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+      <div>
+        <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+          EXPLORE CATALOG
+        </span>
+        <h1 class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
+          DISCOVER EXPERIENCES
+        </h1>
+        <p class="text-muted-gray text-base mt-2 max-w-xl">
+          Temukan tiket resmi untuk tur musik terhangat tahun 2026. Pilih kategori dan amankan kursi Anda sebelum kehabisan.
+        </p>
+      </div>
+
+      <!-- Quick Search Bar -->
+      <div class="relative w-full md:w-80">
+        <input 
+          type="text" 
+          placeholder="Cari artis, konser, atau kota..." 
+          class="w-full px-4 py-3 pl-11 rounded-full bg-dark-plum border border-white/10 text-sm text-soft-white placeholder-muted-gray focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
+        />
+        <svg class="w-4 h-4 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
+      <button class="px-5 py-2 rounded-full text-xs font-semibold bg-electric-magenta text-soft-white shadow-magenta-glow shrink-0">
+        All Genres
+      </button>
+      {MOCK_CATEGORIES.map((cat) => (
+        <button class="px-5 py-2 rounded-full text-xs font-medium bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white hover:border-white/20 shrink-0 transition-colors">
+          {cat.name}
+        </button>
+      ))}
+    </div>
+
+    <!-- Catalog Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {MOCK_EVENTS.map((event) => {
+        const isSoldOut = event.status === 'SOLD_OUT';
+        const isAlmostSold = event.status === 'ALMOST_SOLD_OUT';
+
+        return (
+          <article class="rounded-2xl bg-dark-plum border border-white/[0.08] overflow-hidden flex flex-col group hover:border-electric-magenta/50 hover:shadow-magenta-glow transition-all duration-300">
+            <div class="relative w-full aspect-[16/10] overflow-hidden bg-void-black">
+              <img 
+                src={event.posterUrl} 
+                alt={event.title} 
+                class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-90 contrast-110"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-dark-plum via-transparent to-transparent"></div>
+
+              <div class="absolute top-4 right-4">
+                {isSoldOut ? (
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-muted-gray border border-white/10">
+                    SOLD OUT
+                  </span>
+                ) : isAlmostSold ? (
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+                    ALMOST SOLD OUT
+                  </span>
+                ) : (
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md text-soft-white border border-white/20">
+                    AVAILABLE
+                  </span>
+                )}
+              </div>
+
+              <div class="absolute top-4 left-4">
+                <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-void-black/70 backdrop-blur-md text-muted-gray">
+                  {event.category}
+                </span>
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col flex-1 justify-between gap-5">
+              <div>
+                <div class="flex items-center gap-2 text-xs text-electric-magenta font-semibold tracking-wider uppercase mb-2">
+                  <span>{event.date}</span>
+                  <span>•</span>
+                  <span>{event.city}</span>
+                </div>
+
+                <h3 class="font-display text-2xl text-soft-white leading-tight group-hover:text-electric-magenta transition-colors line-clamp-2">
+                  {event.title}
+                </h3>
+
+                <p class="text-sm text-muted-gray mt-2 line-clamp-1 font-medium">
+                  {event.artist}
+                </p>
+
+                <p class="text-xs text-muted-gray/70 mt-1 flex items-center gap-1.5">
+                  <svg class="w-3.5 h-3.5 text-muted-gray" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>{event.venue}</span>
+                </p>
+              </div>
+
+              <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                <div>
+                  <span class="text-[10px] text-muted-gray uppercase tracking-wider block">Starts From</span>
+                  <span class="font-display text-xl text-soft-white">
+                    {formatRupiah(event.startingPrice)}
+                  </span>
+                </div>
+
+                {isSoldOut ? (
+                  <button disabled class="px-4 py-2 rounded-full bg-white/5 text-muted-gray text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
+                    SOLD OUT
+                  </button>
+                ) : (
+                  <button class="px-4 py-2 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-soft-white text-xs font-semibold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all">
+                    GET TICKETS
+                  </button>
+                )}
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>

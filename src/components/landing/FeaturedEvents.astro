@@ -1,0 +1,99 @@
+---
+// Section 03: Featured Events (DICE-style compact continuous marquee & horizontal slider)
+import { MOCK_EVENTS } from '../../data/mockEvents';
+
+function formatRupiah(amount: number) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    maximumFractionDigits: 0,
+  }).format(amount);
+}
+---
+
+<section id="events" class="relative w-full py-20 px-6 lg:px-16 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] overflow-hidden transition-colors duration-300">
+  <div class="max-w-7xl mx-auto">
+    <!-- Clean Minimalist Header (DICE Style) -->
+    <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
+      <div>
+        <h2 data-animate="reveal" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white tracking-wide">
+          UPCOMING EXPERIENCES
+        </h2>
+        <p data-animate="reveal" class="delay-100 text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-lg">
+          Check out the most anticipated live gigs coming up, from stadium world tours to intimate soundstages.
+        </p>
+      </div>
+
+      <a 
+        data-animate="reveal" 
+        href="/events" 
+        class="self-start sm:self-auto px-5 py-2.5 rounded-full bg-neutral-950 text-white dark:bg-soft-white dark:text-void-black hover:bg-electric-magenta dark:hover:bg-electric-magenta dark:hover:text-white font-semibold text-xs tracking-wider uppercase transition-colors shrink-0"
+      >
+        BROWSE ALL EVENTS
+      </a>
+    </div>
+
+    <!-- DICE Style Compact Horizontal Cards Track / Marquee -->
+    <div class="flex gap-5 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory no-scrollbar scroll-smooth">
+      {MOCK_EVENTS.map((event, idx) => (
+        <a 
+          href={`/events`}
+          class="group shrink-0 w-[200px] sm:w-[230px] md:w-[250px] snap-start flex flex-col cursor-pointer"
+        >
+          <!-- 1:1 Square Artwork Container -->
+          <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 group-hover:border-electric-magenta/60 group-hover:shadow-magenta-glow transition-all duration-300">
+            <img 
+              src={event.posterUrl} 
+              alt={event.title} 
+              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95 contrast-110"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+
+            <!-- Status Tag (Top Left) -->
+            {event.status === 'ALMOST_SOLD_OUT' && (
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-electric-magenta text-soft-white font-mono text-[9px] font-bold tracking-tight uppercase shadow-sm">
+                ALMOST SOLD OUT
+              </span>
+            )}
+            {event.status === 'SOLD_OUT' && (
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/80 text-muted-gray border border-white/10 font-mono text-[9px] font-bold tracking-tight uppercase">
+                SOLD OUT
+              </span>
+            )}
+
+            <!-- Heart Icon (Bottom Right, DICE Style) -->
+            <button 
+              type="button" 
+              aria-label="Save Event"
+              class="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-void-black/75 backdrop-blur-md border border-white/10 flex items-center justify-center text-soft-white hover:text-electric-magenta hover:scale-110 transition-all"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Metadata Underneath (Clean DICE Typography) -->
+          <div class="mt-3 flex flex-col gap-0.5">
+            <h3 class="text-sm font-bold text-neutral-900 dark:text-soft-white leading-tight group-hover:text-electric-magenta transition-colors line-clamp-1">
+              {event.artist} - {event.title}
+            </h3>
+
+            <p class="text-xs text-neutral-500 dark:text-muted-gray font-medium">
+              {event.date}
+            </p>
+
+            <p class="text-xs text-neutral-500/80 dark:text-muted-gray/70 line-clamp-1">
+              {event.venue}, {event.city}
+            </p>
+
+            <p class="text-xs font-semibold text-neutral-900 dark:text-soft-white mt-1">
+              From {formatRupiah(event.startingPrice)}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

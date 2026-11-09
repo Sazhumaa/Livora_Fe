@@ -1,0 +1,81 @@
+---
+// Section 04: Discover Categories
+import { MOCK_CATEGORIES } from '../../data/mockCategories';
+---
+
+<section id="categories" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] transition-colors duration-300">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="flex flex-col items-center text-center mb-16">
+      <span 
+        data-animate="reveal" 
+        class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-3"
+      >
+        GENRE & ATMOSPHERE
+      </span>
+      <h2 
+        data-animate="reveal" 
+        class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
+      >
+        FIND YOUR FREQUENCY.
+      </h2>
+      <p 
+        data-animate="reveal" 
+        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-lg mt-3"
+      >
+        Jelajahi konser berdasarkan dentuman musik yang paling beresonansi dengan jiwa Anda.
+      </p>
+
+      <!-- Category Filter Chips -->
+      <div 
+        data-animate="reveal" 
+        class="delay-300 flex flex-wrap justify-center gap-2.5 mt-8 max-w-3xl"
+      >
+        {MOCK_CATEGORIES.map((cat) => (
+          <a 
+            href={`/events?category=${cat.slug}`}
+            class="px-4 py-2 rounded-full text-xs font-medium bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 text-neutral-700 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-electric-magenta hover:bg-electric-magenta/10 transition-all duration-200 shadow-sm dark:shadow-none"
+          >
+            {cat.name} <span class="text-[10px] text-electric-magenta ml-1">({cat.count})</span>
+          </a>
+        ))}
+      </div>
+    </div>
+
+    <!-- Category Visual Cards Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {MOCK_CATEGORIES.map((cat, idx) => (
+        <a 
+          data-animate="reveal" 
+          href={`/events?category=${cat.slug}`}
+          class={`delay-${((idx % 3) + 1) * 100} group relative rounded-2xl overflow-hidden aspect-[16/11] bg-dark-plum border border-white/[0.08] hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-500`}
+        >
+          <!-- Category Background Image -->
+          <img 
+            src={cat.imageUrl} 
+            alt={cat.name} 
+            class="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 filter brightness-[0.45] contrast-125"
+            loading="lazy"
+          />
+
+          <!-- Gradient Overlay -->
+          <div class="absolute inset-0 bg-gradient-to-t from-void-black via-void-black/50 to-transparent"></div>
+          <div class="absolute inset-0 bg-radial-gradient from-deep-magenta/0 group-hover:from-deep-magenta/40 transition-colors duration-500"></div>
+
+          <!-- Card Content -->
+          <div class="absolute inset-0 p-6 flex flex-col justify-end">
+            <span class="text-[11px] font-bold text-electric-magenta uppercase tracking-wider mb-1">
+              {cat.count} UPCOMING EXPERIENCES
+            </span>
+            <h3 class="font-display text-3xl text-soft-white group-hover:text-electric-magenta transition-colors">
+              {cat.name}
+            </h3>
+            <p class="text-xs text-muted-gray line-clamp-2 mt-1 font-normal opacity-80 group-hover:opacity-100 transition-opacity">
+              {cat.description}
+            </p>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+// Section 06: How It Works
+const steps = [
+  {
+    num: '01',
+    title: 'DISCOVER',
+    subtitle: 'Temukan Panggung & Artis',
+    desc: 'Cari event favorit berdasarkan kota, tanggal, atau artis. Pilih kategori tiket idaman lengkap dengan visualisasi tata panggung yang jelas.'
+  },
+  {
+    num: '02',
+    title: 'SECURE & BOOK',
+    subtitle: 'Kunci Tiket Tanpa Crash',
+    desc: 'Sistem Redis atomik mengunci tiket Anda secara eksklusif selama 10 menit saat proses checkout. Bayar dengan aman melalui QRIS, Virtual Account, atau Kartu Kredit.'
+  },
+  {
+    num: '03',
+    title: 'EXPERIENCE',
+    subtitle: 'Nikmati Momen Tak Terlupakan',
+    desc: 'QR Pass resmi langsung aktif di akun AFTERGLOW Anda. Scan di pintu gate konser dan bersiaplah merasakan panggung musik terbaik dalam hidup Anda.'
+  }
+];
+---
+
+<section id="how-it-works" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] overflow-hidden transition-colors duration-300">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="flex flex-col items-center text-center mb-20">
+      <span 
+        data-animate="reveal" 
+        class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-3"
+      >
+        FRICTIONLESS JOURNEY
+      </span>
+      <h2 
+        data-animate="reveal" 
+        class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
+      >
+        THREE STEPS TO THE MOMENT.
+      </h2>
+      <p 
+        data-animate="reveal" 
+        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-lg mt-3"
+      >
+        Dari pencarian awal hingga berada di depan panggung hanya butuh tiga langkah ringkas.
+      </p>
+    </div>
+
+    <!-- 3 Steps Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
+      {steps.map((step, idx) => (
+        <div 
+          data-animate="reveal" 
+          class={`delay-${(idx + 1) * 150} relative p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/[0.08] hover:border-electric-magenta/50 shadow-sm dark:shadow-none transition-all duration-300 flex flex-col justify-between overflow-hidden group`}
+        >
+          <!-- Background Ghost Step Number -->
+          <span class="ghost-text absolute -top-8 -right-4 text-9xl font-display opacity-30 group-hover:opacity-60 transition-opacity">
+            {step.num}
+          </span>
+
+          <div class="relative z-10">
+            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-electric-magenta bg-electric-magenta/10 border border-electric-magenta/20 mb-6">
+              STEP {step.num}
+            </span>
+
+            <h3 class="font-display text-3xl text-neutral-950 dark:text-soft-white tracking-wide mb-1">
+              {step.title}
+            </h3>
+
+            <h4 class="text-xs font-semibold text-electric-magenta uppercase tracking-wider mb-4">
+              {step.subtitle}
+            </h4>
+
+            <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed font-normal">
+              {step.desc}
+            </p>
+          </div>
+
+          <div class="relative z-10 mt-8 pt-4 border-t border-neutral-100 dark:border-white/[0.05] flex items-center justify-between text-xs text-neutral-500 dark:text-muted-gray">
+            <span class="text-[11px] tracking-wider uppercase text-neutral-400 dark:text-muted-gray/70">AFTERGLOW PROTOCOL</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta"></span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

@@ -1,0 +1,37 @@
+---
+import RootLayout from '../layouts/RootLayout.astro';
+import Hero from '../components/landing/Hero.astro';
+import FeaturedEvents from '../components/landing/FeaturedEvents.astro';
+import DiscoverCategories from '../components/landing/DiscoverCategories.astro';
+import HowItWorks from '../components/landing/HowItWorks.astro';
+import WhyAfterglow from '../components/landing/WhyAfterglow.astro';
+import BrandStatement from '../components/landing/BrandStatement.astro';
+import FinalCta from '../components/landing/FinalCta.astro';
+import Footer from '../components/landing/Footer.astro';
+---
+
+<RootLayout title="AFTERGLOW — Live Concert Ticketing Platform">
+  <!-- 01. Hero (Split Layout: Left Stage Content, Right Title & Subtitle) -->
+  <Hero />
+
+  <!-- 02. Featured Events (DICE Style Compact Marquee / Horizontal Track) -->
+  <FeaturedEvents />
+
+  <!-- 03. Discover Categories (6 Genres) -->
+  <DiscoverCategories />
+
+  <!-- 04. How It Works (Three Steps to the Moment) -->
+  <HowItWorks />
+
+  <!-- 05. Why AFTERGLOW (4 Pillars) -->
+  <WhyAfterglow />
+
+  <!-- 06. Brand Statement & Philosophy (Choginga-inspired Asymmetric About) -->
+  <BrandStatement />
+
+  <!-- 07. Final CTA -->
+  <FinalCta />
+
+  <!-- 08. Footer -->
+  <Footer />
+</RootLayout>

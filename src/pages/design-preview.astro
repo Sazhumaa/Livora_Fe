@@ -1,0 +1,652 @@
+---
+// AFTERGLOW Design Laboratory & Live Prototype Sandbox
+// Zero AI Slop: Authentic concert stage lighting, physical ticket stubs, technical metadata, brutalist editorial layout.
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en" class="bg-void-black text-soft-white">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AFTERGLOW — Design Laboratory & Prototype Sandbox</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --void-black: #0B090B;
+        --dark-plum: #180F16;
+        --deep-magenta: #70264F;
+        --electric-magenta: #D14D91;
+        --soft-white: #F8F0F5;
+        --muted-gray: #A58D9C;
+      }
+
+      body {
+        font-family: 'Inter', system-ui, sans-serif;
+        background-color: var(--void-black);
+        color: var(--soft-white);
+        overflow-x: hidden;
+      }
+
+      .font-display {
+        font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+        letter-spacing: 0.03em;
+      }
+
+      .font-mono-tech {
+        font-family: 'Space Mono', monospace;
+      }
+
+      /* Ghost typography outline */
+      .ghost-outline {
+        -webkit-text-stroke: 1.5px rgba(248, 240, 245, 0.12);
+        color: transparent;
+      }
+
+      .ghost-outline-magenta {
+        -webkit-text-stroke: 1.5px rgba(209, 77, 145, 0.25);
+        color: transparent;
+      }
+
+      /* Holographic foil sheen */
+      .hologram-strip {
+        background: linear-gradient(
+          115deg,
+          transparent 20%,
+          rgba(209, 77, 145, 0.4) 40%,
+          rgba(141, 232, 255, 0.5) 50%,
+          rgba(255, 216, 58, 0.4) 60%,
+          transparent 80%
+        );
+        background-size: 200% 100%;
+        animation: foilShimmer 6s infinite linear;
+      }
+
+      @keyframes foilShimmer {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+      }
+
+      /* Ticket Stub Notches (Tear-off semicircles) */
+      .ticket-notch-top {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        background-color: var(--void-black);
+        border-radius: 9999px;
+        top: -12px;
+        transform: translateX(-50%);
+        box-shadow: inset 0 -3px 4px rgba(0,0,0,0.4);
+      }
+
+      .ticket-notch-bottom {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        background-color: var(--void-black);
+        border-radius: 9999px;
+        bottom: -12px;
+        transform: translateX(-50%);
+        box-shadow: inset 0 3px 4px rgba(0,0,0,0.4);
+      }
+
+      /* Perforated tear line */
+      .ticket-perforation {
+        background-image: linear-gradient(to bottom, rgba(248, 240, 245, 0.25) 50%, transparent 50%);
+        background-size: 2px 12px;
+        background-repeat: repeat-y;
+      }
+
+      /* Soundwave frequency bars */
+      .soundbar {
+        animation: soundPulse 1.2s ease-in-out infinite alternate;
+      }
+
+      @keyframes soundPulse {
+        0% { height: 15%; opacity: 0.4; }
+        100% { height: 95%; opacity: 1; }
+      }
+    </style>
+  </head>
+  <body class="selection:bg-electric-magenta selection:text-white pb-32">
+
+    <!-- Top Design Control Header -->
+    <header class="sticky top-0 z-50 bg-void-black/95 backdrop-blur-md border-b border-white/10 px-6 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="w-3 h-3 rounded-full bg-electric-magenta animate-ping"></span>
+        <span class="font-mono-tech text-xs tracking-wider text-soft-white font-bold">
+          AFTERGLOW // DESIGN LAB v2.0
+        </span>
+        <span class="hidden sm:inline-block px-2 py-0.5 rounded bg-white/10 text-[10px] font-mono-tech text-muted-gray uppercase">
+          Anti-Slop Sandbox
+        </span>
+      </div>
+
+      <!-- Quick Nav Buttons -->
+      <div class="flex items-center gap-3">
+        <a href="#concept-a" class="px-3 py-1 rounded-full text-xs font-mono-tech bg-electric-magenta/20 border border-electric-magenta text-soft-white hover:bg-electric-magenta transition-colors">
+          01. STAGE TITAN HERO
+        </a>
+        <a href="#ticket-passes" class="px-3 py-1 rounded-full text-xs font-mono-tech bg-white/5 border border-white/15 text-muted-gray hover:text-soft-white transition-colors">
+          02. TICKET STUBS
+        </a>
+        <a href="#concept-b" class="px-3 py-1 rounded-full text-xs font-mono-tech bg-white/5 border border-white/15 text-muted-gray hover:text-soft-white transition-colors">
+          03. NEO-CYBER GRID
+        </a>
+        <a href="/" class="px-3 py-1 rounded-full text-xs font-mono-tech text-muted-gray hover:text-soft-white">
+          ← Back to Site
+        </a>
+      </div>
+    </header>
+
+    <!-- ======================================================================== -->
+    <!-- CONCEPT A: "STAGE TITAN" ASYMMETRIC HERO -->
+    <!-- ======================================================================== -->
+    <section id="concept-a" class="relative w-full min-h-screen border-b border-white/10 overflow-hidden flex flex-col justify-between pt-12 pb-8 px-6 lg:px-16">
+      <!-- Background Ambient Grid Lines & Crosshairs -->
+      <div class="absolute inset-0 pointer-events-none opacity-20">
+        <div class="w-full h-full" style="background-image: radial-gradient(rgba(248, 240, 245, 0.15) 1px, transparent 1px); background-size: 40px 40px;"></div>
+      </div>
+
+      <!-- Corner Crosshair Markers -->
+      <div class="absolute top-16 left-6 font-mono-tech text-xs text-white/30 select-none">+ LAT -06.2185° // LNG 106.8018°</div>
+      <div class="absolute top-16 right-6 font-mono-tech text-xs text-white/30 select-none">FREQ: 142.84 MHz +</div>
+
+      <!-- Live Stage Header Metadata -->
+      <div class="relative z-10 flex flex-wrap items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div class="flex items-center gap-3">
+          <span class="font-display text-2xl tracking-wider text-soft-white">AFTERGLOW</span>
+          <span class="text-white/20">/</span>
+          <span class="font-mono-tech text-xs text-electric-magenta uppercase font-bold tracking-widest">
+            AUTHENTIC ARENA PASSES
+          </span>
+        </div>
+
+        <!-- Live Audio Spectrum Visualizer -->
+        <div class="flex items-center gap-3 bg-dark-plum/80 px-4 py-1.5 rounded-full border border-white/10">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="font-mono-tech text-[10px] tracking-wider text-muted-gray uppercase">LIVE STAGE FEED</span>
+          <div class="flex items-end gap-1 h-3.5 w-16">
+            <span class="soundbar w-1 bg-electric-magenta rounded-full [animation-delay:0.1s]"></span>
+            <span class="soundbar w-1 bg-electric-magenta rounded-full [animation-delay:0.4s]"></span>
+            <span class="soundbar w-1 bg-soft-white rounded-full [animation-delay:0.2s]"></span>
+            <span class="soundbar w-1 bg-electric-magenta rounded-full [animation-delay:0.6s]"></span>
+            <span class="soundbar w-1 bg-soft-white rounded-full [animation-delay:0.3s]"></span>
+            <span class="soundbar w-1 bg-electric-magenta rounded-full [animation-delay:0.5s]"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Asymmetric Hero Main Stage Grid -->
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center my-auto py-10">
+        
+        <!-- Left Column: Monumental Brutalist Typography (7 Cols) -->
+        <div class="lg:col-span-7 flex flex-col justify-center">
+          
+          <!-- Event Status Pill with Barcode Graphic -->
+          <div class="inline-flex items-center gap-3 mb-6 self-start">
+            <span class="px-3 py-1 rounded bg-electric-magenta text-void-black font-mono-tech text-xs font-bold uppercase tracking-wider">
+              2026 WORLD TOUR
+            </span>
+            <span class="font-mono-tech text-xs text-muted-gray tracking-widest">
+              [ GATE VALIDATED: ZERO RESELLER BOTS ]
+            </span>
+          </div>
+
+          <!-- Massive Layered Headline -->
+          <div class="relative">
+            <!-- Ghost background typography bleed -->
+            <span class="ghost-outline absolute -top-16 -left-4 text-7xl sm:text-9xl md:text-[140px] font-display pointer-events-none select-none opacity-40">
+              NO COMPROMISE
+            </span>
+
+            <h1 class="relative font-display text-6xl sm:text-8xl md:text-9xl text-soft-white leading-[0.88] tracking-tight uppercase">
+              THE NIGHT <br />
+              <span class="text-transparent bg-clip-text bg-gradient-to-r from-soft-white via-electric-magenta to-electric-magenta">
+                IS YOURS.
+              </span>
+            </h1>
+          </div>
+
+          <!-- Editorial Subcopy with Technical Detail -->
+          <p class="max-w-xl text-base sm:text-lg text-muted-gray font-normal leading-relaxed mt-6">
+            Dentuman sound system 120.000 watt, lautan lightstick, dan desak napas ribuan penonton. Amankan tiket konser resmi dengan kecepatan transaksi di bawah 1 detik tanpa risiko calo.
+          </p>
+
+          <!-- Action Buttons & Live Stats Row -->
+          <div class="flex flex-wrap items-center gap-5 mt-8">
+            <a 
+              href="#ticket-passes" 
+              class="px-8 py-4 rounded-full bg-electric-magenta text-soft-white font-bold text-sm tracking-wider hover:shadow-[0_0_35px_rgba(209,77,145,0.6)] hover:scale-105 active:scale-95 transition-all flex items-center gap-3 uppercase"
+            >
+              <span>WAR TIKET SEKARANG</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </a>
+
+            <a 
+              href="/events" 
+              class="px-6 py-4 rounded-full bg-white/5 hover:bg-white/10 border border-white/20 text-soft-white font-mono-tech text-xs tracking-wider transition-colors flex items-center gap-2"
+            >
+              <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+              <span>JELAJAHI 48+ EVENT</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column: Interactive 3D Concert Ticket Hero Card (5 Cols) -->
+        <div class="lg:col-span-5 flex justify-center">
+          <div class="relative w-full max-w-md group">
+            
+            <!-- Magenta Backlight Aura -->
+            <div class="absolute -inset-2 bg-gradient-to-r from-deep-magenta to-electric-magenta rounded-3xl opacity-40 blur-2xl group-hover:opacity-75 transition-opacity duration-700"></div>
+
+            <!-- The Ticket Showcase Frame -->
+            <div class="relative rounded-2xl bg-dark-plum border border-white/20 shadow-2xl overflow-hidden p-1">
+              
+              <!-- Hologram Top Strip -->
+              <div class="h-2 w-full hologram-strip"></div>
+
+              <!-- Ticket Visual Image Header -->
+              <div class="relative aspect-[16/10] overflow-hidden rounded-t-xl bg-black">
+                <img 
+                  src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=85" 
+                  alt="Concert stage laser lights" 
+                  class="w-full h-full object-cover object-center filter contrast-125 brightness-90 group-hover:scale-105 transition-transform duration-700"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-dark-plum via-transparent to-transparent"></div>
+
+                <div class="absolute top-3 left-3 px-2.5 py-1 rounded bg-void-black/80 backdrop-blur-md border border-white/10 font-mono-tech text-[10px] text-electric-magenta font-bold">
+                  ● UPCOMING HEADLINER
+                </div>
+
+                <div class="absolute top-3 right-3 px-2 py-0.5 rounded bg-electric-magenta text-soft-white font-mono-tech text-[10px] font-bold">
+                  87% BOOKED
+                </div>
+              </div>
+
+              <!-- Ticket Content Body -->
+              <div class="p-6">
+                <div class="flex items-center justify-between text-xs font-mono-tech text-muted-gray pb-3 border-b border-white/10">
+                  <span>14 - 15 NOV 2026</span>
+                  <span class="text-soft-white font-bold">JAKARTA, INDONESIA</span>
+                </div>
+
+                <h3 class="font-display text-3xl text-soft-white mt-3 leading-none tracking-wide group-hover:text-electric-magenta transition-colors">
+                  AFTERGLOW FESTIVAL 2026
+                </h3>
+                <p class="text-xs text-electric-magenta font-semibold mt-1">
+                  PORTER ROBINSON • M83 • RADWIMPS • WAVE TO EARTH
+                </p>
+
+                <!-- Technical Ticket Notches & Perforation -->
+                <div class="relative my-5 py-3 border-t border-b border-white/10 border-dashed flex items-center justify-between font-mono-tech text-[11px]">
+                  <div class="ticket-notch-top left-0"></div>
+                  <div class="ticket-notch-bottom left-0"></div>
+                  
+                  <div class="flex flex-col">
+                    <span class="text-muted-gray text-[9px] uppercase">VENUE TIER</span>
+                    <span class="text-soft-white font-bold">VIP FESTIVAL // GATE A</span>
+                  </div>
+                  <div class="flex flex-col text-right">
+                    <span class="text-muted-gray text-[9px] uppercase">STARTING FROM</span>
+                    <span class="font-display text-xl text-electric-magenta">IDR 1.250.000</span>
+                  </div>
+                </div>
+
+                <!-- Barcode & Serial Strip -->
+                <div class="flex items-center justify-between pt-1">
+                  <div class="flex flex-col">
+                    <span class="font-mono-tech text-[9px] text-white/40">SERIAL: #AGW-9482-VOID</span>
+                    <!-- Simulated Barcode Lines -->
+                    <div class="flex items-center gap-[2px] h-6 mt-1 opacity-70">
+                      <span class="w-[2px] h-full bg-soft-white"></span>
+                      <span class="w-[4px] h-full bg-soft-white"></span>
+                      <span class="w-[1px] h-full bg-soft-white"></span>
+                      <span class="w-[3px] h-full bg-soft-white"></span>
+                      <span class="w-[1px] h-full bg-soft-white"></span>
+                      <span class="w-[5px] h-full bg-soft-white"></span>
+                      <span class="w-[2px] h-full bg-soft-white"></span>
+                      <span class="w-[4px] h-full bg-soft-white"></span>
+                      <span class="w-[1px] h-full bg-soft-white"></span>
+                      <span class="w-[3px] h-full bg-soft-white"></span>
+                      <span class="w-[6px] h-full bg-soft-white"></span>
+                      <span class="w-[2px] h-full bg-soft-white"></span>
+                      <span class="w-[1px] h-full bg-soft-white"></span>
+                      <span class="w-[4px] h-full bg-soft-white"></span>
+                    </div>
+                  </div>
+
+                  <a 
+                    href="/events" 
+                    class="px-5 py-2.5 rounded-xl bg-electric-magenta text-soft-white font-display text-lg tracking-wider hover:shadow-magenta-glow transition-all active:scale-95"
+                  >
+                    SELECT PASS
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Live Realtime Ticker Tape along the bottom -->
+      <div class="relative z-10 w-full overflow-hidden border-t border-white/10 pt-4 flex items-center font-mono-tech text-xs text-muted-gray">
+        <span class="px-2 py-0.5 rounded bg-electric-magenta text-void-black font-bold mr-4 shrink-0 text-[10px]">
+          LIVE PULSE
+        </span>
+        <div class="whitespace-nowrap overflow-hidden flex gap-8 tracking-wider">
+          <span class="text-soft-white">✦ [GBK STADIUM] PORTER ROBINSON VIP SECTION 88% BOOKED</span>
+          <span>•</span>
+          <span class="text-electric-magenta">✦ [INDONESIA ARENA] AESPA SUPERNOVA TOUR PRESALE OPENS IN 02D : 14H</span>
+          <span>•</span>
+          <span class="text-soft-white">✦ [ELDORADO DOME] THE MIDNIGHT GA TICKETS REMAINING: 42 SEATS</span>
+          <span>•</span>
+          <span class="text-muted-gray">✦ [ANTI-BOT GUARANTEE] ALL TICKETS DIGITALLY WATERMARKED</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================== -->
+    <!-- SECTION 02: REAL PHYSICAL CONCERT TICKET PASSES -->
+    <!-- ======================================================================== -->
+    <section id="ticket-passes" class="py-24 px-6 lg:px-16 border-b border-white/10 bg-dark-plum/20">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+          <div>
+            <span class="font-mono-tech text-xs text-electric-magenta uppercase font-bold tracking-widest block mb-2">
+              [ COMPONENT EXPLORATION 02 ]
+            </span>
+            <h2 class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
+              AUTHENTIC TICKET STUBS
+            </h2>
+            <p class="text-muted-gray text-base mt-2 max-w-xl">
+              Bukan kartu SaaS biasa. Dirancang meniru struktur fisik tiket konser otentik: lengkap dengan garis perforasi sobekan, kode gate scanning, dan hologram anti-pemalsuan.
+            </p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <span class="font-mono-tech text-xs text-muted-gray">INTERACTIVE PERFORATION PREVIEW</span>
+          </div>
+        </div>
+
+        <!-- Physical Ticket Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- TICKET 01: AESPA SUPERNOVA TOUR -->
+          <div class="relative rounded-3xl bg-dark-plum border border-white/15 overflow-hidden shadow-2xl flex flex-col md:flex-row hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-300 group">
+            
+            <!-- Left Side: Event Showcase & Artwork (65%) -->
+            <div class="relative md:w-[65%] p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
+              <!-- Corner Hologram -->
+              <div class="absolute top-0 left-0 w-32 h-1 hologram-strip"></div>
+
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <span class="px-3 py-1 rounded bg-electric-magenta/20 border border-electric-magenta text-electric-magenta font-mono-tech text-[10px] font-bold uppercase tracking-wider">
+                    STADIUM CONCERT
+                  </span>
+                  <span class="font-mono-tech text-xs text-muted-gray">SEC: VIP STANDING</span>
+                </div>
+
+                <h3 class="font-display text-4xl text-soft-white leading-none tracking-wide group-hover:text-electric-magenta transition-colors">
+                  SUPERNOVA: THE COSMIC ODYSSEY
+                </h3>
+                <p class="text-sm font-semibold text-soft-white/80 mt-1">
+                  aespa & Special Guest
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/10 font-mono-tech text-xs">
+                  <div>
+                    <span class="text-muted-gray text-[9px] uppercase block">DATE & TIME</span>
+                    <span class="text-soft-white font-bold">28 NOV 2026 // 19:00</span>
+                  </div>
+                  <div>
+                    <span class="text-muted-gray text-[9px] uppercase block">LOCATION</span>
+                    <span class="text-soft-white font-bold">INDONESIA ARENA, JKT</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Barcode strip at bottom of left side -->
+              <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between font-mono-tech text-xs text-muted-gray">
+                <span class="text-[9px]">GATE PROTOCOL: BIOMETRIC SCAN</span>
+                <span class="text-electric-magenta font-bold">AVAILABLE</span>
+              </div>
+            </div>
+
+            <!-- Perforation Cutout Notches between left & right -->
+            <div class="hidden md:block ticket-notch-top left-[65%]"></div>
+            <div class="hidden md:block ticket-notch-bottom left-[65%]"></div>
+
+            <!-- Right Side: Tear-off Stub & Instant Purchase (35%) -->
+            <div class="relative md:w-[35%] bg-void-black/70 p-6 sm:p-8 flex flex-col justify-between items-center text-center">
+              <span class="font-mono-tech text-[9px] tracking-widest text-muted-gray uppercase">
+                ADMISSION PASS STUB
+              </span>
+
+              <!-- Simulated QR Pass Code -->
+              <div class="my-4 p-3 bg-white rounded-xl shadow-md">
+                <svg class="w-20 h-20 text-black" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-4h2v2h-2v-2zm0 4h2v2h-2v-2z" />
+                </svg>
+              </div>
+
+              <div>
+                <span class="font-mono-tech text-[10px] text-muted-gray block">STARTING AT</span>
+                <span class="font-display text-2xl text-soft-white">IDR 1.650.000</span>
+              </div>
+
+              <button class="w-full mt-4 py-3 rounded-xl bg-electric-magenta text-soft-white font-display text-lg tracking-wider hover:shadow-magenta-glow transition-all active:scale-95">
+                SECURE PASS
+              </button>
+            </div>
+          </div>
+
+          <!-- TICKET 02: REBELLION NIGHTS -->
+          <div class="relative rounded-3xl bg-dark-plum border border-white/15 overflow-hidden shadow-2xl flex flex-col md:flex-row hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-300 group">
+            
+            <!-- Left Side: Event Showcase & Artwork (65%) -->
+            <div class="relative md:w-[65%] p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/10">
+              <div class="absolute top-0 left-0 w-32 h-1 hologram-strip"></div>
+
+              <div>
+                <div class="flex items-center justify-between mb-4">
+                  <span class="px-3 py-1 rounded bg-white/10 text-muted-gray font-mono-tech text-[10px] font-bold uppercase tracking-wider">
+                    ROCK & ALTERNATIVE
+                  </span>
+                  <span class="font-mono-tech text-xs text-muted-gray">SEC: FESTIVAL A</span>
+                </div>
+
+                <h3 class="font-display text-4xl text-soft-white leading-none tracking-wide group-hover:text-electric-magenta transition-colors">
+                  REBELLION NIGHTS: LIVE & LOUD
+                </h3>
+                <p class="text-sm font-semibold text-soft-white/80 mt-1">
+                  Bring Me The Horizon & ONE OK ROCK
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-white/10 font-mono-tech text-xs">
+                  <div>
+                    <span class="text-muted-gray text-[9px] uppercase block">DATE & TIME</span>
+                    <span class="text-soft-white font-bold">12 DEC 2026 // 18:30</span>
+                  </div>
+                  <div>
+                    <span class="text-muted-gray text-[9px] uppercase block">LOCATION</span>
+                    <span class="text-soft-white font-bold">STADION MADYA GBK</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between font-mono-tech text-xs text-muted-gray">
+                <span class="text-[9px]">GATE PROTOCOL: DYNAMIC QR</span>
+                <span class="text-electric-magenta font-bold">ALMOST SOLD OUT</span>
+              </div>
+            </div>
+
+            <!-- Perforation Cutout Notches -->
+            <div class="hidden md:block ticket-notch-top left-[65%]"></div>
+            <div class="hidden md:block ticket-notch-bottom left-[65%]"></div>
+
+            <!-- Right Side: Tear-off Stub -->
+            <div class="relative md:w-[35%] bg-void-black/70 p-6 sm:p-8 flex flex-col justify-between items-center text-center">
+              <span class="font-mono-tech text-[9px] tracking-widest text-muted-gray uppercase">
+                ADMISSION PASS STUB
+              </span>
+
+              <div class="my-4 p-3 bg-white rounded-xl shadow-md">
+                <svg class="w-20 h-20 text-black" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-4h2v2h-2v-2zm0 4h2v2h-2v-2z" />
+                </svg>
+              </div>
+
+              <div>
+                <span class="font-mono-tech text-[10px] text-muted-gray block">STARTING AT</span>
+                <span class="font-display text-2xl text-soft-white">IDR 1.850.000</span>
+              </div>
+
+              <button class="w-full mt-4 py-3 rounded-xl bg-electric-magenta text-soft-white font-display text-lg tracking-wider hover:shadow-magenta-glow transition-all active:scale-95">
+                SECURE PASS
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================== -->
+    <!-- CONCEPT B: "NEO-CYBER CHOGINGA STAGE" (Japanese Subculture & Technical Grid) -->
+    <!-- ======================================================================== -->
+    <section id="concept-b" class="py-24 px-6 lg:px-16 border-b border-white/10 bg-void-black">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col mb-16">
+          <span class="font-mono-tech text-xs text-electric-magenta uppercase font-bold tracking-widest block mb-2">
+            [ COMPONENT EXPLORATION 03 ]
+          </span>
+          <div class="flex items-baseline gap-4">
+            <h2 class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
+              NEO-CYBER SOUNDSTAGE
+            </h2>
+            <span class="font-display text-2xl text-electric-magenta">/ 超音波体験</span>
+          </div>
+          <p class="text-muted-gray text-base mt-2 max-w-xl">
+            Mengadopsi tata letak asimetris ala label rekaman subkultur Tokyo: border grid teknikal, aksen tulisan vertikal (tategaki), dan badge melayang.
+          </p>
+        </div>
+
+        <!-- Cyber Grid Frame -->
+        <div class="grid grid-cols-1 md:grid-cols-3 border border-white/10 divide-y md:divide-y-0 md:divide-x divide-white/10 bg-dark-plum/30">
+          
+          <!-- Column 1: Vertical Japanese Tag & Statement -->
+          <div class="p-8 flex flex-col justify-between">
+            <div>
+              <span class="font-mono-tech text-xs text-electric-magenta font-bold block mb-4">
+                01 // PHILOSOPHY
+              </span>
+              <p class="font-mono-tech text-xs text-muted-gray leading-relaxed">
+                Kami membangun platform ini bukan sebagai loket tiket biasa, tetapi sebagai gerbang resmi menuju dentuman musik murni tanpa calo.
+              </p>
+            </div>
+
+            <!-- Vertical Japanese Characters -->
+            <div class="my-12 flex items-center gap-6">
+              <span class="text-4xl sm:text-5xl font-bold tracking-widest text-soft-white writing-vertical select-none" style="writing-mode: vertical-rl;">
+                残光を超えて
+              </span>
+              <div class="h-40 w-px bg-gradient-to-b from-electric-magenta via-transparent to-white/10"></div>
+              <p class="text-xs font-mono-tech text-muted-gray max-w-[120px] leading-tight">
+                BEYOND THE RESIDUAL GLOW OF LIVE MUSIC.
+              </p>
+            </div>
+
+            <div class="font-mono-tech text-[10px] text-white/40">
+              SYS VER: AGW-2.4 // PROTOCOL READY
+            </div>
+          </div>
+
+          <!-- Column 2: Stage Geometry & Radar Blip -->
+          <div class="p-8 flex flex-col justify-between bg-dark-plum/50">
+            <div>
+              <span class="font-mono-tech text-xs text-electric-magenta font-bold block mb-4">
+                02 // LIVE RADAR
+              </span>
+              <h3 class="font-display text-3xl text-soft-white mb-2">
+                ACTIVE RADAR MAP
+              </h3>
+              <p class="text-xs text-muted-gray font-mono-tech">
+                Pemindaian kuota gate konser di seluruh venue Jakarta & Bandung secara realtime.
+              </p>
+            </div>
+
+            <!-- Concentric Circular Radar Graphic (Ala Choginga) -->
+            <div class="my-8 relative w-48 h-48 mx-auto flex items-center justify-center">
+              <div class="absolute inset-0 rounded-full border border-white/10 animate-ping [animation-duration:3s]"></div>
+              <div class="absolute inset-4 rounded-full border border-electric-magenta/30"></div>
+              <div class="absolute inset-10 rounded-full border border-white/20 border-dashed animate-spin-slow"></div>
+              <div class="w-16 h-16 rounded-full bg-electric-magenta/20 border border-electric-magenta flex items-center justify-center font-display text-lg text-soft-white">
+                LIVE
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between font-mono-tech text-xs text-muted-gray pt-4 border-t border-white/10">
+              <span>SCANNER LATENCY: &lt; 40ms</span>
+              <span class="text-emerald-400">ONLINE</span>
+            </div>
+          </div>
+
+          <!-- Column 3: VIP Pass Lanyard Badge Card -->
+          <div class="p-8 flex flex-col justify-between">
+            <div>
+              <span class="font-mono-tech text-xs text-electric-magenta font-bold block mb-4">
+                03 // LANYARD PASS
+              </span>
+              <h3 class="font-display text-3xl text-soft-white mb-1">
+                ALL-ACCESS PASS
+              </h3>
+              <span class="font-mono-tech text-xs text-muted-gray">LIMITED EDITION FESTIVAL 2026</span>
+            </div>
+
+            <!-- Physical Lanyard Hole & Card Visual -->
+            <div class="my-6 p-6 rounded-2xl bg-void-black border border-white/15 relative overflow-hidden">
+              <!-- Lanyard clip hole -->
+              <div class="w-10 h-3 rounded-full bg-dark-plum border border-white/30 mx-auto mb-4"></div>
+
+              <div class="text-center">
+                <span class="font-display text-4xl text-electric-magenta block">AAA // VIP</span>
+                <span class="font-mono-tech text-[10px] text-muted-gray tracking-widest uppercase mt-1 block">
+                  ALL AREAS ACCESS PASS
+                </span>
+                <p class="text-xs text-soft-white/80 mt-3 font-mono-tech">
+                  Backstage Access • Soundcheck • Priority Pit Gate
+                </p>
+              </div>
+
+              <div class="mt-6 pt-3 border-t border-white/10 flex items-center justify-between font-mono-tech text-[10px] text-muted-gray">
+                <span>RFID TAGGED</span>
+                <span class="text-soft-white font-bold">SERIAL: #0042</span>
+              </div>
+            </div>
+
+            <button class="w-full py-3 rounded-full bg-white/10 hover:bg-electric-magenta text-soft-white font-mono-tech text-xs tracking-wider transition-colors">
+              VIEW PASS PRIVILEGES →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bottom Feedback & Direction Pill Bar -->
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-void-black/90 backdrop-blur-xl border border-white/20 rounded-full px-6 py-3.5 shadow-2xl flex items-center gap-4">
+      <span class="w-2 h-2 rounded-full bg-electric-magenta animate-pulse"></span>
+      <span class="font-mono-tech text-xs text-soft-white">
+        PROTOTYPE READY: Buka <strong class="text-electric-magenta">http://localhost:4321/design-preview</strong> di browser lu!
+      </span>
+    </div>
+
+  </body>
+</html>

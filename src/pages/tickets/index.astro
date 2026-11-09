@@ -1,0 +1,59 @@
+---
+import RootLayout from '../../layouts/RootLayout.astro';
+import Footer from '../../components/landing/Footer.astro';
+---
+
+<RootLayout 
+  title="My Tickets — AFTERGLOW" 
+  description="Dompet tiket konser digital Anda dengan QR Code dinamis resmi anti-pemalsuan."
+>
+  <div class="pt-32 pb-24 px-6 lg:px-12 max-w-4xl mx-auto w-full">
+    <div class="mb-10">
+      <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+        DIGITAL WALLET
+      </span>
+      <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+        MY TICKETS
+      </h1>
+      <p class="text-muted-gray text-sm mt-1">
+        Tiket konser aktif siap pakai untuk gate scanning di hari acara.
+      </p>
+    </div>
+
+    <!-- Active Ticket Card Preview -->
+    <div class="rounded-3xl bg-dark-plum border border-white/10 overflow-hidden shadow-2xl relative">
+      <div class="p-8 sm:p-10 flex flex-col md:flex-row justify-between gap-8 items-center border-b border-white/10 border-dashed">
+        <div>
+          <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+            ACTIVE PASS // READY TO SCAN
+          </span>
+          <h2 class="font-display text-3xl sm:text-4xl text-soft-white mt-4">
+            AFTERGLOW FESTIVAL 2026: VOID INCEPTION
+          </h2>
+          <p class="text-sm text-electric-magenta font-semibold mt-1">
+            VIP FESTIVAL • GATE A • SECTION VIP-04
+          </p>
+          <div class="text-xs text-muted-gray mt-4 space-y-1">
+            <p>📅 14 NOV 2026 • 18:00 WIB</p>
+            <p>📍 Gelora Bung Karno Stadium, Jakarta</p>
+          </div>
+        </div>
+
+        <!-- QR Code Simulation -->
+        <div class="p-4 bg-white rounded-2xl flex flex-col items-center justify-center shrink-0 shadow-lg">
+          <svg class="w-32 h-32 text-black" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm14-2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm-4 0h2v2h-2v-2zm2 2h2v2h-2v-2zm-6-4h2v2h-2v-2zm0 4h2v2h-2v-2z" />
+          </svg>
+          <span class="text-[9px] font-mono text-black font-bold tracking-widest mt-1">#AGW-9482-VOID</span>
+        </div>
+      </div>
+
+      <div class="p-6 bg-void-black/60 flex items-center justify-between text-xs text-muted-gray">
+        <span>Owner: Registered Pass Holder</span>
+        <span class="text-electric-magenta font-semibold">Dynamic Anti-Screenshot Enabled</span>
+      </div>
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>

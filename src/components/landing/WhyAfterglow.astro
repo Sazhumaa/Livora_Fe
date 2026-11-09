@@ -1,0 +1,79 @@
+---
+// Section 05: Why AFTERGLOW
+const pillars = [
+  {
+    title: 'Easy Discovery',
+    description: 'Temukan headliner internasional dan festival lokal favorit Anda melalui kurasi genre presisi tanpa kebisingan iklan yang mengganggu.',
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />`
+  },
+  {
+    title: 'Seamless Booking',
+    description: 'Arsitektur latensi ultra-rendah Bun + Redis. Hadirkan pengalaman war tiket anti-crash dengan pemesanan selesai dalam hitungan detik.',
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />`
+  },
+  {
+    title: 'Secure Transaction',
+    description: 'Integrasi payment gateway resmi berstandar perbankan dengan webhook idempoten. Transaksi tiket Anda dijamin 100% aman dan terkonfirmasi.',
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />`
+  },
+  {
+    title: 'Digital Ticket Pass',
+    description: 'QR Code tiket dinamis anti-pemalsuan dan anti-calo langsung di smartphone Anda. Tinggal scan di gate venue tanpa perlu cetak fisik.',
+    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />`
+  }
+];
+---
+
+<section id="why" class="relative w-full py-28 px-6 lg:px-12 bg-white/50 dark:bg-dark-plum/20 border-t border-neutral-200/80 dark:border-white/[0.04] transition-colors duration-300">
+  <div class="max-w-7xl mx-auto">
+    <!-- Section Header -->
+    <div class="flex flex-col items-center text-center mb-16">
+      <span 
+        data-animate="reveal" 
+        class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-3"
+      >
+        BUILT FOR TRUE FANS
+      </span>
+      <h2 
+        data-animate="reveal" 
+        class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
+      >
+        MORE THAN JUST A TICKET.
+      </h2>
+      <p 
+        data-animate="reveal" 
+        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-lg mt-3"
+      >
+        Standar baru platform tiket konser yang dirancang mengutamakan keaslian, transparansi, dan kenyamanan penonton.
+      </p>
+    </div>
+
+    <!-- 4 Pillars Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {pillars.map((item, idx) => (
+        <div 
+          data-animate="reveal" 
+          class={`delay-${(idx + 1) * 100} p-8 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/[0.08] hover:border-electric-magenta/40 hover:shadow-magenta-glow shadow-sm dark:shadow-none transition-all duration-300 flex flex-col justify-between group`}
+        >
+          <div>
+            <div class="w-12 h-12 rounded-xl bg-electric-magenta/10 border border-electric-magenta/30 flex items-center justify-center text-electric-magenta mb-6 group-hover:scale-110 group-hover:bg-electric-magenta group-hover:text-soft-white transition-all duration-300">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.icon}></svg>
+            </div>
+
+            <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-3 tracking-wide">
+              {item.title}
+            </h3>
+
+            <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed font-normal">
+              {item.description}
+            </p>
+          </div>
+
+          <div class="mt-8 pt-4 border-t border-neutral-100 dark:border-white/[0.05] flex items-center justify-between text-xs text-neutral-500 dark:text-muted-gray">
+            <span class="tracking-widest uppercase font-semibold text-[10px] text-electric-magenta">0{idx + 1} // VERIFIED</span>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
