@@ -1,79 +1,204 @@
 ---
-// Section 05: Why AFTERGLOW
-const pillars = [
-  {
-    title: 'Easy Discovery',
-    description: 'Temukan headliner internasional dan festival lokal favorit Anda melalui kurasi genre presisi tanpa kebisingan iklan yang mengganggu.',
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />`
-  },
-  {
-    title: 'Seamless Booking',
-    description: 'Arsitektur latensi ultra-rendah Bun + Redis. Hadirkan pengalaman war tiket anti-crash dengan pemesanan selesai dalam hitungan detik.',
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />`
-  },
-  {
-    title: 'Secure Transaction',
-    description: 'Integrasi payment gateway resmi berstandar perbankan dengan webhook idempoten. Transaksi tiket Anda dijamin 100% aman dan terkonfirmasi.',
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />`
-  },
-  {
-    title: 'Digital Ticket Pass',
-    description: 'QR Code tiket dinamis anti-pemalsuan dan anti-calo langsung di smartphone Anda. Tinggal scan di gate venue tanpa perlu cetak fisik.',
-    icon: `<path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />`
-  }
-];
+// Section 05: Why AFTERGLOW (Concert Engine Asymmetric Bento Matrix)
 ---
 
-<section id="why" class="relative w-full py-28 px-6 lg:px-12 bg-white/50 dark:bg-dark-plum/20 border-t border-neutral-200/80 dark:border-white/[0.04] transition-colors duration-300">
+<section id="why" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] transition-colors duration-300">
   <div class="max-w-7xl mx-auto">
-    <!-- Section Header -->
-    <div class="flex flex-col items-center text-center mb-16">
-      <span 
-        data-animate="reveal" 
-        class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-3"
-      >
-        BUILT FOR TRUE FANS
-      </span>
-      <h2 
-        data-animate="reveal" 
-        class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
-      >
-        MORE THAN JUST A TICKET.
-      </h2>
-      <p 
-        data-animate="reveal" 
-        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-lg mt-3"
-      >
-        Standar baru platform tiket konser yang dirancang mengutamakan keaslian, transparansi, dan kenyamanan penonton.
-      </p>
+    
+    <!-- Section Header (Editorial & Asymmetric with Live Telemetry) -->
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14 sm:mb-16">
+      <div>
+        <div data-animate="reveal" class="flex items-center gap-2 mb-3">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30">
+            <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
+            ZERO-SLOP CONCERT STANDARD
+          </span>
+          <span class="text-xs font-mono text-neutral-500 dark:text-muted-gray">• PROMOTOR DIRECT</span>
+        </div>
+        <h2 
+          data-animate="reveal" 
+          class="delay-100 font-display text-5xl sm:text-7xl lg:text-8xl text-neutral-950 dark:text-soft-white tracking-wide leading-none"
+        >
+          MORE THAN JUST A TICKET.
+        </h2>
+        <p 
+          data-animate="reveal" 
+          class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-xl mt-4 leading-relaxed"
+        >
+          Standar baru arsitektur konser musik. Dibangun untuk mematikan calo, mengunci kuota 100% tanpa crash, dan memastikan tiket Anda aman sampai depan panggung.
+        </p>
+      </div>
+
+      <!-- Live Guarantee Telemetry Badges -->
+      <div data-animate="reveal" class="delay-300 flex flex-wrap items-center gap-3 shrink-0">
+        <div class="px-4 py-2.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 font-mono text-xs shadow-sm dark:shadow-none">
+          <span class="text-[10px] text-neutral-500 dark:text-muted-gray block uppercase">WAR UPTIME</span>
+          <span class="text-neutral-900 dark:text-soft-white font-bold text-sm">99.98%</span>
+        </div>
+        <div class="px-4 py-2.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 font-mono text-xs shadow-sm dark:shadow-none">
+          <span class="text-[10px] text-neutral-500 dark:text-muted-gray block uppercase">GATE SPEED</span>
+          <span class="text-electric-magenta font-bold text-sm">&lt; 0.3s</span>
+        </div>
+        <div class="px-4 py-2.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 font-mono text-xs shadow-sm dark:shadow-none">
+          <span class="text-[10px] text-neutral-500 dark:text-muted-gray block uppercase">BOT MARKUP</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold text-sm">0% TOLERANCE</span>
+        </div>
+      </div>
     </div>
 
-    <!-- 4 Pillars Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {pillars.map((item, idx) => (
-        <div 
-          data-animate="reveal" 
-          class={`delay-${(idx + 1) * 100} p-8 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/[0.08] hover:border-electric-magenta/40 hover:shadow-magenta-glow shadow-sm dark:shadow-none transition-all duration-300 flex flex-col justify-between group`}
-        >
-          <div>
-            <div class="w-12 h-12 rounded-xl bg-electric-magenta/10 border border-electric-magenta/30 flex items-center justify-center text-electric-magenta mb-6 group-hover:scale-110 group-hover:bg-electric-magenta group-hover:text-soft-white transition-all duration-300">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" set:html={item.icon}></svg>
-            </div>
+    <!-- 12-Column Asymmetric Bento Grid (7+5 / 5+7) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-            <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-3 tracking-wide">
-              {item.title}
-            </h3>
-
-            <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed font-normal">
-              {item.description}
-            </p>
+      <!-- Pillar 1: High Concurrency War Tiket Engine (7 cols) -->
+      <div 
+        data-animate="reveal"
+        class="md:col-span-7 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-500 p-6 sm:p-8 flex flex-col justify-between group shadow-sm dark:shadow-none cursor-pointer"
+      >
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 border border-electric-magenta/30 text-electric-magenta">
+              PILLAR 01 // LATENCY SHIELD
+            </span>
+            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5 font-bold">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+              BUN + REDIS ATOMIC
+            </span>
           </div>
 
-          <div class="mt-8 pt-4 border-t border-neutral-100 dark:border-white/[0.05] flex items-center justify-between text-xs text-neutral-500 dark:text-muted-gray">
-            <span class="tracking-widest uppercase font-semibold text-[10px] text-electric-magenta">0{idx + 1} // VERIFIED</span>
+          <h3 class="font-display text-3xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-3">
+            SEAMLESS WAR TIKET ENGINE.
+          </h3>
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed max-w-lg mb-6">
+            Arsitektur latensi ultra-rendah Bun runtime berpadu dengan atomic distributed locks Redis. Menangani puluhan ribu request war tiket serentak dalam detik pertama tanpa server down atau race condition.
+          </p>
+        </div>
+
+        <!-- Live Concurrency Micro-Visualizer -->
+        <div class="p-4 rounded-2xl bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-electric-magenta/15 border border-electric-magenta/40 flex items-center justify-center text-electric-magenta shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-[10px] text-neutral-500 dark:text-muted-gray block">TRANSACTION LATENCY</span>
+              <span class="text-neutral-950 dark:text-white font-bold">&lt; 12ms EXECUTION</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-[11px] font-bold">
+            <span>0ms DUPLICATE SEATS</span>
           </div>
         </div>
-      ))}
+      </div>
+
+      <!-- Pillar 2: Dynamic Encrypted Gate Pass (5 cols) -->
+      <div 
+        data-animate="reveal"
+        class="delay-100 md:col-span-5 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-500 p-6 sm:p-8 flex flex-col justify-between group shadow-sm dark:shadow-none cursor-pointer"
+      >
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-700 dark:text-soft-white">
+              PILLAR 02 // ACCESS PASS
+            </span>
+            <span class="text-xs font-mono text-electric-magenta font-bold">ANTI-SCREENSHOT</span>
+          </div>
+
+          <h3 class="font-display text-3xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-3">
+            DYNAMIC GATE PASS.
+          </h3>
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-6">
+            Bukan tiket PDF statis yang mudah digandakan calo. QR Code dinamis dengan enkripsi waktu berputar otomatis setiap 15 detik, langsung siap tap di gate turnstile.
+          </p>
+        </div>
+
+        <!-- Dynamic QR Micro-Widget -->
+        <div class="p-4 rounded-2xl bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex items-center justify-between font-mono text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-white p-0.5 rounded-lg flex items-center justify-center shrink-0 border border-neutral-200 dark:border-none">
+              <div class="grid grid-cols-3 gap-0.5 w-full h-full bg-black p-0.5 rounded">
+                <div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div>
+                <div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div>
+                <div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div>
+              </div>
+            </div>
+            <div>
+              <span class="text-[10px] text-neutral-500 dark:text-muted-gray block">TURNSTILE GATE PASS</span>
+              <span class="text-electric-magenta font-bold">ACTIVE SCAN // 15s</span>
+            </div>
+          </div>
+          <span class="text-[10px] px-2 py-1 rounded bg-neutral-200 dark:bg-white/10 text-neutral-800 dark:text-white font-bold">
+            VERIFIED
+          </span>
+        </div>
+      </div>
+
+      <!-- Pillar 3: Bank-Grade Escrow Settlement (5 cols) -->
+      <div 
+        data-animate="reveal"
+        class="delay-200 md:col-span-5 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-500 p-6 sm:p-8 flex flex-col justify-between group shadow-sm dark:shadow-none cursor-pointer"
+      >
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-700 dark:text-soft-white">
+              PILLAR 03 // SETTLEMENT
+            </span>
+            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold">IDEMPOTENT</span>
+          </div>
+
+          <h3 class="font-display text-3xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-3">
+            SECURE SETTLEMENT.
+          </h3>
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-6">
+            Integrasi payment gateway resmi berstandar perbankan. Dilengkapi idempotent webhook untuk memastikan pembayaran tiket tidak pernah terpotong ganda atau hang di tengah jalan.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex items-center justify-between font-mono text-xs">
+          <span class="text-neutral-500 dark:text-muted-gray">CHANNELS:</span>
+          <span class="text-neutral-900 dark:text-white font-bold">QRIS • VIRTUAL ACCOUNT • CC</span>
+        </div>
+      </div>
+
+      <!-- Pillar 4: Promotor-Direct Verified Inventory (7 cols) -->
+      <div 
+        data-animate="reveal"
+        class="delay-300 md:col-span-7 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-500 p-6 sm:p-8 flex flex-col justify-between group shadow-sm dark:shadow-none cursor-pointer"
+      >
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <span class="px-3 py-1 rounded-md text-[10px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 border border-electric-magenta/30 text-electric-magenta">
+              PILLAR 04 // 100% GENUINE
+            </span>
+            <span class="text-xs font-mono text-neutral-900 dark:text-soft-white font-bold">ANTI-CALO GUARANTEE</span>
+          </div>
+
+          <h3 class="font-display text-3xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-3">
+            VERIFIED PROMOTOR INVENTORY.
+          </h3>
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed max-w-lg mb-6">
+            Setiap kuota tiket bersumber langsung dari promotor resmi konser dan venue operator. Nol tiket palsu, nol mark-up calo liar di luar panggung, dan bebas dari iklan spam yang mengganggu.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/40 flex items-center justify-center text-emerald-600 dark:text-emerald-400 shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <span class="text-[10px] text-neutral-500 dark:text-muted-gray block">SOURCE VALIDATION</span>
+              <span class="text-neutral-950 dark:text-white font-bold">100% OFFICIAL PROMOTOR ALLOCATION</span>
+            </div>
+          </div>
+          <span class="text-electric-magenta font-bold">ZERO SECONDARY RESALE</span>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </section>
