@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-void-black: #0B090B;
+  --color-dark-plum: #20151D;
+  --color-deep-magenta: #70264F;
+  --color-electric-magenta: #D14D91;
+  --color-soft-white: #F8F0F5;
+  --color-muted-gray: #A58D9C;
+  --color-light-bg: #FAF7F9;
+  --color-light-card: #FFFFFF;
+  --color-light-text: #120C11;
+  --color-light-muted: #6B5B67;
+  --ease-cinematic: cubic-bezier(0.86, 0, 0.07, 1);
+}
+
+html {
+  font-family: 'Inter', system-ui, sans-serif;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+html.dark {
+  background-color: var(--color-void-black);
+  color: var(--color-soft-white);
+  color-scheme: dark;
+}
+
+html:not(.dark) {
+  background-color: var(--color-light-bg);
+  color: var(--color-light-text);
+  color-scheme: light;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color 0.35s var(--ease-cinematic), color 0.35s var(--ease-cinematic);
+}
+
+html.dark body {
+  background-color: var(--color-void-black);
+  color: var(--color-soft-white);
+}
+
+html:not(.dark) body {
+  background-color: var(--color-light-bg);
+  color: var(--color-light-text);
+}
+
+::selection {
+  background-color: #D14D91;
+  color: #ffffff;
+}
+
+/* Custom Headline Typography */
+.font-display {
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+/* Background Ghost Typography */
+html.dark .ghost-text {
+  -webkit-text-stroke: 1.5px rgba(248, 240, 245, 0.08);
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  text-transform: uppercase;
+  line-height: 0.85;
+}
+
+html:not(.dark) .ghost-text {
+  -webkit-text-stroke: 1.5px rgba(20, 14, 19, 0.08);
+  color: transparent;
+  user-select: none;
+  pointer-events: none;
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  text-transform: uppercase;
+  line-height: 0.85;
+}
+
+/* Ultra-lightweight Scroll Reveal Animation */
+[data-animate="reveal"] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.8s var(--ease-cinematic), transform 0.8s var(--ease-cinematic);
+  will-change: opacity, transform;
+}
+
+[data-animate="reveal"].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delay utility */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+.delay-400 { transition-delay: 400ms; }
+
+/* Custom Horizontal Scroll Bar hiding */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Custom Stage Vignette / Glow */
+.magenta-vignette {
+  background: radial-gradient(circle at 50% 50%, rgba(112, 38, 79, 0.22) 0%, rgba(11, 9, 11, 0.95) 75%);
+}
+
+.stage-light-beam {
+  background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(209, 77, 145, 0.18) 0%, transparent 80%);
+}
+
+/* Astro View Transition Custom Animations */
+::view-transition-old(root) {
+  animation: 300ms var(--ease-cinematic) both fade-out;
+}
+::view-transition-new(root) {
+  animation: 400ms var(--ease-cinematic) both fade-in;
+}
+
+@keyframes fade-out {
+  from { opacity: 1; transform: scale(1); }
+  to { opacity: 0; transform: scale(0.98); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: scale(1.02); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-animate="reveal"] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

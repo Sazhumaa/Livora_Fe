@@ -1,0 +1,98 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Navbar from '../components/common/Navbar.astro';
+import FloatingHud from '../components/common/FloatingHud.astro';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { 
+  title = "AFTERGLOW — Cinematic Live Concert Ticketing Platform",
+  description = "MUSIC FADES. MEMORIES DON'T. Discover headliners, secure authentic digital concert passes, and experience unforgettable live moments with zero latency."
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#0B090B" />
+
+    <!-- Google Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Speculation Rules for Instant Client-Side Navigation -->
+    <script type="speculationrules">
+      {
+        "prefetch": [
+          {
+            "source": "document",
+            "where": {
+              "and": [
+                { "href_matches": "/*" }
+              ]
+            },
+            "eagerness": "moderate"
+          }
+        ]
+      }
+    </script>
+
+    <!-- Theme Flash Prevention -->
+    <script is:inline>
+      (function() {
+        try {
+          const stored = localStorage.getItem('theme');
+          const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+          } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {}
+      })();
+    </script>
+
+    <!-- Astro View Transitions Engine -->
+    <ClientRouter />
+  </head>
+  <body class="bg-[#FAF7F9] dark:bg-void-black text-neutral-900 dark:text-soft-white antialiased selection:bg-electric-magenta selection:text-white transition-colors duration-300">
+    <!-- Ambient Concert Embers Canvas (Background) -->
+    <canvas 
+      id="stage-embers-canvas" 
+      class="fixed inset-0 pointer-events-none z-0 opacity-20 dark:opacity-60 w-full h-full transition-opacity duration-500"
+    ></canvas>
+
+    <!-- Global Persistent Navigation -->
+    <Navbar />
+
+    <!-- Main Content Area -->
+    <main class="relative z-10 flex flex-col min-h-screen">
+      <slot />
+    </main>
+
+    <!-- Floating HUD Elements -->
+    <FloatingHud />
+
+    <!-- Client-side Motion and Intersection Scripts -->
+    <script>
+      import '../scripts/scrollObserver';
+      import '../scripts/stageEmbers';
+      import '../scripts/hudObserver';
+      import '../scripts/lenisInit';
+      import '../scripts/theme';
+    </script>
+  </body>
+</html>

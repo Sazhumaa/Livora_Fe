@@ -1,0 +1,184 @@
+---
+// AFTERGLOW Minimalist Cinematic Navbar
+const pathname = Astro.url.pathname;
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-void-black/85 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.06] transition-colors duration-300">
+  <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
+    <!-- Brand Logo -->
+    <a href="/" class="flex items-center gap-2 group tracking-wider">
+      <span class="font-display text-3xl md:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors duration-200">
+        AFTERGLOW
+      </span>
+      <span class="w-2 h-2 rounded-full bg-electric-magenta shadow-magenta-glow animate-pulse"></span>
+    </a>
+
+    <!-- Desktop Nav Links -->
+    <nav class="hidden md:flex items-center gap-8">
+      <a 
+        href="/events" 
+        class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/events') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
+      >
+        Discover Events
+      </a>
+      <a 
+        href="/#about" 
+        class="text-sm tracking-wide text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors duration-200"
+      >
+        About
+      </a>
+      <a 
+        href="/tickets" 
+        class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/tickets') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
+      >
+        My Tickets
+      </a>
+      <a 
+        href="/organizer" 
+        class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/organizer') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
+      >
+        Create Event
+      </a>
+    </nav>
+
+    <!-- Right Action CTA & Theme Switcher -->
+    <div class="hidden md:flex items-center gap-3">
+      <!-- Dark / Light Theme Toggle Button -->
+      <button 
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle Dark / Light Mode"
+        title="Toggle Dark / Light Mode"
+        class="w-10 h-10 rounded-full flex items-center justify-center border border-neutral-200 dark:border-white/10 bg-neutral-100/90 dark:bg-white/5 text-neutral-700 dark:text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta transition-all duration-300 hover:scale-105 active:scale-95"
+      >
+        <!-- Sun Icon (Active in Dark Mode to switch to Light) -->
+        <svg data-icon="sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" />
+        </svg>
+        <!-- Moon Icon (Active in Light Mode to switch to Dark) -->
+        <svg data-icon="moon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
+      <a 
+        href="/#signin" 
+        class="text-sm font-medium text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors duration-200 px-3 py-2"
+      >
+        Sign In
+      </a>
+      <a 
+        href="/events" 
+        class="px-5 py-2.5 rounded-full bg-electric-magenta text-soft-white font-medium text-sm tracking-wide hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+      >
+        Get Tickets
+      </a>
+    </div>
+
+    <!-- Mobile Action Row: Theme toggle + Hamburger -->
+    <div class="md:hidden flex items-center gap-2">
+      <button 
+        type="button"
+        data-theme-toggle
+        aria-label="Toggle Dark / Light Mode"
+        class="w-9 h-9 rounded-full flex items-center justify-center border border-neutral-200 dark:border-white/10 bg-neutral-100 dark:bg-white/5 text-neutral-700 dark:text-soft-white"
+      >
+        <svg data-icon="sun" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41m14.14-14.14l-1.41 1.41" />
+        </svg>
+        <svg data-icon="moon" class="w-4 h-4 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+        </svg>
+      </button>
+
+      <button 
+        id="mobile-menu-btn" 
+        aria-label="Toggle Navigation Menu" 
+        class="flex flex-col justify-center items-center w-10 h-10 gap-1.5 focus:outline-none"
+      >
+        <span class="w-6 h-0.5 bg-neutral-800 dark:bg-soft-white transition-transform duration-300 line-top"></span>
+        <span class="w-4 h-0.5 bg-electric-magenta transition-opacity duration-300 line-mid"></span>
+        <span class="w-6 h-0.5 bg-neutral-800 dark:bg-soft-white transition-transform duration-300 line-bot"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer Menu Overlay -->
+  <div 
+    id="mobile-menu-drawer" 
+    class="md:hidden hidden fixed inset-0 top-20 bg-white/95 dark:bg-void-black/95 backdrop-blur-xl border-t border-black/[0.08] dark:border-white/[0.08] flex-col p-8 gap-6 z-40 transition-all duration-300"
+  >
+    <a href="/events" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Discover Events
+    </a>
+    <a href="/#about" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      About
+    </a>
+    <a href="/tickets" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      My Tickets
+    </a>
+    <a href="/organizer" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Create Event (Organizer)
+    </a>
+
+    <div class="h-px bg-black/10 dark:bg-white/10 my-2"></div>
+
+    <div class="flex flex-col gap-4">
+      <button 
+        type="button" 
+        data-theme-toggle 
+        class="w-full flex items-center justify-between px-5 py-3.5 rounded-xl border border-neutral-300 dark:border-white/15 text-neutral-800 dark:text-soft-white font-medium text-sm"
+      >
+        <span>Toggle Theme</span>
+        <span data-theme-label class="text-xs uppercase font-mono text-electric-magenta">LIGHT MODE</span>
+      </button>
+
+      <a 
+        href="/events" 
+        class="w-full text-center py-4 rounded-xl bg-electric-magenta text-soft-white font-semibold text-lg shadow-magenta-glow"
+      >
+        Explore Events
+      </a>
+      <a 
+        href="/#signin" 
+        class="w-full text-center py-3.5 rounded-xl border border-neutral-300 dark:border-white/20 text-neutral-800 dark:text-soft-white font-medium text-base hover:bg-neutral-100 dark:hover:bg-white/5"
+      >
+        Sign In / Register
+      </a>
+    </div>
+  </div>
+</header>
+
+<script>
+  function setupMobileMenu() {
+    const btn = document.getElementById('mobile-menu-btn');
+    const drawer = document.getElementById('mobile-menu-drawer');
+    if (!btn || !drawer) return;
+
+    btn.addEventListener('click', () => {
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        drawer.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      } else {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        document.body.style.overflow = '';
+      }
+    });
+
+    // Close when clicking nav links
+    drawer.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        drawer.classList.add('hidden');
+        drawer.classList.remove('flex');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', setupMobileMenu);
+</script>
