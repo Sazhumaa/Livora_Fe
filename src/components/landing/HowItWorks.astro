@@ -1,87 +1,246 @@
 ---
-// Section 06: How It Works
+// Section 06: How It Works (Open Editorial Pipeline — Zero Bulky Boxes)
 const steps = [
   {
     num: '01',
-    title: 'DISCOVER',
-    subtitle: 'Temukan Panggung & Artis',
-    desc: 'Cari event favorit berdasarkan kota, tanggal, atau artis. Pilih kategori tiket idaman lengkap dengan visualisasi tata panggung yang jelas.'
+    phase: 'PHASE 01 // 3D STAGE RADAR',
+    title: 'DISCOVER & MAP.',
+    desc: 'Jelajahi konser idaman berdasarkan kota, tanggal, atau lineup artis. Dapatkan visualisasi tata panggung 3D presisi untuk memilih titik pandang terbaik — dari VIP front-row pit hingga tribun akustik.',
+    protocolTag: 'STAGE PROTOCOL',
+    statusTag: 'VERIFIED SEATING',
+    microType: 'seatmap',
   },
   {
     num: '02',
-    title: 'SECURE & BOOK',
-    subtitle: 'Kunci Tiket Tanpa Crash',
-    desc: 'Sistem Redis atomik mengunci tiket Anda secara eksklusif selama 10 menit saat proses checkout. Bayar dengan aman melalui QRIS, Virtual Account, atau Kartu Kredit.'
+    phase: 'PHASE 02 // ATOMIC REDIS ENGINE',
+    title: 'SECURE & LOCK.',
+    desc: 'War tiket tanpa server crash. Engine Redis atomik mengunci kuota tiket Anda secara eksklusif selama 10 menit checkout penuh. Selesaikan pembayaran dengan garansi 0ms race condition.',
+    protocolTag: 'CONCURRENCY',
+    statusTag: '100% ATOMIC',
+    microType: 'timer',
   },
   {
     num: '03',
-    title: 'EXPERIENCE',
-    subtitle: 'Nikmati Momen Tak Terlupakan',
-    desc: 'QR Pass resmi langsung aktif di akun AFTERGLOW Anda. Scan di pintu gate konser dan bersiaplah merasakan panggung musik terbaik dalam hidup Anda.'
-  }
+    phase: 'PHASE 03 // DYNAMIC TURNSTILE GATE',
+    title: 'EXPERIENCE.',
+    desc: 'Pass digital aktif seketika di akun Anda dengan dynamic rotating QR code anti-screenshot dan anti-calo. Dekatkan ponsel di turnstile gate venue, dan nikmati dentuman panggung terbaik.',
+    protocolTag: 'CHECK-IN SPEED',
+    statusTag: '0.3 SECONDS',
+    microType: 'gate',
+  },
 ];
 ---
 
 <section id="how-it-works" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] overflow-hidden transition-colors duration-300">
   <div class="max-w-7xl mx-auto">
-    <!-- Section Header -->
-    <div class="flex flex-col items-center text-center mb-20">
-      <span 
-        data-animate="reveal" 
-        class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-3"
-      >
-        FRICTIONLESS JOURNEY
-      </span>
+    
+    <!-- Section Header (Open Editorial) -->
+    <div class="mb-14 sm:mb-20">
+      <div data-animate="reveal" class="flex items-center gap-2 mb-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30">
+          <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
+          ADMISSION PIPELINE
+        </span>
+        <span class="text-xs font-mono text-neutral-500 dark:text-muted-gray">• 0 TO FRONT ROW IN THREE BEATS</span>
+      </div>
       <h2 
         data-animate="reveal" 
-        class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
+        class="delay-100 font-display text-5xl sm:text-7xl lg:text-8xl text-neutral-950 dark:text-soft-white tracking-wide leading-none"
       >
         THREE STEPS TO THE MOMENT.
       </h2>
       <p 
         data-animate="reveal" 
-        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-lg mt-3"
+        class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-2xl mt-4 leading-relaxed"
       >
-        Dari pencarian awal hingga berada di depan panggung hanya butuh tiga langkah ringkas.
+        Bukan sekadar transaksi tiket. Sebuah alur presisi tanpa calo, tanpa bot, dan nol antrean fiktif menuju barisan terdepan panggung konser Anda.
       </p>
     </div>
 
-    <!-- 3 Steps Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-      {steps.map((step, idx) => (
-        <div 
-          data-animate="reveal" 
-          class={`delay-${(idx + 1) * 150} relative p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/[0.08] hover:border-electric-magenta/50 shadow-sm dark:shadow-none transition-all duration-300 flex flex-col justify-between overflow-hidden group`}
-        >
-          <!-- Background Ghost Step Number -->
-          <span class="ghost-text absolute -top-8 -right-4 text-9xl font-display opacity-30 group-hover:opacity-60 transition-opacity">
-            {step.num}
+    <!-- Continuous Pipeline Line on Top of Steps (Desktop) -->
+    <div data-animate="reveal" class="hidden lg:grid grid-cols-3 gap-12 mb-8 relative">
+      <div class="h-[2px] bg-gradient-to-r from-electric-magenta to-neutral-300 dark:to-white/20 relative">
+        <div class="absolute -top-1.5 left-0 w-3.5 h-3.5 rounded-full bg-electric-magenta shadow-magenta-glow"></div>
+      </div>
+      <div class="h-[2px] bg-gradient-to-r from-neutral-300 dark:from-white/20 via-electric-magenta to-neutral-300 dark:to-white/20 relative">
+        <div class="absolute -top-1.5 left-0 w-3.5 h-3.5 rounded-full bg-[#FAF7F9] dark:bg-void-black border-2 border-electric-magenta"></div>
+      </div>
+      <div class="h-[2px] bg-gradient-to-r from-neutral-300 dark:from-white/20 to-electric-magenta relative">
+        <div class="absolute -top-1.5 left-0 w-3.5 h-3.5 rounded-full bg-[#FAF7F9] dark:bg-void-black border-2 border-electric-magenta"></div>
+        <div class="absolute -top-1.5 right-0 w-3.5 h-3.5 rounded-full bg-electric-magenta shadow-magenta-glow"></div>
+      </div>
+    </div>
+
+    <!-- 3 Open Editorial Columns (Divided by razor lines, ZERO bulky boxes) -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-14 divide-y lg:divide-y-0 lg:divide-x divide-neutral-200 dark:divide-white/10 pt-4">
+
+      <!-- Column 1: DISCOVER -->
+      <div data-animate="reveal" class="pt-8 lg:pt-0 lg:pr-10 relative group flex flex-col justify-between">
+        <div>
+          <!-- Giant Ghost Number -->
+          <span class="ghost-number text-8xl sm:text-9xl font-display select-none pointer-events-none block mb-2 transition-all duration-500">
+            01
           </span>
 
-          <div class="relative z-10">
-            <span class="inline-block px-3 py-1 rounded-full text-xs font-bold text-electric-magenta bg-electric-magenta/10 border border-electric-magenta/20 mb-6">
-              STEP {step.num}
-            </span>
+          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            PHASE 01 // 3D STAGE RADAR
+          </span>
 
-            <h3 class="font-display text-3xl text-neutral-950 dark:text-soft-white tracking-wide mb-1">
-              {step.title}
-            </h3>
+          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            DISCOVER & MAP.
+          </h3>
 
-            <h4 class="text-xs font-semibold text-electric-magenta uppercase tracking-wider mb-4">
-              {step.subtitle}
-            </h4>
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            Jelajahi konser idaman berdasarkan kota, tanggal, atau lineup artis. Dapatkan visualisasi tata panggung 3D presisi untuk memilih titik pandang terbaik — dari VIP front-row pit hingga tribun akustik.
+          </p>
 
-            <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed font-normal">
-              {step.desc}
-            </p>
-          </div>
-
-          <div class="relative z-10 mt-8 pt-4 border-t border-neutral-100 dark:border-white/[0.05] flex items-center justify-between text-xs text-neutral-500 dark:text-muted-gray">
-            <span class="text-[11px] tracking-wider uppercase text-neutral-400 dark:text-muted-gray/70">AFTERGLOW PROTOCOL</span>
-            <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta"></span>
+          <!-- Minimalist Visual Blueprint (Frameless) -->
+          <div class="p-4 rounded-2xl bg-white/80 dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 space-y-2.5 shadow-sm dark:shadow-none group-hover:border-electric-magenta/50 transition-colors">
+            <div class="flex items-center justify-between text-[10px] font-mono text-neutral-500 dark:text-muted-gray">
+              <span class="text-electric-magenta font-bold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
+                STAGE // CENTER
+              </span>
+              <span>100% ACOUSTIC</span>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5 text-center font-mono text-[10px]">
+              <div class="py-2 rounded-lg bg-electric-magenta/15 border border-electric-magenta/40 text-neutral-900 dark:text-white font-bold">
+                VIP PIT
+              </div>
+              <div class="py-2 rounded-lg bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray">
+                CAT 1
+              </div>
+              <div class="py-2 rounded-lg bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray">
+                CAT 2
+              </div>
+            </div>
           </div>
         </div>
-      ))}
+
+        <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
+          <span>STAGE PROTOCOL</span>
+          <span class="text-electric-magenta font-bold">VERIFIED SEATING</span>
+        </div>
+      </div>
+
+      <!-- Column 2: SECURE & BOOK -->
+      <div data-animate="reveal" class="delay-150 pt-8 lg:pt-0 lg:px-10 relative group flex flex-col justify-between">
+        <div>
+          <!-- Giant Ghost Number -->
+          <span class="ghost-number text-8xl sm:text-9xl font-display select-none pointer-events-none block mb-2 transition-all duration-500">
+            02
+          </span>
+
+          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            PHASE 02 // ATOMIC REDIS ENGINE
+          </span>
+
+          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            SECURE & LOCK.
+          </h3>
+
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            War tiket tanpa server crash. Engine Redis atomik mengunci kuota tiket Anda secara eksklusif selama 10 menit checkout penuh. Selesaikan pembayaran dengan garansi 0ms race condition.
+          </p>
+
+          <!-- Minimalist Hold Timer (Frameless) -->
+          <div class="p-4 rounded-2xl bg-white/80 dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 space-y-2 shadow-sm dark:shadow-none group-hover:border-electric-magenta/50 transition-colors">
+            <div class="flex items-center justify-between text-[10px] font-mono text-neutral-500 dark:text-muted-gray">
+              <span>HOLD TIMER</span>
+              <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                LOCKED
+              </span>
+            </div>
+            <div class="flex items-center justify-center py-1">
+              <span class="font-mono text-3xl font-bold text-neutral-950 dark:text-soft-white tracking-widest">
+                09:59<span class="text-electric-magenta text-lg animate-pulse">.42</span>
+              </span>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-neutral-500 dark:text-muted-gray pt-1 border-t border-neutral-200 dark:border-white/10">
+              <span>ANTI-BOT SHIELD</span>
+              <span class="text-neutral-900 dark:text-white font-semibold">QRIS • VA • CARDS</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
+          <span>CONCURRENCY</span>
+          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% ATOMIC</span>
+        </div>
+      </div>
+
+      <!-- Column 3: EXPERIENCE -->
+      <div data-animate="reveal" class="delay-300 pt-8 lg:pt-0 lg:pl-10 relative group flex flex-col justify-between">
+        <div>
+          <!-- Giant Ghost Number -->
+          <span class="ghost-number text-8xl sm:text-9xl font-display select-none pointer-events-none block mb-2 transition-all duration-500">
+            03
+          </span>
+
+          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            PHASE 03 // DYNAMIC TURNSTILE GATE
+          </span>
+
+          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            EXPERIENCE.
+          </h3>
+
+          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            Pass digital aktif seketika di akun Anda dengan dynamic rotating QR code anti-screenshot dan anti-calo. Dekatkan ponsel di turnstile gate venue, dan nikmati dentuman panggung terbaik.
+          </p>
+
+          <!-- Minimalist Gate Scan (Frameless) -->
+          <div class="p-4 rounded-2xl bg-white/80 dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 space-y-2 shadow-sm dark:shadow-none group-hover:border-electric-magenta/50 transition-colors">
+            <div class="flex items-center justify-between text-[10px] font-mono text-neutral-500 dark:text-muted-gray">
+              <span>GATE PASS</span>
+              <span class="text-electric-magenta font-bold">ACCESS GRANTED</span>
+            </div>
+            <div class="flex items-center gap-3 py-1">
+              <div class="w-10 h-10 bg-white p-0.5 rounded-lg shrink-0 flex items-center justify-center border border-neutral-200 dark:border-none">
+                <div class="grid grid-cols-3 gap-0.5 w-full h-full bg-black p-0.5 rounded">
+                  <div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div>
+                  <div class="bg-white"></div><div class="bg-black"></div><div class="bg-white"></div>
+                  <div class="bg-white"></div><div class="bg-white"></div><div class="bg-white"></div>
+                </div>
+              </div>
+              <div class="font-mono text-[10px]">
+                <span class="text-neutral-900 dark:text-white font-bold block">GATE 04 • VIP PIT</span>
+                <span class="text-electric-magenta block">TURNSTILE SCAN READY</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between text-[9px] font-mono text-neutral-500 dark:text-muted-gray pt-1 border-t border-neutral-200 dark:border-white/10">
+              <span>ROTATING QR</span>
+              <span class="text-neutral-900 dark:text-white font-semibold">AUTO-REFRESH: 15s</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
+          <span>CHECK-IN SPEED</span>
+          <span class="text-electric-magenta font-bold">0.3 SECONDS</span>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </section>
+
+<style>
+  html.dark .ghost-number {
+    -webkit-text-stroke: 1.5px rgba(248, 240, 245, 0.15);
+    color: transparent;
+  }
+  html.dark .group:hover .ghost-number {
+    -webkit-text-stroke: 1.5px rgba(209, 77, 145, 0.45);
+  }
+
+  html:not(.dark) .ghost-number {
+    -webkit-text-stroke: 1.5px rgba(20, 14, 19, 0.15);
+    color: transparent;
+  }
+  html:not(.dark) .group:hover .ghost-number {
+    -webkit-text-stroke: 1.5px rgba(209, 77, 145, 0.55);
+  }
+</style>
