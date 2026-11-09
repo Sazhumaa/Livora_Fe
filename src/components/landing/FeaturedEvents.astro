@@ -1,5 +1,5 @@
 ---
-// Section 03: Featured Events (DICE-style compact continuous marquee & horizontal slider)
+// Section 03: Featured Events (DICE-style continuous infinite scroll & interactive slider)
 import { MOCK_EVENTS } from '../../data/mockEvents';
 
 function formatRupiah(amount: number) {
@@ -33,67 +33,265 @@ function formatRupiah(amount: number) {
       </a>
     </div>
 
-    <!-- DICE Style Compact Horizontal Cards Track / Marquee -->
-    <div class="flex gap-5 overflow-x-auto pb-6 pt-2 snap-x snap-mandatory no-scrollbar scroll-smooth">
-      {MOCK_EVENTS.map((event, idx) => (
-        <a 
-          href={`/events`}
-          class="group shrink-0 w-[200px] sm:w-[230px] md:w-[250px] snap-start flex flex-col cursor-pointer"
-        >
-          <!-- 1:1 Square Artwork Container -->
-          <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 group-hover:border-electric-magenta/60 group-hover:shadow-magenta-glow transition-all duration-300">
-            <img 
-              src={event.posterUrl} 
-              alt={event.title} 
-              class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95 contrast-110"
-              loading="lazy"
-            />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+    <!-- DICE Style Infinite Continuous Marquee & Draggable Slider Track -->
+    <div 
+      id="events-marquee-viewport"
+      class="relative w-full overflow-hidden select-none cursor-grab active:cursor-grabbing group/track py-2 -mx-2 px-2"
+      style="touch-action: pan-y;"
+    >
+      <!-- Vignette Gradient Edge Fades (left & right) -->
+      <div class="pointer-events-none absolute left-0 top-0 bottom-0 w-8 sm:w-16 z-10 bg-gradient-to-r from-[#FAF7F9] dark:from-void-black to-transparent"></div>
+      <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-8 sm:w-16 z-10 bg-gradient-to-l from-[#FAF7F9] dark:from-void-black to-transparent"></div>
 
-            <!-- Status Tag (Top Left) -->
-            {event.status === 'ALMOST_SOLD_OUT' && (
-              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-electric-magenta text-soft-white font-mono text-[9px] font-bold tracking-tight uppercase shadow-sm">
-                ALMOST SOLD OUT
-              </span>
-            )}
-            {event.status === 'SOLD_OUT' && (
-              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/80 text-muted-gray border border-white/10 font-mono text-[9px] font-bold tracking-tight uppercase">
-                SOLD OUT
-              </span>
-            )}
+      <!-- Moving Track Container -->
+      <div 
+        id="events-track"
+        class="flex gap-5 w-max select-none"
+        style="will-change: transform; transform: translate3d(0, 0, 0);"
+      >
+        <!-- 4 sets of MOCK_EVENTS ensure 100% infinite loop on any resolution up to 4K/UW -->
+        {[0, 1, 2, 3].map((setIndex) => (
+          <div 
+            class="flex gap-5 shrink-0 events-group" 
+            data-group-index={setIndex}
+            aria-hidden={setIndex > 0 ? "true" : undefined}
+          >
+            {MOCK_EVENTS.map((event, idx) => (
+              <a 
+                href="/events"
+                tabindex={setIndex > 0 ? -1 : 0}
+                class="event-card-link group shrink-0 w-[200px] sm:w-[230px] md:w-[250px] flex flex-col cursor-pointer"
+                draggable="false"
+              >
+                <!-- 1:1 Square Artwork Container -->
+                <div class="relative aspect-square w-full rounded-2xl overflow-hidden bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 group-hover:border-electric-magenta/60 group-hover:shadow-magenta-glow transition-all duration-300">
+                  <img 
+                    src={event.posterUrl} 
+                    alt={event.title} 
+                    class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-95 contrast-110 pointer-events-none"
+                    loading="lazy"
+                    draggable="false"
+                  />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
 
-            <!-- Heart Icon (Bottom Right, DICE Style) -->
-            <button 
-              type="button" 
-              aria-label="Save Event"
-              class="absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-void-black/75 backdrop-blur-md border border-white/10 flex items-center justify-center text-soft-white hover:text-electric-magenta hover:scale-110 transition-all"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-              </svg>
-            </button>
+                  <!-- Status Tag (Top Left) -->
+                  {event.status === 'ALMOST_SOLD_OUT' && (
+                    <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-electric-magenta text-soft-white font-mono text-[9px] font-bold tracking-tight uppercase shadow-sm">
+                      ALMOST SOLD OUT
+                    </span>
+                  )}
+                  {event.status === 'SOLD_OUT' && (
+                    <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/80 text-muted-gray border border-white/10 font-mono text-[9px] font-bold tracking-tight uppercase">
+                      SOLD OUT
+                    </span>
+                  )}
+
+                  <!-- Heart Icon (Bottom Right, DICE Style) -->
+                  <button 
+                    type="button" 
+                    aria-label="Save Event"
+                    class="save-btn absolute bottom-2.5 right-2.5 w-8 h-8 rounded-full bg-void-black/75 backdrop-blur-md border border-white/10 flex items-center justify-center text-soft-white hover:text-electric-magenta hover:scale-110 transition-all z-10"
+                  >
+                    <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </button>
+                </div>
+
+                <!-- Metadata Underneath (Clean DICE Typography) -->
+                <div class="mt-3 flex flex-col gap-0.5">
+                  <h3 class="text-sm font-bold text-neutral-900 dark:text-soft-white leading-tight group-hover:text-electric-magenta transition-colors line-clamp-1">
+                    {event.artist} - {event.title}
+                  </h3>
+
+                  <p class="text-xs text-neutral-500 dark:text-muted-gray font-medium">
+                    {event.date}
+                  </p>
+
+                  <p class="text-xs text-neutral-500/80 dark:text-muted-gray/70 line-clamp-1">
+                    {event.venue}, {event.city}
+                  </p>
+
+                  <p class="text-xs font-semibold text-neutral-900 dark:text-soft-white mt-1">
+                    From {formatRupiah(event.startingPrice)}
+                  </p>
+                </div>
+              </a>
+            ))}
           </div>
-
-          <!-- Metadata Underneath (Clean DICE Typography) -->
-          <div class="mt-3 flex flex-col gap-0.5">
-            <h3 class="text-sm font-bold text-neutral-900 dark:text-soft-white leading-tight group-hover:text-electric-magenta transition-colors line-clamp-1">
-              {event.artist} - {event.title}
-            </h3>
-
-            <p class="text-xs text-neutral-500 dark:text-muted-gray font-medium">
-              {event.date}
-            </p>
-
-            <p class="text-xs text-neutral-500/80 dark:text-muted-gray/70 line-clamp-1">
-              {event.venue}, {event.city}
-            </p>
-
-            <p class="text-xs font-semibold text-neutral-900 dark:text-soft-white mt-1">
-              From {formatRupiah(event.startingPrice)}
-            </p>
-          </div>
-        </a>
-      ))}
+        ))}
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+  function setupInfiniteScroll() {
+    const viewport = document.getElementById('events-marquee-viewport');
+    const track = document.getElementById('events-track');
+
+    if (!viewport || !track) return () => {};
+
+    const group0 = track.querySelector('[data-group-index="0"]') as HTMLElement | null;
+    const group1 = track.querySelector('[data-group-index="1"]') as HTMLElement | null;
+    if (!group0) return () => {};
+
+    // Calculate exact repetition distance between groups
+    let singleGroupWidth = group1 ? (group1.offsetLeft - group0.offsetLeft) : (group0.offsetWidth + 20);
+    
+    let currentX = 0;
+    const speed = 0.75; // Pixels per frame (smooth cinematic pace)
+    let isHovered = false;
+    let isDragging = false;
+    let startX = 0;
+    let startCurrentX = 0;
+    let dragDistance = 0;
+    let animId: number | null = null;
+
+    // Check user's prefers-reduced-motion preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let isReducedMotion = mediaQuery.matches;
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      isReducedMotion = e.matches;
+    };
+    mediaQuery.addEventListener('change', handleMotionChange);
+
+    function updateMetrics() {
+      if (group0) {
+        singleGroupWidth = group1 ? (group1.offsetLeft - group0.offsetLeft) : (group0.offsetWidth + 20);
+      }
+    }
+
+    window.addEventListener('resize', updateMetrics);
+
+    function normalizeX(val: number): number {
+      if (singleGroupWidth <= 0) return val;
+      while (val <= -singleGroupWidth) {
+        val += singleGroupWidth;
+      }
+      while (val > 0) {
+        val -= singleGroupWidth;
+      }
+      return val;
+    }
+
+    // Main 60fps / 120fps animation loop
+    function loop() {
+      if (!isDragging) {
+        if (!isHovered && !isReducedMotion) {
+          currentX -= speed;
+          currentX = normalizeX(currentX);
+          track!.style.transform = `translate3d(${currentX}px, 0, 0)`;
+        }
+      }
+      animId = requestAnimationFrame(loop);
+    }
+
+    animId = requestAnimationFrame(loop);
+
+    // Hover events (pauses auto-scroll on desktop hover)
+    const onMouseEnter = () => { isHovered = true; };
+    const onMouseLeave = () => { 
+      isHovered = false; 
+      isDragging = false; 
+    };
+
+    viewport.addEventListener('mouseenter', onMouseEnter);
+    viewport.addEventListener('mouseleave', onMouseLeave);
+
+    // Pointer Dragging (mouse + touch)
+    const onPointerDown = (e: PointerEvent) => {
+      if ((e.target as HTMLElement).closest('.save-btn')) return;
+      isDragging = true;
+      startX = e.clientX;
+      startCurrentX = currentX;
+      dragDistance = 0;
+      viewport.setPointerCapture(e.pointerId);
+    };
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (!isDragging) return;
+      const deltaX = e.clientX - startX;
+      dragDistance = Math.abs(deltaX);
+      currentX = normalizeX(startCurrentX + deltaX);
+      track.style.transform = `translate3d(${currentX}px, 0, 0)`;
+    };
+
+    const onPointerUp = (e: PointerEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      try {
+        if (viewport.hasPointerCapture(e.pointerId)) {
+          viewport.releasePointerCapture(e.pointerId);
+        }
+      } catch (_) {}
+    };
+
+    viewport.addEventListener('pointerdown', onPointerDown);
+    viewport.addEventListener('pointermove', onPointerMove);
+    viewport.addEventListener('pointerup', onPointerUp);
+    viewport.addEventListener('pointercancel', onPointerUp);
+
+    // Prevent link click when user was dragging
+    const onClick = (e: MouseEvent) => {
+      if (dragDistance > 6) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+    viewport.addEventListener('click', onClick, true);
+
+    // Wheel scrub (horizontal wheel / touchpad swipe)
+    const onWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        currentX = normalizeX(currentX - e.deltaX * 0.8);
+        track.style.transform = `translate3d(${currentX}px, 0, 0)`;
+      }
+    };
+    viewport.addEventListener('wheel', onWheel, { passive: false });
+
+    // Heart / Save button toggle
+    const saveBtns = viewport.querySelectorAll('.save-btn');
+    saveBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const svg = btn.querySelector('svg');
+        const isSaved = btn.getAttribute('data-saved') === 'true';
+        if (isSaved) {
+          btn.setAttribute('data-saved', 'false');
+          btn.classList.remove('text-electric-magenta');
+          svg?.setAttribute('fill', 'none');
+        } else {
+          btn.setAttribute('data-saved', 'true');
+          btn.classList.add('text-electric-magenta');
+          svg?.setAttribute('fill', 'currentColor');
+        }
+      });
+    });
+
+    return () => {
+      if (animId) cancelAnimationFrame(animId);
+      window.removeEventListener('resize', updateMetrics);
+      mediaQuery.removeEventListener('change', handleMotionChange);
+      viewport.removeEventListener('mouseenter', onMouseEnter);
+      viewport.removeEventListener('mouseleave', onMouseLeave);
+      viewport.removeEventListener('pointerdown', onPointerDown);
+      viewport.removeEventListener('pointermove', onPointerMove);
+      viewport.removeEventListener('pointerup', onPointerUp);
+      viewport.removeEventListener('pointercancel', onPointerUp);
+      viewport.removeEventListener('click', onClick, true);
+      viewport.removeEventListener('wheel', onWheel);
+    };
+  }
+
+  let cleanup: (() => void) | undefined;
+  document.addEventListener('DOMContentLoaded', () => {
+    cleanup = setupInfiniteScroll();
+  });
+  document.addEventListener('astro:page-load', () => {
+    if (cleanup) cleanup();
+    cleanup = setupInfiniteScroll();
+  });
+</script>
