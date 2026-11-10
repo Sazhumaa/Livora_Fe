@@ -1,61 +1,273 @@
 ---
-// Section 07: Final CTA
+// Section 07: Final CTA — The Climax Soundstage & Interactive Spotlight Arena
+// Features: Interactive stage laser spotlight tracking cursor, animated sub-bass equalizer telemetry,
+// giant ghost typography, authentic concert copywriting, and magnetic stage pass actions.
 ---
 
-<section class="relative w-full py-32 px-6 lg:px-12 overflow-hidden border-t border-white/[0.04]">
-  <!-- Background Stadium Atmosphere Image -->
-  <div class="absolute inset-0 z-0">
+<section 
+  id="final-cta-section"
+  class="relative w-full py-28 sm:py-36 px-6 lg:px-16 overflow-hidden border-t border-neutral-200/80 dark:border-white/[0.08] bg-[#FAF7F9] dark:bg-void-black transition-colors duration-300"
+>
+  
+  <!-- ======================================================================== -->
+  <!-- BACKGROUND STAGE ATMOSPHERE & INTERACTIVE SPOTLIGHT -->
+  <!-- ======================================================================== -->
+  <div class="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none">
+    <!-- Stadium Concert Image with Stage Laser Silhouette -->
     <img 
       src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=85" 
-      alt="Concert laser lights and cheering crowd" 
-      class="w-full h-full object-cover object-center filter brightness-[0.25] contrast-125"
+      alt="Concert stage laser lights and cheering crowd" 
+      class="w-full h-full object-cover object-center filter brightness-[0.45] dark:brightness-[0.22] contrast-125 saturate-125"
       loading="lazy"
     />
-    <!-- Deep Magenta Radial Glow Overlay -->
-    <div class="absolute inset-0 bg-gradient-to-b from-void-black via-deep-magenta/30 to-void-black"></div>
+
+    <!-- Deep Magenta Stage Vignette & Gradients -->
+    <div class="absolute inset-0 bg-gradient-to-b from-[#FAF7F9] via-transparent to-[#FAF7F9] dark:from-void-black dark:via-dark-plum/40 dark:to-void-black"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-[#FAF7F9]/90 via-transparent to-[#FAF7F9]/90 dark:from-void-black/90 dark:via-transparent dark:to-void-black/90"></div>
+
+    <!-- Interactive Stage Spotlight Beam (Follows cursor coordinate via CSS vars) -->
+    <div 
+      id="stage-spotlight-beam"
+      class="absolute inset-0 transition-opacity duration-700 pointer-events-none"
+      style="background: radial-gradient(circle 500px at var(--spotlight-x, 50%) var(--spotlight-y, 45%), rgba(209,77,145,0.22) 0%, rgba(88,196,220,0.12) 35%, transparent 70%); mix-blend-mode: screen;"
+    ></div>
+
+    <!-- Subtle Diagonal Speed Lines / Laser Strobe Grating -->
+    <div class="absolute inset-0 opacity-15 dark:opacity-20" style="background-image: repeating-linear-gradient(45deg, rgba(209,77,145,0.15) 0, rgba(209,77,145,0.15) 1px, transparent 0, transparent 48px);"></div>
+
+    <!-- Giant Ghost Typographic Marquee Backdrop -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none select-none opacity-10 dark:opacity-20">
+      <span class="font-display text-[16vw] text-neutral-900/10 dark:text-white/10 tracking-tighter whitespace-nowrap block" style="-webkit-text-stroke: 1.5px rgba(209, 77, 145, 0.25);">
+        IN THE PIT • BE THERE • LIVE THE SOUND • AFTERGLOW
+      </span>
+    </div>
   </div>
 
-  <div class="relative z-10 max-w-4xl mx-auto flex flex-col items-center text-center">
-    <span 
-      data-animate="reveal" 
-      class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-4"
-    >
-      YOUR NEXT UNFORGETTABLE NIGHT
-    </span>
+  <!-- ======================================================================== -->
+  <!-- MAIN CONTENT CONTAINER -->
+  <!-- ======================================================================== -->
+  <div class="relative z-10 max-w-5xl mx-auto flex flex-col items-center text-center">
+    
+    <!-- Top Telemetry & Soundcheck Stencil Tag -->
+    <div data-animate="reveal" class="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-white/80 dark:bg-white/[0.04] border border-neutral-300 dark:border-white/15 backdrop-blur-md mb-8 shadow-sm">
+      <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+      <span class="font-mono text-xs font-bold tracking-widest text-electric-magenta uppercase">
+        // ENCORE CALL • SOUNDCHECK 118 dB
+      </span>
+      <span class="text-neutral-400 dark:text-muted-gray text-xs hidden sm:inline">•</span>
+      <span class="font-mono text-[11px] text-neutral-600 dark:text-muted-gray uppercase hidden sm:inline">
+        GATES ACTIVATED
+      </span>
+    </div>
 
+    <!-- Climax Headline (Bold Bebas Neue with Gradient & Energy) -->
     <h2 
       data-animate="reveal" 
-      class="delay-100 font-display text-5xl sm:text-7xl md:text-8xl text-soft-white leading-[0.95] tracking-wide mb-6"
+      class="delay-100 font-display text-5xl sm:text-7xl md:text-8xl lg:text-9xl text-neutral-950 dark:text-soft-white leading-[0.92] tracking-wide mb-6 uppercase"
     >
-      DON'T JUST HEAR ABOUT IT. <br />
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-soft-white via-soft-white to-electric-magenta">
-        BE THERE.
+      DON'T JUST HEAR ABOUT IT.<br />
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-neutral-950 via-electric-magenta to-neutral-950 dark:from-white dark:via-electric-magenta dark:to-white">
+        BE THERE IN THE PIT.
       </span>
     </h2>
 
+    <!-- Authentic Concert Copy (Zero Slop, Pure Live Emotion) -->
     <p 
       data-animate="reveal" 
-      class="delay-200 text-base sm:text-lg text-muted-gray max-w-xl mb-10 font-normal leading-relaxed"
+      class="delay-200 text-sm sm:text-base md:text-lg text-neutral-700 dark:text-soft-white/80 max-w-2xl mb-8 font-normal leading-relaxed font-sans"
     >
-      Ribuan penggemar musik telah mengamankan tiket konser impian mereka tanpa calo dan tanpa rasa khawatir. Ambil giliran Anda malam ini.
+      Saat ribuan penonton bernyanyi bersama di bawah sorotan laser panggung dan bass pertama meledak, kamu tidak ingin sekadar menonton rekaman buram 15 detik di layar ponsel temanmu. Amankan akses tiket sah 100% langsung dari promotor resmi.
     </p>
 
+    <!-- ====================================================================== -->
+    <!-- INTERACTIVE SUB-BASS EQUALIZER & TELEMETRY CONSOLE -->
+    <!-- ====================================================================== -->
     <div 
       data-animate="reveal" 
-      class="delay-300 flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+      class="delay-250 w-full max-w-xl p-4 sm:p-5 rounded-2xl bg-white/70 dark:bg-void-black/70 backdrop-blur-md border border-neutral-200/80 dark:border-white/10 mb-10 shadow-lg dark:shadow-none transition-all duration-300 hover:border-electric-magenta/50"
     >
+      <div class="flex items-center justify-between font-mono text-[11px] text-neutral-500 dark:text-muted-gray pb-3 border-b border-neutral-200 dark:border-white/10">
+        <span class="text-electric-magenta font-bold uppercase tracking-wider">STAGE SOUNDSCAPE FREQUENCY</span>
+        <span class="text-emerald-500 font-bold">LIVE STADIUM MONITOR</span>
+      </div>
+
+      <!-- Animated Graphic Equalizer Spectrum Bars -->
+      <div class="flex items-end justify-between gap-1.5 sm:gap-2 h-14 pt-3 px-2">
+        <!-- Frequency Bar 1 (35Hz Sub-bass) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse h-[85%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">35Hz</span>
+        </div>
+
+        <!-- Frequency Bar 2 (60Hz Kick) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.15s] h-[65%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">60Hz</span>
+        </div>
+
+        <!-- Frequency Bar 3 (120Hz Punch) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.3s] h-[95%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">120Hz</span>
+        </div>
+
+        <!-- Frequency Bar 4 (500Hz Snare) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.45s] h-[50%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">500Hz</span>
+        </div>
+
+        <!-- Frequency Bar 5 (1.5kHz Vocal) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.2s] h-[75%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">1.5k</span>
+        </div>
+
+        <!-- Frequency Bar 6 (4kHz Lead) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.35s] h-[90%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">4kHz</span>
+        </div>
+
+        <!-- Frequency Bar 7 (8kHz Guitar) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.5s] h-[60%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">8kHz</span>
+        </div>
+
+        <!-- Frequency Bar 8 (16kHz Air) -->
+        <div class="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
+          <div class="w-full bg-electric-magenta/20 dark:bg-electric-magenta/30 rounded-t overflow-hidden h-full flex items-end">
+            <div class="w-full bg-electric-magenta rounded-t animate-pulse [animation-delay:0.1s] h-[70%]"></div>
+          </div>
+          <span class="font-mono text-[9px] text-neutral-400 dark:text-muted-gray">16kHz</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================== -->
+    <!-- MAGNETIC ACTION BUTTONS -->
+    <!-- ====================================================================== -->
+    <div 
+      data-animate="reveal" 
+      class="delay-300 flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+    >
+      <!-- Primary Pass Button -->
       <a 
         href="/events" 
-        class="w-full sm:w-auto px-10 py-5 rounded-full bg-electric-magenta text-soft-white font-bold text-base tracking-wider hover:shadow-magenta-glow-lg transition-all duration-300 hover:scale-105 active:scale-95 text-center"
+        class="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-10 py-5 rounded-full bg-electric-magenta text-white font-mono text-xs uppercase tracking-widest font-bold transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(209,77,145,0.5)] overflow-hidden"
       >
-        FIND YOUR EVENT
+        <!-- Button Shimmer Sheen -->
+        <div class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+        
+        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+        </svg>
+        <span>JELAJAHI PANGGUNG RESMI</span>
+        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+        </svg>
       </a>
+
+      <!-- Secondary Organizer Button -->
       <a 
         href="/organizer" 
-        class="w-full sm:w-auto px-8 py-5 rounded-full bg-dark-plum/80 border border-white/15 text-soft-white font-semibold text-base tracking-wide hover:bg-white/10 transition-all duration-300 text-center"
+        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-5 rounded-full bg-white/80 dark:bg-white/[0.05] border border-neutral-300 dark:border-white/15 text-neutral-900 dark:text-soft-white font-mono text-xs uppercase tracking-wider font-semibold hover:border-electric-magenta hover:text-electric-magenta transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95 shadow-sm"
       >
-        CREATE AN EVENT
+        <span>KOLABORASI PROMOTOR</span>
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H9M17 7V15" />
+        </svg>
       </a>
     </div>
+
+    <!-- ====================================================================== -->
+    <!-- BOTTOM SPECIFICATION TRUST LEDGER -->
+    <!-- ====================================================================== -->
+    <div 
+      data-animate="reveal" 
+      class="delay-400 w-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-14 pt-8 border-t border-neutral-200/80 dark:border-white/10 text-left font-mono text-xs"
+    >
+      <div class="p-4 rounded-xl bg-white/50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/5 space-y-1">
+        <span class="text-electric-magenta font-bold block text-[10px] tracking-wider uppercase">01 // DIRECT ALLOCATION</span>
+        <span class="text-neutral-900 dark:text-soft-white font-medium block">100% Kuota Resmi Promotor</span>
+        <p class="text-[11px] text-neutral-500 dark:text-muted-gray">Nol calo, nol bot, harga sah sesuai kesepakatan.</p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-white/50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/5 space-y-1">
+        <span class="text-emerald-500 font-bold block text-[10px] tracking-wider uppercase">02 // ANTI-SCREENSHOT QR</span>
+        <span class="text-neutral-900 dark:text-soft-white font-medium block">Dynamic Rotating QR 0.3s</span>
+        <p class="text-[11px] text-neutral-500 dark:text-muted-gray">Terenkripsi berputar otomatis, mustahil digandakan.</p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-white/50 dark:bg-white/[0.02] border border-neutral-200/60 dark:border-white/5 space-y-1">
+        <span class="text-cyan-500 font-bold block text-[10px] tracking-wider uppercase">03 // ATOMIC OMS LOCK</span>
+        <span class="text-neutral-900 dark:text-soft-white font-medium block">PostgreSQL Concurrency</span>
+        <p class="text-[11px] text-neutral-500 dark:text-muted-gray">Garansi kuota aman tanpa race condition saat war.</p>
+      </div>
+    </div>
+
   </div>
 </section>
+
+<!-- ======================================================================== -->
+<!-- INTERACTIVE STAGE SPOTLIGHT SCRIPT (Cursor Tracking Stage Lighting) -->
+<!-- ======================================================================== -->
+<script>
+  function initStageSpotlight() {
+    const section = document.getElementById('final-cta-section');
+    const spotlight = document.getElementById('stage-spotlight-beam');
+
+    if (!section || !spotlight) return;
+
+    let targetX = 50;
+    let targetY = 45;
+    let currentX = 50;
+    let currentY = 45;
+    let animId: number | null = null;
+    let isHovering = false;
+
+    function renderLoop() {
+      // Smooth lerp for liquid lighting movement
+      currentX += (targetX - currentX) * 0.1;
+      currentY += (targetY - currentY) * 0.1;
+
+      spotlight.style.setProperty('--spotlight-x', `${currentX.toFixed(1)}%`);
+      spotlight.style.setProperty('--spotlight-y', `${currentY.toFixed(1)}%`);
+
+      animId = requestAnimationFrame(renderLoop);
+    }
+
+    animId = requestAnimationFrame(renderLoop);
+
+    section.addEventListener('mousemove', (e) => {
+      isHovering = true;
+      const rect = section.getBoundingClientRect();
+      targetX = ((e.clientX - rect.left) / rect.width) * 100;
+      targetY = ((e.clientY - rect.top) / rect.height) * 100;
+    });
+
+    section.addEventListener('mouseleave', () => {
+      isHovering = false;
+      targetX = 50;
+      targetY = 45;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', initStageSpotlight);
+  document.addEventListener('astro:page-load', initStageSpotlight);
+</script>
