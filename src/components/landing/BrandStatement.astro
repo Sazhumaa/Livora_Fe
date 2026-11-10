@@ -1,216 +1,607 @@
 ---
-// Section: Brand Statement & Philosophy (Brutalist Zine & Contrast Ledger — Un-boxed Manifesto)
+// Section: Brand Statement & Philosophy — Authentic 3D Interactive Ticket Pass
+// Fixed: Text padding & layout bounds (no overflow over notches/perforations).
+// Fixed: Dual-sided 3D backface visibility (no mirrored front text).
+// Creative Back Side: Backstage Access Credential, Pit Code & Gate Rules, Active Dynamic QR Scanner.
+// Persistent 3D rotation (stays where dropped, single click snaps back to default). Zero UI clutter.
 ---
 
-<section id="about" class="relative w-full py-28 md:py-36 px-6 lg:px-16 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.06] overflow-hidden transition-colors duration-300">
+<section id="about" class="relative w-full py-16 lg:py-24 px-4 sm:px-6 lg:px-16 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.06] overflow-hidden transition-colors duration-300">
   
-  <!-- Subtle Background Diagonal Speed Lines -->
-  <div class="absolute inset-0 pointer-events-none opacity-20">
-    <div class="w-full h-full" style="background-image: repeating-linear-gradient(45deg, rgba(209,77,145,0.05) 0, rgba(209,77,145,0.05) 1px, transparent 0, transparent 40px);"></div>
-  </div>
+  <!-- Subtle Background Starlight Dust / Cosmic Atmosphere -->
+  <div class="absolute inset-0 pointer-events-none opacity-40 dark:opacity-25" style="background-image: radial-gradient(rgba(209,77,145,0.25) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 36px 36px, 72px 72px; background-position: 0 0, 18px 18px;"></div>
 
-  <!-- Giant Ghost Text Backdrop -->
-  <div class="absolute -top-10 left-0 right-0 overflow-hidden pointer-events-none select-none opacity-10 dark:opacity-20">
-    <span class="font-display text-[15vw] text-neutral-900/10 dark:text-white/10 tracking-tighter whitespace-nowrap block" style="-webkit-text-stroke: 1px rgba(209, 77, 145, 0.2);">
-      ABOUT AFTERGLOW • THE RAW STAGE
-    </span>
-  </div>
+  <!-- Ambient Stage Light Beams & Magenta Flares -->
+  <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-electric-magenta/10 dark:bg-electric-magenta/15 rounded-full blur-[150px] pointer-events-none"></div>
+  <div class="absolute bottom-10 right-1/4 w-[500px] h-[300px] bg-cyan-500/5 dark:bg-cyan-500/10 rounded-full blur-[130px] pointer-events-none"></div>
 
-  <div class="max-w-7xl mx-auto relative z-10">
+  <div class="max-w-7xl mx-auto relative z-10 flex flex-col items-center">
     
-    <!-- Section Stencil Header (Un-boxed, Open Editorial) -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 sm:mb-16 border-b border-neutral-200 dark:border-white/15 pb-8">
+    <!-- ======================================================================== -->
+    <!-- SECTION HEADER: Minimalist Stencil (Clean & Editorial) -->
+    <!-- ======================================================================== -->
+    <div data-animate="reveal" class="w-full flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-neutral-200/80 dark:border-white/10 mb-8 sm:mb-12">
+      
+      <!-- Top Left: Stylized Marker + Title -->
       <div>
-        <div data-animate="reveal" class="flex items-center gap-3 font-mono text-xs text-electric-magenta font-bold mb-3">
-          <span class="px-3 py-1 rounded-full bg-electric-magenta/15 border border-electric-magenta/30">
-            MANIFESTO 01 // ANTI-CALO PLEDGE
-          </span>
-          <span class="text-neutral-500 dark:text-muted-gray">• EST. 2026 // LIVE ARCHITECTURE</span>
+        <div class="flex items-center gap-2 mb-2 font-mono text-[11px] text-electric-magenta font-bold tracking-widest uppercase">
+          <span class="inline-block w-2.5 h-2.5 bg-electric-magenta shadow-magenta-glow"></span>
+          <span class="inline-block w-2.5 h-2.5 bg-electric-magenta/40"></span>
+          <span class="ml-1">06 // MANIFESTO PASS</span>
         </div>
-        <h2 
-          data-animate="reveal" 
-          class="delay-100 font-display text-6xl sm:text-8xl lg:text-9xl text-neutral-950 dark:text-soft-white tracking-wide leading-[0.88]"
-        >
-          BORN IN THE PIT.<br />
-          <span class="text-electric-magenta">NOT IN A BOARDROOM.</span>
-        </h2>
+        <div class="flex items-baseline gap-4">
+          <h2 class="font-display text-5xl sm:text-7xl lg:text-8xl text-neutral-950 dark:text-soft-white tracking-tight leading-none">
+            ABOUT AFTERGLOW
+          </h2>
+          <span class="font-mono text-xs text-electric-magenta font-bold uppercase tracking-wider hidden sm:inline-block">
+            / SACRED STAGE
+          </span>
+        </div>
+        <p class="font-mono text-xs text-neutral-500 dark:text-muted-gray mt-1.5 tracking-wider">
+          PANGGUNG SAKRAL • HAK TIKET PENONTON SEJATI • ZERO BOT GUARANTEE
+        </p>
       </div>
 
-      <div data-animate="reveal" class="delay-200 md:text-right font-mono text-xs text-neutral-500 dark:text-muted-gray shrink-0">
-        <span class="text-neutral-950 dark:text-white font-bold block text-sm">MISSION PROTOCOL</span>
-        <span>MEMATIKAN CALO • MENGUNCI HARGA RESMI</span>
+      <!-- Top Right: Micro Status Pill -->
+      <div class="flex items-center gap-3 font-mono text-xs text-neutral-500 dark:text-muted-gray">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="tracking-widest uppercase text-[11px]">RFID PROTOCOL ACTIVE</span>
       </div>
     </div>
 
-    <!-- Main Asymmetric Split: 6 Cols Narrative & 6 Cols Contrast Ledger -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start relative z-10">
+    <!-- ======================================================================== -->
+    <!-- 3D TICKET STAGE ARENA -->
+    <!-- ======================================================================== -->
+    <div 
+      id="ticket-stage-viewport"
+      class="w-full flex items-center justify-center py-6 sm:py-10 select-none overflow-visible"
+      style="perspective: 1600px; -webkit-perspective: 1600px;"
+    >
       
-      <!-- LEFT COLUMN: The Visceral Story -->
-      <div class="lg:col-span-6 space-y-8">
-        
-        <div data-animate="reveal" class="delay-100 space-y-6 text-base sm:text-lg text-neutral-700 dark:text-soft-white/90 leading-relaxed font-normal">
-          <p class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-white tracking-wide leading-tight">
-            SETIAP KALI LAMPU STADION PADAM DAN INTRO LAGU PERTAMA DIMAINKAN, ITU ADALAH MOMEN PALING SAKRAL DI DUNIA.
-          </p>
+      <!-- Floating Card Wrapper (NO FILTER on 3D wrapper to prevent Chromium 3D flattening!) -->
+      <div 
+        id="interactive-ticket-card" 
+        class="relative w-full max-w-[920px] aspect-[2.63/1] min-h-[260px] sm:min-h-[300px] cursor-grab active:cursor-grabbing will-change-transform touch-none"
+        style="transform-style: preserve-3d; -webkit-transform-style: preserve-3d; transform: rotateX(6deg) rotateY(-10deg);"
+        aria-label="Interactive 3D Concert Ticket Pass"
+        role="region"
+      >
 
-          <p class="text-sm sm:text-base text-neutral-600 dark:text-muted-gray leading-relaxed">
-            Namun industri tiket telah dirusak oleh spekulan. Calo memborong ribuan kuota menggunakan ratusan script bot otomatis, lalu menjualnya kembali dengan harga 3x hingga 5x lipat kepada fans sejati yang rela menabung berbulan-bulan.
-          </p>
-
-          <p class="text-sm sm:text-base text-neutral-900 dark:text-soft-white leading-relaxed font-medium">
-            <strong class="text-electric-magenta font-bold">AFTERGLOW didirikan untuk menghentikan lelucon ini.</strong> Kami bukan perusahaan calo sekunder terselubung. Kami adalah barisan teknolog dan penikmat gigs murni yang membangun protokol direct-to-promotor: nol bot, nol mark-up liar, dan akses panggung yang sah 100%.
-          </p>
-        </div>
-
-        <!-- The Creed Banner (Razor border) -->
+        <!-- ==================================================================== -->
+        <!-- FRONT SIDE OF TICKET (Clean Bounds, Zero Text Overflow) -->
+        <!-- ==================================================================== -->
         <div 
-          data-animate="reveal" 
-          class="delay-200 p-6 border-l-4 border-electric-magenta bg-white dark:bg-white/[0.02] border-y border-r border-neutral-200 dark:border-white/10 rounded-r-2xl font-mono space-y-2 shadow-sm dark:shadow-none"
+          class="ticket-face ticket-front absolute inset-0 w-full h-full"
+          style="backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(0deg) translateZ(1px); -webkit-transform: rotateY(0deg) translateZ(1px); filter: drop-shadow(0 25px 45px rgba(0,0,0,0.85)) drop-shadow(0 0 25px rgba(209,77,145,0.35));"
         >
-          <span class="text-xs text-electric-magenta font-bold uppercase tracking-wider block">AFTERGLOW CREED</span>
-          <p class="text-neutral-900 dark:text-white text-sm font-semibold italic leading-relaxed">
-            "Musik panggung tidak boleh dimonopoli spekulan. Hak tiket adalah milik mereka yang bernyanyi dan berkeringat bersama."
-          </p>
-          <span class="text-[10px] text-neutral-500 dark:text-muted-gray block pt-1">— TIM AFTERGLOW & ALIANSI PROMOTOR INDEPENDEN</span>
-        </div>
-
-        <!-- Gig Coordinates & Action -->
-        <div data-animate="reveal" class="delay-300 pt-2 flex flex-wrap items-center justify-between gap-6 font-mono text-xs">
-          <div class="flex items-center gap-3">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span class="text-neutral-900 dark:text-white font-bold">LIVE STAGE FOOTPRINT:</span>
-            <span class="text-neutral-500 dark:text-muted-gray">JKT // BDG // DPS // YOG</span>
-          </div>
-
-          <a 
-            href="/events" 
-            class="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-electric-magenta hover:bg-electric-magenta/90 text-white font-bold text-xs uppercase tracking-wider transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_25px_rgba(209,77,145,0.4)]"
+          <!-- SVG Container defining the exact physical notched contour -->
+          <svg 
+            viewBox="0 0 1000 380" 
+            class="w-full h-full overflow-visible" 
+            preserveAspectRatio="none"
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
           >
-            <span>EXPLORE HEADLINERS</span>
-            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
-            </svg>
-          </a>
+            <defs>
+              <!-- Ticket Outer Clip Path (Concave corner scallops + top & bottom notches) -->
+              <clipPath id="ticketOuterShape">
+                <path d="M 0,24 A 24,24 0 0,0 24,0 L 756,0 A 24,24 0 0,0 804,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 804,380 A 24,24 0 0,0 756,380 L 24,380 A 24,24 0 0,0 0,356 Z" />
+              </clipPath>
+
+              <!-- Artwork Image Clip (Inward curved left corners, bounds at x=330) -->
+              <clipPath id="artworkShape">
+                <path d="M 0,24 A 24,24 0 0,0 24,0 L 330,0 L 330,380 L 24,380 A 24,24 0 0,0 0,356 Z" />
+              </clipPath>
+
+              <!-- Ticket Base Background Gradient -->
+              <linearGradient id="ticketBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#1A0A22" />
+                <stop offset="50%" stop-color="#0E0514" />
+                <stop offset="100%" stop-color="#200B2A" />
+              </linearGradient>
+
+              <!-- Right Tear-Off Stub Iridescent Gradient (Violet to Cyan Foil) -->
+              <linearGradient id="stubIridescentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#3C1249" />
+                <stop offset="30%" stop-color="#70264F" />
+                <stop offset="70%" stop-color="#D14D91" />
+                <stop offset="100%" stop-color="#58C4DC" />
+              </linearGradient>
+
+              <!-- Prismatic Diagonal Lens Flare Gradient -->
+              <linearGradient id="prismFlareGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+                <stop offset="25%" stop-color="#58C4DC" stop-opacity="0.7" />
+                <stop offset="50%" stop-color="#D14D91" stop-opacity="0.8" />
+                <stop offset="75%" stop-color="#FFD700" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="transparent" stop-opacity="0" />
+              </linearGradient>
+
+              <!-- Neon Glow Filter -->
+              <filter id="neonStrokeGlow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#D14D91" flood-opacity="0.6" />
+              </filter>
+            </defs>
+
+            <!-- 1. TICKET SOLID BASE (Clipped to exact contour) -->
+            <path 
+              d="M 0,24 A 24,24 0 0,0 24,0 L 756,0 A 24,24 0 0,0 804,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 804,380 A 24,24 0 0,0 756,380 L 24,380 A 24,24 0 0,0 0,356 Z" 
+              fill="url(#ticketBodyGrad)" 
+            />
+
+            <!-- 2. LEFT ARTWORK ZONE (Clipped, x=0 to x=330) -->
+            <g clip-path="url(#artworkShape)">
+              <image 
+                href="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80" 
+                x="0" 
+                y="0" 
+                width="340" 
+                height="380" 
+                preserveAspectRatio="xMidYMid slice" 
+                opacity="0.8"
+                class="filter contrast-125 saturate-150"
+              />
+              <!-- Darkening Gradient Overlay -->
+              <rect x="0" y="0" width="340" height="380" fill="url(#ticketBodyGrad)" opacity="0.45" />
+              <rect x="220" y="0" width="120" height="380" fill="url(#ticketBodyGrad)" opacity="0.95" />
+
+              <!-- Prismatic Diagonal Lens Flare Streak (Ala Reference Image Flare) -->
+              <polygon points="0,0 160,0 0,160" fill="url(#prismFlareGrad)" opacity="0.6" />
+              <line x1="0" y1="0" x2="200" y2="200" stroke="url(#prismFlareGrad)" stroke-width="3" opacity="0.85" />
+              <circle cx="70" cy="70" r="35" fill="#ffffff" opacity="0.15" filter="blur(15px)" />
+
+              <!-- Stage Metadata overlay -->
+              <text x="25" y="45" font-family="monospace" font-size="10" font-weight="bold" fill="#58C4DC" letter-spacing="1.5">● LIVE GIG PASS</text>
+              <text x="25" y="340" font-family="'Bebas Neue', sans-serif" font-size="20" fill="#ffffff" letter-spacing="1">SUB-BASS 35Hz // 118 dB</text>
+            </g>
+
+            <!-- 3. RIGHT TEAR-OFF STUB IRIDESCENT SHINE (Violet to Cyan Foil) -->
+            <path 
+              d="M 780,24 A 24,24 0 0,0 804,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 804,380 A 24,24 0 0,0 780,356 Z" 
+              fill="url(#stubIridescentGrad)" 
+              opacity="0.95"
+            />
+
+            <!-- 4. VERTICAL DASHED TEAR LINE AT JUNCTION -->
+            <line x1="780" y1="24" x2="780" y2="356" stroke="#D14D91" stroke-width="2.5" stroke-dasharray="6,7" stroke-opacity="0.8" />
+
+            <!-- 5. INNER ORNATE DOUBLE HAIRLINE FRAME -->
+            <path 
+              d="M 8,28 A 20,20 0 0,0 28,8 L 748,8 A 32,32 0 0,0 812,8 L 972,8 A 20,20 0 0,0 992,28 L 992,352 A 20,20 0 0,0 972,372 L 812,372 A 32,32 0 0,0 748,372 L 28,372 A 20,20 0 0,0 8,352 Z" 
+              stroke="#D14D91" 
+              stroke-width="1.2" 
+              stroke-opacity="0.5" 
+            />
+
+            <!-- 6. OUTER GLOWING CONTOUR BORDER (Electric Magenta Neon) -->
+            <path 
+              d="M 0,24 A 24,24 0 0,0 24,0 L 756,0 A 24,24 0 0,0 804,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 804,380 A 24,24 0 0,0 756,380 L 24,380 A 24,24 0 0,0 0,356 Z" 
+              stroke="#D14D91" 
+              stroke-width="2.2" 
+              filter="url(#neonStrokeGlow)"
+            />
+
+            <!-- ================================================================ -->
+            <!-- TYPOGRAPHY & DATA (Scaled & Formatted with Strict Margins) -->
+            <!-- ================================================================ -->
+
+            <!-- STUB (Right): Vertical High-Density Barcode & Serial -->
+            <g transform="translate(865, 80)">
+              <!-- Barcode Lines -->
+              <g fill="#0B090B">
+                <rect x="0" y="0" width="3" height="180" />
+                <rect x="6" y="0" width="2" height="180" />
+                <rect x="11" y="0" width="5" height="180" />
+                <rect x="19" y="0" width="2" height="180" />
+                <rect x="24" y="0" width="6" height="180" />
+                <rect x="33" y="0" width="1" height="180" />
+                <rect x="37" y="0" width="4" height="180" />
+                <rect x="44" y="0" width="3" height="180" />
+                <rect x="50" y="0" width="2" height="180" />
+                <rect x="55" y="0" width="6" height="180" />
+                <rect x="64" y="0" width="1" height="180" />
+                <rect x="68" y="0" width="5" height="180" />
+                <rect x="76" y="0" width="3" height="180" />
+                <rect x="82" y="0" width="2" height="180" />
+                <rect x="87" y="0" width="5" height="180" />
+                <rect x="95" y="0" width="2" height="180" />
+              </g>
+              <!-- Vertical Serial Number -->
+              <text 
+                x="116" 
+                y="90" 
+                transform="rotate(90 116 90)" 
+                font-family="monospace" 
+                font-size="11" 
+                font-weight="bold" 
+                fill="#0B090B" 
+                letter-spacing="3" 
+                text-anchor="middle"
+              >
+                AGW - 20261109 - VOID
+              </text>
+            </g>
+            <text x="900" y="52" font-family="'Bebas Neue', sans-serif" font-size="18" fill="#ffffff" letter-spacing="2" text-anchor="middle">STUB PASS</text>
+            <text x="900" y="325" font-family="monospace" font-size="10" font-weight="bold" fill="#0B090B" letter-spacing="1" text-anchor="middle">100% VERIFIED</text>
+
+            <!-- CENTER MANIFESTO (Bounded between x=365 and x=710, leaving 70px safe margin before notch at x=780) -->
+            <!-- Title -->
+            <text x="365" y="74" font-family="'Bebas Neue', 'Anton', sans-serif" font-size="40" fill="#ffffff" letter-spacing="2">
+              BORN IN THE PIT.
+            </text>
+            <text x="365" y="104" font-family="'Bebas Neue', 'Anton', sans-serif" font-size="24" fill="#D14D91" letter-spacing="2">
+              NOT IN A BOARDROOM.
+            </text>
+
+            <!-- Subtitle -->
+            <text x="365" y="132" font-family="monospace" font-size="10.5" font-weight="bold" fill="#A58D9C" letter-spacing="2">
+              AFTERGLOW PROTOCOL // DIRECT PASS
+            </text>
+
+            <!-- Narrative Statements (Max 38 characters per line, clean wrapping) -->
+            <text x="365" y="166" font-family="'Inter', sans-serif" font-size="12.5" fill="#F8F0F5" opacity="0.9">
+              Panggung konser adalah ruang sakral. Momen
+            </text>
+            <text x="365" y="188" font-family="'Inter', sans-serif" font-size="12.5" fill="#F8F0F5" opacity="0.9">
+              ketika lampu padam dan bass pertama bergetar
+            </text>
+            <text x="365" y="210" font-family="'Inter', sans-serif" font-size="12.5" fill="#F8F0F5" opacity="0.9">
+              adalah hak murni penonton sejati—
+            </text>
+            <text x="365" y="232" font-family="'Inter', sans-serif" font-size="12.5" font-weight="bold" fill="#D14D91">
+              bukan ladang spekulan bot calo.
+            </text>
+
+            <!-- Big Date & Gate Specs (Clean margins) -->
+            <text x="365" y="296" font-family="'Bebas Neue', sans-serif" font-size="68" fill="#D14D91" letter-spacing="1">
+              2026
+            </text>
+            <text x="495" y="270" font-family="monospace" font-size="13" font-weight="bold" fill="#ffffff" letter-spacing="1.5">
+              ALL ACCESS PIT PASS
+            </text>
+            <text x="495" y="290" font-family="monospace" font-size="10.5" fill="#A58D9C" letter-spacing="1">
+              GATE: PRIORITY FRONT-ROW
+            </text>
+
+            <!-- Micro Spec Dots Row (Bottom) -->
+            <text x="365" y="340" font-family="monospace" font-size="9" fill="#F8F0F5" opacity="0.5" letter-spacing="1.8">
+              RAW STAGE  •  ZERO BOT  •  ATOMIC OMS  •  0.3s DYNAMIC QR
+            </text>
+          </svg>
+
+          <!-- Interactive Holographic Glare Overlay -->
+          <div 
+            class="ticket-glare absolute inset-0 pointer-events-none rounded-2xl transition-opacity duration-300"
+            style="background: radial-gradient(circle at var(--glare-x, 40%) var(--glare-y, 30%), rgba(255,255,255,0.45) 0%, rgba(209,77,145,0.3) 25%, rgba(88,196,220,0.2) 45%, transparent 70%); mix-blend-mode: overlay; opacity: var(--glare-opacity, 0.65);"
+          ></div>
+        </div>
+
+        <!-- ==================================================================== -->
+        <!-- BACK SIDE OF TICKET (Creative VIP Backstage Access Credential & Pit Rules) -->
+        <!-- ==================================================================== -->
+        <div 
+          class="ticket-face ticket-back absolute inset-0 w-full h-full"
+          style="backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: rotateY(180deg) translateZ(1px); -webkit-transform: rotateY(180deg) translateZ(1px); filter: drop-shadow(0 25px 45px rgba(0,0,0,0.85)) drop-shadow(0 0 25px rgba(88,196,220,0.35));"
+        >
+          <svg 
+            viewBox="0 0 1000 380" 
+            class="w-full h-full overflow-visible" 
+            preserveAspectRatio="none"
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <!-- 1. SOLID BASE (Mirrored: Stub on Left at x = 220) -->
+            <path 
+              d="M 0,24 A 24,24 0 0,0 24,0 L 196,0 A 24,24 0 0,0 244,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 244,380 A 24,24 0 0,0 196,380 L 24,380 A 24,24 0 0,0 0,356 Z" 
+              fill="url(#ticketBodyGrad)" 
+            />
+
+            <!-- 2. STUB ON BACK LEFT (x=0 to x=220) -->
+            <path 
+              d="M 0,24 A 24,24 0 0,0 24,0 L 196,0 A 24,24 0 0,0 220,24 L 220,356 A 24,24 0 0,0 196,380 L 24,380 A 24,24 0 0,0 0,356 Z" 
+              fill="#180A20" 
+            />
+
+            <!-- 3. DASHED PERFORATION LINE -->
+            <line x1="220" y1="24" x2="220" y2="356" stroke="#D14D91" stroke-width="2.5" stroke-dasharray="6,7" stroke-opacity="0.8" />
+
+            <!-- 4. INNER ORNATE FRAME -->
+            <path 
+              d="M 8,28 A 20,20 0 0,0 28,8 L 188,8 A 32,32 0 0,0 252,8 L 972,8 A 20,20 0 0,0 992,28 L 992,352 A 20,20 0 0,0 972,372 L 252,372 A 32,32 0 0,0 188,372 L 28,372 A 20,20 0 0,0 8,352 Z" 
+              stroke="#D14D91" 
+              stroke-width="1.2" 
+              stroke-opacity="0.5" 
+            />
+
+            <!-- 5. OUTER NEON BORDER (Neon Cyan & Electric Magenta Accent) -->
+            <path 
+              d="M 0,24 A 24,24 0 0,0 24,0 L 196,0 A 24,24 0 0,0 244,0 L 976,0 A 24,24 0 0,0 1000,24 L 1000,356 A 24,24 0 0,0 976,380 L 244,380 A 24,24 0 0,0 196,380 L 24,380 A 24,24 0 0,0 0,356 Z" 
+              stroke="#58C4DC" 
+              stroke-width="2.2" 
+              filter="url(#neonStrokeGlow)"
+            />
+
+            <!-- ================================================================ -->
+            <!-- BACK CONTENT: Creative VIP Credential, Pit Code & Dynamic QR Scanner -->
+            <!-- ================================================================ -->
+
+            <!-- BACK LEFT STUB (x=0 to x=220): Security Seal & Circuit Tracks -->
+            <text x="110" y="52" font-family="monospace" font-size="10" font-weight="bold" fill="#58C4DC" letter-spacing="1.5" text-anchor="middle">SECURITY CHIP</text>
+            <circle cx="110" cy="180" r="50" stroke="#58C4DC" stroke-width="2" stroke-opacity="0.6" stroke-dasharray="8 6" />
+            <circle cx="110" cy="180" r="38" stroke="#D14D91" stroke-width="1.5" stroke-opacity="0.7" />
+            <circle cx="110" cy="180" r="24" fill="#0B090B" stroke="#ffffff" stroke-width="1" stroke-opacity="0.4" />
+            <text x="110" y="176" font-family="'Bebas Neue', sans-serif" font-size="20" fill="#ffffff" text-anchor="middle">AFTERGLOW</text>
+            <text x="110" y="194" font-family="monospace" font-size="8" font-weight="bold" fill="#D14D91" text-anchor="middle">SEAL #0042</text>
+            <!-- Circuit trace line -->
+            <path d="M 60,250 L 110,270 L 160,250 L 160,290" stroke="#58C4DC" stroke-width="1.5" stroke-opacity="0.4" fill="none" />
+            <circle cx="160" cy="290" r="3" fill="#58C4DC" />
+            <text x="110" y="330" font-family="monospace" font-size="9" fill="#A58D9C" text-anchor="middle">AES-256 RFID AUTH</text>
+
+            <!-- BACK CENTER (x=260 to x=700): Authentic Pit Rules & Sacred Creed -->
+            <text x="260" y="56" font-family="monospace" font-size="10.5" font-weight="bold" fill="#D14D91" letter-spacing="2">
+              // GATE SCANNING &amp; MOSH PIT PROTOCOL
+            </text>
+            <text x="260" y="86" font-family="'Bebas Neue', sans-serif" font-size="28" fill="#ffffff" letter-spacing="1.5">
+              ATURAN SAKRAL PENONTON KONSER
+            </text>
+
+            <!-- 3 Creative Gig Pillars -->
+            <!-- 01 -->
+            <text x="260" y="118" font-family="monospace" font-size="11" font-weight="bold" fill="#58C4DC" letter-spacing="1">
+              01. HAK TIKET MUTLAK PENONTON
+            </text>
+            <text x="260" y="136" font-family="'Inter', sans-serif" font-size="11.5" fill="#F8F0F5" opacity="0.85">
+              Terkunci atomik ke identitas fans resmi. Nol alokasi calo dan jastip liar.
+            </text>
+
+            <!-- 02 -->
+            <text x="260" y="170" font-family="monospace" font-size="11" font-weight="bold" fill="#D14D91" letter-spacing="1">
+              02. ENKRIPSI ROTASI 0.3s DYNAMIC QR
+            </text>
+            <text x="260" y="188" font-family="'Inter', sans-serif" font-size="11.5" fill="#F8F0F5" opacity="0.85">
+              QR Code berputar berkala. Screenshot &amp; PDF palsu otomatis tertolak di pintu gerbang.
+            </text>
+
+            <!-- 03 -->
+            <text x="260" y="222" font-family="monospace" font-size="11" font-weight="bold" fill="#58C4DC" letter-spacing="1">
+              03. SOLIDARITAS BARIKADE DEPAN
+            </text>
+            <text x="260" y="240" font-family="'Inter', sans-serif" font-size="11.5" fill="#F8F0F5" opacity="0.85">
+              Saling jaga di mosh pit. Yang jatuh dibantu berdiri, yang bernyanyi satu suara.
+            </text>
+
+            <!-- Bottom Authentic Quote -->
+            <text x="260" y="296" font-family="'Inter', sans-serif" font-size="13" font-style="italic" font-weight="600" fill="#ffffff">
+              "Dentuman speaker 118 dB tidak pernah bohong. Hak panggung adalah milik penonton murni."
+            </text>
+            <text x="260" y="324" font-family="monospace" font-size="10" fill="#A58D9C" letter-spacing="1">
+              — TIM AFTERGLOW &amp; ALIANSI PROMOTOR INDEPENDEN // 2026
+            </text>
+
+            <!-- BACK RIGHT (x=730 to x=960): Active Dynamic QR Scanner Engine -->
+            <!-- Scanner Box Frame -->
+            <rect x="735" y="45" width="225" height="290" rx="12" fill="#0C0410" stroke="#58C4DC" stroke-width="1.2" stroke-opacity="0.4" />
+            <text x="847" y="74" font-family="monospace" font-size="10" font-weight="bold" fill="#58C4DC" letter-spacing="1.5" text-anchor="middle">
+              SCANNER ENGINE
+            </text>
+
+            <!-- Glowing Dynamic QR Code Mockup -->
+            <g transform="translate(782, 90)">
+              <!-- QR White Box -->
+              <rect x="0" y="0" width="130" height="130" rx="6" fill="#ffffff" />
+              <!-- QR Matrix Elements -->
+              <g fill="#0B090B">
+                <rect x="12" y="12" width="32" height="32" />
+                <rect x="18" y="18" width="20" height="20" fill="#ffffff" />
+                <rect x="23" y="23" width="10" height="10" />
+
+                <rect x="86" y="12" width="32" height="32" />
+                <rect x="92" y="18" width="20" height="20" fill="#ffffff" />
+                <rect x="97" y="23" width="10" height="10" />
+
+                <rect x="12" y="86" width="32" height="32" />
+                <rect x="18" y="92" width="20" height="20" fill="#ffffff" />
+                <rect x="23" y="97" width="10" height="10" />
+
+                <!-- Data Matrix Dots -->
+                <rect x="52" y="16" width="8" height="8" />
+                <rect x="68" y="16" width="8" height="8" />
+                <rect x="52" y="36" width="10" height="10" />
+                <rect x="70" y="36" width="8" height="8" />
+                <rect x="52" y="56" width="14" height="14" />
+                <rect x="74" y="56" width="10" height="10" />
+                <rect x="92" y="56" width="8" height="8" />
+                <rect x="56" y="80" width="12" height="12" />
+                <rect x="78" y="80" width="8" height="8" />
+                <rect x="94" y="80" width="10" height="10" />
+                <rect x="56" y="104" width="8" height="8" />
+                <rect x="74" y="104" width="12" height="12" />
+                <rect x="96" y="104" width="12" height="12" />
+              </g>
+
+              <!-- Viewfinder Brackets -->
+              <path d="M 0,20 L 0,0 L 20,0" stroke="#D14D91" stroke-width="3" fill="none" />
+              <path d="M 110,0 L 130,0 L 130,20" stroke="#D14D91" stroke-width="3" fill="none" />
+              <path d="M 130,110 L 130,130 L 110,130" stroke="#D14D91" stroke-width="3" fill="none" />
+              <path d="M 20,130 L 0,130 L 0,110" stroke="#D14D91" stroke-width="3" fill="none" />
+
+              <!-- Animated Neon Laser Scanning Line -->
+              <rect x="0" y="60" width="130" height="3" fill="#58C4DC" opacity="0.9">
+                <animate attributeName="y" values="10;118;10" dur="2.2s" repeatCount="indefinite" />
+              </rect>
+            </g>
+
+            <!-- Verification Status Pill -->
+            <text x="847" y="246" font-family="monospace" font-size="10" font-weight="bold" fill="#58C4DC" letter-spacing="1" text-anchor="middle">
+              HASH: 0x9F82...4B1A
+            </text>
+            <text x="847" y="268" font-family="monospace" font-size="11" font-weight="bold" fill="#10B981" letter-spacing="0.5" text-anchor="middle">
+              ● GATE READY &lt; 35ms
+            </text>
+            <text x="847" y="288" font-family="monospace" font-size="9" fill="#A58D9C" letter-spacing="0.5" text-anchor="middle">
+              ATOMIC OMS VERIFIED
+            </text>
+            <text x="847" y="312" font-family="monospace" font-size="9.5" font-weight="bold" fill="#D14D91" letter-spacing="1.5" text-anchor="middle">
+              PROMOTOR BACKED
+            </text>
+          </svg>
+
+          <!-- Holographic Glare for Back Face -->
+          <div 
+            class="ticket-glare absolute inset-0 pointer-events-none rounded-2xl transition-opacity duration-300"
+            style="background: radial-gradient(circle at var(--glare-x, 60%) var(--glare-y, 30%), rgba(255,255,255,0.4) 0%, rgba(88,196,220,0.25) 25%, rgba(209,77,145,0.2) 45%, transparent 70%); mix-blend-mode: overlay; opacity: var(--glare-opacity, 0.65);"
+          ></div>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN: The High-Impact Contrast Ledger (The Industry vs Afterglow) -->
-      <div data-animate="reveal" class="delay-200 lg:col-span-6 space-y-6">
-        
-        <div class="flex items-center justify-between font-mono text-xs border-b border-neutral-200 dark:border-white/10 pb-3">
-          <span class="text-neutral-900 dark:text-white font-bold tracking-wider uppercase">THE CONFRONTATION</span>
-          <span class="text-electric-magenta font-bold">STATUS QUO VS AFTERGLOW</span>
-        </div>
+    </div>
 
-        <!-- COMPARISON ROW 01: Bots vs Direct Promotor -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Bad / Industry -->
-          <div class="p-5 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-500/30 space-y-2">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-red-600 dark:text-red-400 font-bold uppercase">
-              <span>✗ INDUSTRI LAMA</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-900 dark:text-white leading-tight">BOT & JASTIP LIAR</h4>
-            <p class="text-xs text-neutral-600 dark:text-muted-gray leading-snug">
-              Ribuan tiket diborong script bot otomatis dalam 3 detik untuk dijual 300% di Twitter.
-            </p>
-          </div>
-
-          <!-- Good / Afterglow -->
-          <div class="p-5 rounded-2xl bg-white dark:bg-electric-magenta/10 border border-electric-magenta/40 dark:border-electric-magenta/50 space-y-2 shadow-sm dark:shadow-[0_0_20px_rgba(209,77,145,0.15)]">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>✓ AFTERGLOW PROTOCOL</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-950 dark:text-white leading-tight">100% DIRECT ALLOCATION</h4>
-            <p class="text-xs text-neutral-700 dark:text-soft-white/80 leading-snug">
-              Setiap tiket dialokasikan langsung dari promotor resmi dengan proteksi anti-bot Bun+Redis.
-            </p>
-          </div>
-        </div>
-
-        <!-- COMPARISON ROW 02: War Crash vs 0ms Latency -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Bad / Industry -->
-          <div class="p-5 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-500/30 space-y-2">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-red-600 dark:text-red-400 font-bold uppercase">
-              <span>✗ INDUSTRI LAMA</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-900 dark:text-white leading-tight">SERVER CRASH 00:01</h4>
-            <p class="text-xs text-neutral-600 dark:text-muted-gray leading-snug">
-              Antrean palsu ratusan ribu nomor dan error 502 saat proses pembayaran berlangsung.
-            </p>
-          </div>
-
-          <!-- Good / Afterglow -->
-          <div class="p-5 rounded-2xl bg-white dark:bg-electric-magenta/10 border border-electric-magenta/40 dark:border-electric-magenta/50 space-y-2 shadow-sm dark:shadow-[0_0_20px_rgba(209,77,145,0.15)]">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>✓ AFTERGLOW PROTOCOL</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-950 dark:text-white leading-tight">ATOMIC 0ms LOCK</h4>
-            <p class="text-xs text-neutral-700 dark:text-soft-white/80 leading-snug">
-              Concurrency atomic lock mengamankan kuota tanpa race condition atau double booking.
-            </p>
-          </div>
-        </div>
-
-        <!-- COMPARISON ROW 03: Fake PDF vs Dynamic Rotating QR -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <!-- Bad / Industry -->
-          <div class="p-5 rounded-2xl bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-500/30 space-y-2">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-red-600 dark:text-red-400 font-bold uppercase">
-              <span>✗ INDUSTRI LAMA</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-900 dark:text-white leading-tight">PDF TIKET PALSU</h4>
-            <p class="text-xs text-neutral-600 dark:text-muted-gray leading-snug">
-              Satu barcode PDF digandakan ke puluhan orang, tertahan dan didepak di pintu gerbang.
-            </p>
-          </div>
-
-          <!-- Good / Afterglow -->
-          <div class="p-5 rounded-2xl bg-white dark:bg-electric-magenta/10 border border-electric-magenta/40 dark:border-electric-magenta/50 space-y-2 shadow-sm dark:shadow-[0_0_20px_rgba(209,77,145,0.15)]">
-            <div class="flex items-center gap-2 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold uppercase">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span>✓ AFTERGLOW PROTOCOL</span>
-            </div>
-            <h4 class="font-display text-2xl text-neutral-950 dark:text-white leading-tight">0.3s DYNAMIC QR</h4>
-            <p class="text-xs text-neutral-700 dark:text-soft-white/80 leading-snug">
-              QR Code terenkripsi berputar setiap 15 detik, mustahil di-screenshot atau digandakan.
-            </p>
-          </div>
-        </div>
-
-        <!-- Bottom Real Stage Image with Stamped Barcode -->
-        <div class="relative rounded-2xl overflow-hidden border border-neutral-300 dark:border-white/20 h-44 group shadow-md dark:shadow-none bg-neutral-950">
-          <img 
-            src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80" 
-            alt="Gig Stage Atmosphere" 
-            class="w-full h-full object-cover filter contrast-125 saturate-125 group-hover:scale-105 transition-transform duration-700"
-            loading="lazy"
-          />
-          <div class="absolute inset-0 bg-gradient-to-r from-void-black/90 via-void-black/40 to-void-black/90 pointer-events-none"></div>
-          
-          <div class="absolute inset-0 p-5 flex flex-col justify-between font-mono text-xs select-none">
-            <div class="flex justify-between items-start">
-              <span class="px-2.5 py-1 rounded bg-electric-magenta text-white font-bold text-[10px] tracking-wider uppercase">
-                VERIFIED GIG PASS
-              </span>
-              <span class="text-white font-bold tracking-wider">STAGE DECIBEL: 118 dB</span>
-            </div>
-            <div class="flex justify-between items-end">
-              <div>
-                <span class="text-[10px] text-muted-gray block">SOUNDSCAPE</span>
-                <span class="text-white font-bold">SUB-BASS 35Hz // 20kHz AIR</span>
-              </div>
-              <span class="text-emerald-400 font-bold">100% PROMOTOR BACKED</span>
-            </div>
-          </div>
-        </div>
-
+    <!-- ======================================================================== -->
+    <!-- MINIMALIST STAGE METADATA STRIP (Zero UI Clutter) -->
+    <!-- ======================================================================== -->
+    <div data-animate="reveal" class="w-full flex flex-wrap items-center justify-between gap-4 mt-6 pt-4 border-t border-neutral-200/60 dark:border-white/10 font-mono text-[11px] text-neutral-500 dark:text-muted-gray">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span>ALL GATES PROTECTED // DIRECT-TO-PROMOTOR PROTOCOL</span>
       </div>
-
+      <div class="flex items-center gap-6">
+        <span>STAGE FOOTPRINT: JKT // BDG // DPS // YOG</span>
+        <span class="text-electric-magenta font-bold">100% PROMOTOR BACKED</span>
+      </div>
     </div>
 
   </div>
 </section>
+
+<!-- ======================================================================== -->
+<!-- INTERACTIVE 3D TICKET PHYSICS ENGINE (Persistent Rotation + Click to Reset) -->
+<!-- ======================================================================== -->
+<script>
+  function initInteractiveTicket() {
+    const card = document.getElementById('interactive-ticket-card');
+    const viewport = document.getElementById('ticket-stage-viewport');
+
+    if (!card || !viewport) return;
+
+    // Default Showcase Resting Orientation
+    const defaultRotX = 6;
+    const defaultRotY = -10;
+
+    // Physics State
+    let currentRotX = defaultRotX;
+    let currentRotY = defaultRotY;
+    let targetRotX = defaultRotX;
+    let targetRotY = defaultRotY;
+    let velX = 0;
+    let velY = 0;
+    let isDragging = false;
+    let startPointerX = 0;
+    let startPointerY = 0;
+    let lastPointerX = 0;
+    let lastPointerY = 0;
+    let hasDragged = false;
+    let animationFrameId: number | null = null;
+
+    // Continuous 60fps Loop
+    function updateCardTransform() {
+      if (!isDragging) {
+        // Inertia damping when released
+        if (Math.abs(velX) > 0.04 || Math.abs(velY) > 0.04) {
+          targetRotY += velX;
+          targetRotX += velY;
+          velX *= 0.92;
+          velY *= 0.92;
+          // Clamp target X to keep card comfortable to view
+          targetRotX = Math.max(-65, Math.min(65, targetRotX));
+        }
+
+        // Smooth Lerp towards target angle (stays wherever user dropped it!)
+        currentRotX += (targetRotX - currentRotX) * 0.12;
+        currentRotY += (targetRotY - currentRotY) * 0.12;
+      } else {
+        currentRotX = targetRotX;
+        currentRotY = targetRotY;
+      }
+
+      card.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+
+      // Dynamic Holographic Prism Glare
+      const glareX = 50 + (currentRotY * 1.3) % 100;
+      const glareY = 50 - (currentRotX * 1.5) % 100;
+      const glareOpacity = Math.max(0.25, Math.min(0.9, 0.65 + Math.sin(currentRotY * 0.04) * 0.25));
+
+      card.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
+      card.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
+      card.style.setProperty('--glare-opacity', glareOpacity.toFixed(2));
+
+      animationFrameId = requestAnimationFrame(updateCardTransform);
+    }
+
+    // Start 60fps Physics Loop
+    animationFrameId = requestAnimationFrame(updateCardTransform);
+
+    // Pointer Events for 3D Drag Rotation (Mouse + Touch)
+    card.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      hasDragged = false;
+      card.setPointerCapture(e.pointerId);
+      startPointerX = e.clientX;
+      startPointerY = e.clientY;
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+      velX = 0;
+      velY = 0;
+    });
+
+    card.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      const totalDx = e.clientX - startPointerX;
+      const totalDy = e.clientY - startPointerY;
+      
+      // If moved more than 4px, mark as drag (not a simple click)
+      if (Math.hypot(totalDx, totalDy) > 4) {
+        hasDragged = true;
+      }
+
+      const deltaX = e.clientX - lastPointerX;
+      const deltaY = e.clientY - lastPointerY;
+
+      lastPointerX = e.clientX;
+      lastPointerY = e.clientY;
+
+      velX = deltaX * 0.45;
+      velY = -deltaY * 0.45;
+
+      targetRotY += velX;
+      targetRotX += velY;
+
+      // Restrict extreme flipping on X-axis to keep card pleasant to view
+      targetRotX = Math.max(-65, Math.min(65, targetRotX));
+    });
+
+    const stopDragging = (e: PointerEvent) => {
+      if (!isDragging) return;
+      isDragging = false;
+      try {
+        card.releasePointerCapture(e.pointerId);
+      } catch (err) {}
+
+      // IF USER CLICKED (tap without dragging) -> SNAP BACK TO DEFAULT SHOWCASE ANGLE!
+      if (!hasDragged) {
+        targetRotX = defaultRotX;
+        targetRotY = defaultRotY;
+        velX = 0;
+        velY = 0;
+      }
+      // IF USER DRAGGED -> It stays right at the new angle with momentum inertia!
+    };
+
+    card.addEventListener('pointerup', stopDragging);
+    card.addEventListener('pointercancel', stopDragging);
+  }
+
+  // Initialize on load and on Astro View Transitions
+  document.addEventListener('DOMContentLoaded', initInteractiveTicket);
+  document.addEventListener('astro:page-load', initInteractiveTicket);
+</script>
