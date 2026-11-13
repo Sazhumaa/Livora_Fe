@@ -71,7 +71,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.festivalsDesc',
     ctaKey: 'categories.festivalsCta',
     defaultTitle: 'Festival Musik',
-    defaultDesc: 'Panggung raksasa multi-stage, camping ground, dan euforia ribuan penonton bernyanyi bersama di bawah langit malam.',
+    defaultDesc: 'Panggung megah dan euforia ribuan penonton bernyanyi bersama.',
     defaultCta: 'Jelajahi Festival',
   },
   'electronic-edm': {
@@ -79,7 +79,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.edmDesc',
     ctaKey: 'categories.edmCta',
     defaultTitle: 'Electronic & EDM',
-    defaultDesc: 'Dentuman synth berenergi tinggi, sorotan laser futuristik, dan rave spektakuler tanpa jeda.',
+    defaultDesc: 'Dentuman synth bertenaga, sorotan laser, dan rave spektakuler.',
     defaultCta: 'Masuk Lantai Dansa',
   },
   'pop-kpop': {
@@ -87,7 +87,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.popDesc',
     ctaKey: 'categories.popCta',
     defaultTitle: 'Pop & K-Pop',
-    defaultDesc: 'Koreografi spektakuler kelas dunia, visual panggung megah, dan nyanyian serentak ribuan penggemar.',
+    defaultDesc: 'Koreografi memukau, panggung megah, dan nyanyian ribuan fans.',
     defaultCta: 'Lihat Tur Arena',
   },
   'rock-alternative': {
@@ -95,7 +95,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.rockDesc',
     ctaKey: 'categories.rockCta',
     defaultTitle: 'Rock & Alternative',
-    defaultDesc: 'Riff gitar bertenaga, mosh pit yang membakar semangat, dan teriakan vokal yang menggetarkan dada.',
+    defaultDesc: 'Riff gitar bertenaga, energi mosh pit, dan vokal menggelegar.',
     defaultCta: 'Gabung Mosh Pit',
   },
   'jazz-soul': {
@@ -103,7 +103,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.jazzDesc',
     ctaKey: 'categories.jazzCta',
     defaultTitle: 'Jazz & Soul',
-    defaultDesc: 'Harmoni tiupan brass nan anggun, akustik panggung hangat, dan keintiman vokal memikat.',
+    defaultDesc: 'Harmoni brass nan hangat, akustik nyaman, dan vokal memikat.',
     defaultCta: 'Nikmati Nuansa Soul',
   },
   'indie-local': {
@@ -111,7 +111,7 @@ const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey:
     descKey: 'categories.indieDesc',
     ctaKey: 'categories.indieCta',
     defaultTitle: 'Indie & Panggung Lokal',
-    defaultDesc: 'Eksplorasi musisi independen berbakat, panggung intim penuh jiwa, dan komunitas musik yang solid.',
+    defaultDesc: 'Musisi independen berbakat dan panggung intim penuh jiwa.',
     defaultCta: 'Dukung Panggung Indie',
   },
 };
@@ -277,7 +277,7 @@ const categories = orderedSlugs
                 {i18nInfo.defaultTitle}
               </h3>
 
-              <p data-i18n={i18nInfo.descKey} class="text-xs sm:text-sm text-neutral-600 dark:text-muted-gray line-clamp-2 mb-4 leading-relaxed">
+              <p data-i18n={i18nInfo.descKey} class="text-xs sm:text-sm text-neutral-600 dark:text-muted-gray min-h-[38px] mb-4 leading-relaxed">
                 {i18nInfo.defaultDesc}
               </p>
 
