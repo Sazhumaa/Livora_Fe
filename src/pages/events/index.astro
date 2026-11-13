@@ -21,14 +21,14 @@ function formatRupiah(amount: number) {
     <!-- Header Banner -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
       <div>
-        <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
-          EXPLORE CATALOG
+        <span data-i18n="pages.eventsCatalog" class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+          KATALOG KONSER
         </span>
-        <h1 class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
-          DISCOVER EXPERIENCES
+        <h1 data-i18n="pages.eventsHeader" class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
+          TEMUKAN KONSER IMPIANMU
         </h1>
-        <p class="text-muted-gray text-base mt-2 max-w-xl">
-          Temukan tiket resmi untuk tur musik terhangat tahun 2026. Pilih kategori dan amankan kursi Anda sebelum kehabisan.
+        <p data-i18n="pages.eventsSub" class="text-muted-gray text-base mt-2 max-w-xl">
+          Dapatkan akses resmi ke seluruh jadwal tur musik dan festival terpanas tahun 2026. Pilih posisimu sekarang sebelum kehabisan.
         </p>
       </div>
 
@@ -36,6 +36,7 @@ function formatRupiah(amount: number) {
       <div class="relative w-full md:w-80">
         <input 
           type="text" 
+          data-i18n-placeholder="pages.searchPlaceholder"
           placeholder="Cari artis, konser, atau kota..." 
           class="w-full px-4 py-3 pl-11 rounded-full bg-dark-plum border border-white/10 text-sm text-soft-white placeholder-muted-gray focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
         />
@@ -48,7 +49,7 @@ function formatRupiah(amount: number) {
     <!-- Category Filter Bar -->
     <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
       <button class="px-5 py-2 rounded-full text-xs font-semibold bg-electric-magenta text-soft-white shadow-magenta-glow shrink-0">
-        All Genres
+        <span data-i18n="pages.allGenres">Semua Genre</span>
       </button>
       {MOCK_CATEGORIES.map((cat) => (
         <button class="px-5 py-2 rounded-full text-xs font-medium bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white hover:border-white/20 shrink-0 transition-colors">
@@ -76,16 +77,16 @@ function formatRupiah(amount: number) {
 
               <div class="absolute top-4 right-4">
                 {isSoldOut ? (
-                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-muted-gray border border-white/10">
-                    SOLD OUT
+                  <span data-i18n="featured.soldOut" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-muted-gray border border-white/10">
+                    HABIS TERJUAL
                   </span>
                 ) : isAlmostSold ? (
-                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
-                    ALMOST SOLD OUT
+                  <span data-i18n="featured.almostSoldOut" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+                    HAMPIR HABIS
                   </span>
                 ) : (
-                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md text-soft-white border border-white/20">
-                    AVAILABLE
+                  <span data-i18n="featured.available" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md text-soft-white border border-white/20">
+                    TERSEDIA
                   </span>
                 )}
               </div>
@@ -124,7 +125,7 @@ function formatRupiah(amount: number) {
 
               <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
                 <div>
-                  <span class="text-[10px] text-muted-gray uppercase tracking-wider block">Starts From</span>
+                  <span data-i18n="pages.startsFrom" class="text-[10px] text-muted-gray uppercase tracking-wider block">Mulai Dari</span>
                   <span class="font-display text-xl text-soft-white">
                     {formatRupiah(event.startingPrice)}
                   </span>
@@ -132,11 +133,11 @@ function formatRupiah(amount: number) {
 
                 {isSoldOut ? (
                   <button disabled class="px-4 py-2 rounded-full bg-white/5 text-muted-gray text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
-                    SOLD OUT
+                    <span data-i18n="pages.soldOutBtn">TIKET HABIS</span>
                   </button>
                 ) : (
                   <button class="px-4 py-2 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-soft-white text-xs font-semibold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all">
-                    GET TICKETS
+                    <span data-i18n="pages.getTicketsBtn">BELI TIKET</span>
                   </button>
                 )}
               </div>

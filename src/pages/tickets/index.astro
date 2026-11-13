@@ -9,13 +9,13 @@ import Footer from '../../components/landing/Footer.astro';
 >
   <div class="pt-32 pb-24 px-6 lg:px-12 max-w-4xl mx-auto w-full">
     <div class="mb-10">
-      <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
-        DIGITAL WALLET
+      <span data-i18n="pages.ticketsWallet" class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+        DOMPET TIKET DIGITAL
       </span>
-      <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
-        MY TICKETS
+      <h1 data-i18n="pages.ticketsHeader" class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+        TIKET KONSER SAYA
       </h1>
-      <p class="text-muted-gray text-sm mt-1">
+      <p data-i18n="pages.ticketsSub" class="text-muted-gray text-sm mt-1">
         Tiket konser aktif siap pakai untuk gate scanning di hari acara.
       </p>
     </div>
@@ -24,8 +24,8 @@ import Footer from '../../components/landing/Footer.astro';
     <div class="rounded-3xl bg-dark-plum border border-white/10 overflow-hidden shadow-2xl relative">
       <div class="p-8 sm:p-10 flex flex-col md:flex-row justify-between gap-8 items-center border-b border-white/10 border-dashed">
         <div>
-          <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
-            ACTIVE PASS // READY TO SCAN
+          <span data-i18n="pages.ticketsActive" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+            TIKET AKTIF // SIAP SCAN
           </span>
           <h2 class="font-display text-3xl sm:text-4xl text-soft-white mt-4">
             AFTERGLOW FESTIVAL 2026: VOID INCEPTION
@@ -49,8 +49,8 @@ import Footer from '../../components/landing/Footer.astro';
       </div>
 
       <div class="p-6 bg-void-black/60 flex items-center justify-between text-xs text-muted-gray">
-        <span>Owner: Registered Pass Holder</span>
-        <span class="text-electric-magenta font-semibold">Dynamic Anti-Screenshot Enabled</span>
+        <span data-i18n="pages.ticketsOwner">Pemilik: Pemegang Tiket Terdaftar</span>
+        <span data-i18n="pages.ticketsAntiScreenshot" class="text-electric-magenta font-semibold">QR Code Dinamis Anti-Pemalsuan Aktif</span>
       </div>
     </div>
   </div>
