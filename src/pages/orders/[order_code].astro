@@ -1,0 +1,365 @@
+---
+import RootLayout from '../../layouts/RootLayout.astro';
+import Footer from '../../components/landing/Footer.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { order_code: 'demo' } },
+    { params: { order_code: 'ORD-UKK-DEMO-2026' } },
+  ];
+}
+---
+
+<RootLayout 
+  title="Selesaikan Pembayaran Tiket — AFTERGLOW" 
+  description="Konfirmasi pesanan tiket konser dan selesaikan transaksi dalam 15 menit."
+>
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-4xl mx-auto w-full">
+    
+    <!-- Loading Skeleton Placeholder -->
+    <div id="order-loading-skeleton" class="animate-pulse space-y-6">
+      <div class="h-8 bg-white/5 rounded-xl w-1/3"></div>
+      <div class="h-64 bg-dark-plum/70 rounded-3xl border border-white/10"></div>
+    </div>
+
+    <!-- Main Order Container (Hidden until client loads order) -->
+    <div id="order-content" class="hidden space-y-8">
+      
+      <!-- Top Status Banner with 15-Minute Countdown -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum border border-electric-magenta/40 shadow-magenta-glow backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div class="space-y-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta animate-ping"></span>
+            <span class="text-xs font-mono font-bold tracking-widest text-electric-magenta uppercase">
+              RESERVASI KUOTA AKTIF
+            </span>
+          </div>
+          <h1 class="font-display text-3xl sm:text-4xl text-soft-white tracking-wide">
+            SELESAIKAN PEMBAYARAN TIKET
+          </h1>
+          <p class="text-xs text-muted-gray">
+            Kode Transaksi: <strong id="order-code-display" class="font-mono text-soft-white tracking-wider">ORD-XXXX</strong>
+          </p>
+        </div>
+
+        <!-- 15-Minute Countdown Clock Disc -->
+        <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-void-black/80 border border-white/15 min-w-[140px] text-center shadow-lg">
+          <span class="text-[10px] font-mono text-muted-gray uppercase tracking-wider mb-1">SISA WAKTU BAYAR</span>
+          <span id="order-countdown-timer" class="font-display text-4xl text-electric-magenta tracking-widest animate-pulse">
+            15:00
+          </span>
+          <span class="text-[9px] text-muted-gray mt-1 font-mono">Sebelum Kuota Dilepas</span>
+        </div>
+      </div>
+
+      <!-- Order Summary Card -->
+      <div class="p-7 sm:p-9 rounded-3xl bg-dark-plum/80 border border-white/15 backdrop-blur-xl space-y-6">
+        <h2 class="font-display text-2xl text-soft-white border-b border-white/10 pb-4">
+          RINCIAN TIKET YANG DIPESAN
+        </h2>
+
+        <!-- Event Basic Info -->
+        <div class="flex items-start gap-4">
+          <div class="w-16 h-16 rounded-2xl bg-void-black border border-white/10 overflow-hidden shrink-0">
+            <img 
+              id="order-event-poster" 
+              src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&q=80" 
+              alt="Poster Event" 
+              class="w-full h-full object-cover" 
+            />
+          </div>
+          <div>
+            <h3 id="order-event-title" class="font-bold text-lg text-soft-white">Nama Konser Musik</h3>
+            <p id="order-event-venue" class="text-xs text-muted-gray mt-0.5">Gelora Bung Karno Stadium, Jakarta</p>
+            <p id="order-event-date" class="text-xs text-electric-magenta font-mono font-semibold mt-1">Sabtu, 14 Nov 2026 • 19:00 WIB</p>
+          </div>
+        </div>
+
+        <!-- Purchased Ticket Items List -->
+        <div id="order-items-list" class="space-y-3 pt-2">
+          <!-- Dynamically injected item rows -->
+        </div>
+
+        <!-- Promo Voucher Section -->
+        <div class="p-4 rounded-2xl bg-void-black/60 border border-white/10">
+          <span class="text-xs font-semibold text-muted-gray block mb-2 font-mono uppercase">
+            Punya Kode Promo / Voucher Konser?
+          </span>
+          <div class="flex gap-2">
+            <input 
+              type="text" 
+              id="voucher-input" 
+              placeholder="Contoh: SOUNDTIXUKK" 
+              class="flex-1 px-4 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white uppercase font-mono tracking-wider focus:outline-none focus:border-electric-magenta"
+            />
+            <button 
+              id="apply-voucher-btn" 
+              type="button" 
+              class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider transition-all"
+            >
+              Gunakan
+            </button>
+          </div>
+          <p id="voucher-status-msg" class="text-[11px] mt-1.5 hidden"></p>
+        </div>
+
+        <!-- Transparent Price Breakdown (Zero Hidden Fees) -->
+        <div class="space-y-2 py-4 border-t border-b border-white/10 text-xs font-mono">
+          <div class="flex justify-between text-muted-gray">
+            <span>Subtotal Tiket:</span>
+            <span id="order-subtotal" class="text-soft-white">Rp 0</span>
+          </div>
+          <div id="order-discount-row" class="hidden flex justify-between text-emerald-400">
+            <span>Potongan Diskon Voucher:</span>
+            <span id="order-discount-amount">- Rp 0</span>
+          </div>
+          <div class="flex justify-between text-muted-gray">
+            <span>Platform Fee (Sistem & Escrow):</span>
+            <span id="order-platform-fee" class="text-soft-white">Rp 3.000</span>
+          </div>
+          <div class="flex justify-between text-base font-bold pt-3 border-t border-white/10">
+            <span class="text-soft-white font-sans">Total Pembayaran Lunas:</span>
+            <span id="order-final-amount" class="font-display text-3xl text-electric-magenta">Rp 0</span>
+          </div>
+        </div>
+
+        <!-- Payment Actions (Mock Payment Simulation & Cancel) -->
+        <div class="space-y-3 pt-2">
+          <!-- DEV MOCK PAY BUTTON -->
+          <button 
+            id="mock-pay-btn" 
+            type="button" 
+            class="w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+          >
+            <span class="btn-text">⚡ SIMULASIKAN PEMBAYARAN INSTAN (MOCK PAY)</span>
+            <svg class="w-4 h-4 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+          </button>
+
+          <!-- CANCEL ORDER BUTTON -->
+          <button 
+            id="cancel-order-btn" 
+            type="button" 
+            class="w-full py-3 px-6 rounded-2xl bg-white/5 border border-white/10 text-muted-gray hover:text-red-400 hover:border-red-500/40 text-xs font-semibold tracking-wider uppercase transition-colors"
+          >
+            Batalkan Pesanan Ini (Kembalikan Kuota)
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expired Order State -->
+    <div id="order-expired-state" class="hidden text-center py-20">
+      <div class="w-20 h-20 rounded-full bg-red-950/40 border border-red-500/40 flex items-center justify-center mx-auto mb-4 text-red-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 class="font-display text-4xl text-soft-white mb-2">SESI RESERVASI TELAH BERAKHIR</h2>
+      <p class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+        Batas waktu pembayaran 15 menit telah habis dan kuota tiket telah dikembalikan ke katalog publik secara otomatis.
+      </p>
+      <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        CARI TIKET LAIN
+      </a>
+    </div>
+
+  </div>
+
+  <Footer />
+</RootLayout>
+
+<script>
+  import { api } from '../../lib/api';
+  import { formatRupiah, formatCountdown } from '../../lib/formatters';
+
+  function initOrderCheckout() {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const orderCode = pathParts[pathParts.length - 1];
+
+    const skeleton = document.getElementById('order-loading-skeleton');
+    const content = document.getElementById('order-content');
+    const expiredState = document.getElementById('order-expired-state');
+
+    const codeDisplay = document.getElementById('order-code-display');
+    const countdownTimer = document.getElementById('order-countdown-timer');
+    const eventPoster = document.getElementById('order-event-poster') as HTMLImageElement;
+    const eventTitle = document.getElementById('order-event-title');
+    const eventVenue = document.getElementById('order-event-venue');
+    const eventDate = document.getElementById('order-event-date');
+    const itemsList = document.getElementById('order-items-list');
+
+    const subtotalDisplay = document.getElementById('order-subtotal');
+    const discountRow = document.getElementById('order-discount-row');
+    const discountAmount = document.getElementById('order-discount-amount');
+    const platformFeeDisplay = document.getElementById('order-platform-fee');
+    const finalAmountDisplay = document.getElementById('order-final-amount');
+
+    const mockPayBtn = document.getElementById('mock-pay-btn') as HTMLButtonElement;
+    const cancelBtn = document.getElementById('cancel-order-btn') as HTMLButtonElement;
+
+    const voucherInput = document.getElementById('voucher-input') as HTMLInputElement;
+    const applyVoucherBtn = document.getElementById('apply-voucher-btn');
+    const voucherMsg = document.getElementById('voucher-status-msg');
+
+    let currentOrder: any = null;
+    let timerInterval: any = null;
+    let pollingInterval: any = null;
+
+    if (!orderCode) return;
+
+    loadOrderDetail();
+
+    async function loadOrderDetail() {
+      try {
+        const order = await api.get(`/orders/${orderCode}`);
+        currentOrder = order;
+        renderOrder(order);
+      } catch (err: any) {
+        // Fallback demo mock if offline
+        const mockOrder = {
+          order_code: orderCode,
+          event_id: 1,
+          nama_event: 'AFTERGLOW FESTIVAL 2026: VOID INCEPTION',
+          poster_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&q=80',
+          alamat: 'Gelora Bung Karno Stadium, Jakarta',
+          tanggal_mulai: '2026-11-14T19:00:00Z',
+          status: 'pending',
+          total_amount: 1500000,
+          diskon_amount: 0,
+          platform_fee: 3000,
+          final_amount: 1503000,
+          payment_expires_at: new Date(Date.now() + 14 * 60 * 1000).toISOString(),
+          items: [
+            { category_name: 'VIP PANGGUNG', qty: 1, price: 1500000, subtotal: 1500000 }
+          ]
+        };
+        currentOrder = mockOrder;
+        renderOrder(mockOrder);
+      }
+    }
+
+    function renderOrder(order: any) {
+      skeleton?.classList.add('hidden');
+
+      if (order.status === 'expired' || order.status === 'cancelled') {
+        expiredState?.classList.remove('hidden');
+        content?.classList.add('hidden');
+        return;
+      }
+
+      if (order.status === 'paid') {
+        // Redirect immediately to receipt
+        window.location.href = `/orders/${orderCode}/receipt`;
+        return;
+      }
+
+      content?.classList.remove('hidden');
+
+      if (codeDisplay) codeDisplay.textContent = order.order_code;
+      if (eventPoster && order.poster_url) eventPoster.src = order.poster_url;
+      if (eventTitle) eventTitle.textContent = order.nama_event || 'AFTERGLOW Live Concert';
+      if (eventVenue) eventVenue.textContent = order.alamat || 'Stadion Utama Gelora Bung Karno';
+
+      // Render Items
+      if (itemsList && order.items) {
+        itemsList.innerHTML = order.items.map((item: any) => `
+          <div class="flex items-center justify-between p-3.5 rounded-xl bg-void-black/70 border border-white/5 text-xs">
+            <div>
+              <span class="font-bold text-soft-white block">${item.category_name || item.nama_kategori || 'Tiket Konser'}</span>
+              <span class="text-muted-gray">${item.qty} tiket × ${formatRupiah(item.price || item.harga || 0)}</span>
+            </div>
+            <span class="font-mono font-bold text-soft-white">${formatRupiah(item.subtotal || ((item.price || 0) * (item.qty || 1)))}</span>
+          </div>
+        `).join('');
+      }
+
+      // Amounts
+      if (subtotalDisplay) subtotalDisplay.textContent = formatRupiah(order.total_amount);
+      if (platformFeeDisplay) platformFeeDisplay.textContent = formatRupiah(order.platform_fee || 3000);
+      if (finalAmountDisplay) finalAmountDisplay.textContent = formatRupiah(order.final_amount);
+
+      // Start Countdown
+      startCountdown(order.payment_expires_at);
+
+      // Start Polling every 3s
+      startPolling();
+    }
+
+    function startCountdown(expiresAtStr: string) {
+      clearInterval(timerInterval);
+      const expiresAt = new Date(expiresAtStr).getTime();
+
+      function tick() {
+        const remaining = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
+        const { formatted } = formatCountdown(remaining);
+
+        if (countdownTimer) countdownTimer.textContent = formatted;
+
+        if (remaining <= 0) {
+          clearInterval(timerInterval);
+          clearInterval(pollingInterval);
+          content?.classList.add('hidden');
+          expiredState?.classList.remove('hidden');
+        }
+      }
+
+      tick();
+      timerInterval = setInterval(tick, 1000);
+    }
+
+    function startPolling() {
+      clearInterval(pollingInterval);
+      pollingInterval = setInterval(async () => {
+        try {
+          const check = await api.get(`/orders/${orderCode}`);
+          if (check.status === 'paid') {
+            clearInterval(pollingInterval);
+            clearInterval(timerInterval);
+            window.location.href = `/orders/${orderCode}/receipt`;
+          }
+        } catch {}
+      }, 3000);
+    }
+
+    // Mock Pay Handler
+    mockPayBtn?.addEventListener('click', async () => {
+      mockPayBtn.disabled = true;
+      const text = mockPayBtn.querySelector('.btn-text');
+      const spinner = mockPayBtn.querySelector('.btn-spinner');
+      text?.classList.add('opacity-50');
+      spinner?.classList.remove('hidden');
+
+      try {
+        await api.post(`/payments/mock-pay/${orderCode}`);
+        // Successful payment -> redirect to official receipt
+        window.location.href = `/orders/${orderCode}/receipt`;
+      } catch (err: any) {
+        alert(err.message || 'Gagal memproses mock payment.');
+        mockPayBtn.disabled = false;
+        text?.classList.remove('opacity-50');
+        spinner?.classList.add('hidden');
+      }
+    });
+
+    // Cancel Order Handler
+    cancelBtn?.addEventListener('click', async () => {
+      const confirmCancel = confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Kuota akan langsung dilepas.');
+      if (!confirmCancel) return;
+
+      cancelBtn.disabled = true;
+      try {
+        await api.post(`/orders/${orderCode}/cancel`);
+        alert('Pesanan berhasil dibatalkan. Kuota tiket telah dikembalikan.');
+        window.location.href = '/events';
+      } catch (err: any) {
+        alert(err.message || 'Gagal membatalkan pesanan.');
+        cancelBtn.disabled = false;
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initOrderCheckout);
+</script>

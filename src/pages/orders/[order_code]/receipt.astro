@@ -1,0 +1,254 @@
+---
+import RootLayout from '../../../layouts/RootLayout.astro';
+import Footer from '../../../components/landing/Footer.astro';
+
+export async function getStaticPaths() {
+  return [
+    { params: { order_code: 'demo' } },
+    { params: { order_code: 'ORD-UKK-DEMO-2026' } },
+  ];
+}
+---
+
+<RootLayout 
+  title="Kuitansi Resmi Pembayaran Tiket — AFTERGLOW" 
+  description="Bukti pembayaran sah berstempel lunas untuk tiket konser musik resmi AFTERGLOW."
+>
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-3xl mx-auto w-full">
+    
+    <!-- Printable Invoice Container -->
+    <div id="receipt-container" class="rounded-3xl bg-dark-plum/90 border border-white/15 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-soft-white print:bg-white print:text-black print:border-none print:shadow-none">
+      
+      <!-- Top Receipt Header: Brand & PAID Stamp -->
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-white/10 print:border-black/20">
+        <div>
+          <span class="font-display text-4xl text-soft-white print:text-black tracking-wider block">
+            AFTERGLOW
+          </span>
+          <span class="text-xs font-mono text-muted-gray print:text-neutral-600 block mt-0.5">
+            PLATFORM TIKET KONSER RESMI BERLISENSI
+          </span>
+          <p class="text-[11px] text-muted-gray print:text-neutral-500 font-mono mt-1">
+            NPWP: 01.345.678.9-012.000 • soundtix.id
+          </p>
+        </div>
+
+        <!-- Official Green Paid Stamp -->
+        <div class="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg">
+          <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div class="leading-tight">
+            <span class="text-[10px] font-mono tracking-widest uppercase block">STATUS TRANSAKSI</span>
+            <span class="font-display text-2xl tracking-wider">LUNAS // PAID</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction Meta Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 py-8 border-b border-white/10 print:border-black/20 text-xs font-mono">
+        <div>
+          <span class="text-muted-gray print:text-neutral-500 block">KODE ORDER:</span>
+          <strong id="receipt-order-code" class="text-soft-white print:text-black text-sm block mt-0.5">ORD-XXXX</strong>
+        </div>
+        <div>
+          <span class="text-muted-gray print:text-neutral-500 block">TANGGAL LUNAS:</span>
+          <strong id="receipt-paid-at" class="text-soft-white print:text-black text-sm block mt-0.5">-</strong>
+        </div>
+        <div>
+          <span class="text-muted-gray print:text-neutral-500 block">METODE BAYAR:</span>
+          <strong id="receipt-channel" class="text-soft-white print:text-black text-sm block mt-0.5">MOCK PAY</strong>
+        </div>
+        <div>
+          <span class="text-muted-gray print:text-neutral-500 block">PEMBELI:</span>
+          <strong id="receipt-buyer-email" class="text-soft-white print:text-black text-sm block mt-0.5 truncate">buyer@soundtix.id</strong>
+        </div>
+      </div>
+
+      <!-- Concert Info Banner -->
+      <div class="py-6 border-b border-white/10 print:border-black/20">
+        <span class="text-[10px] font-mono font-bold tracking-widest text-electric-magenta print:text-pink-700 uppercase block mb-1">
+          DETAIL EVENT KONSER
+        </span>
+        <h2 id="receipt-event-title" class="font-display text-3xl text-soft-white print:text-black">
+          AFTERGLOW FESTIVAL 2026: VOID INCEPTION
+        </h2>
+        <p id="receipt-event-venue" class="text-xs text-muted-gray print:text-neutral-600 mt-1">
+          Gelora Bung Karno Stadium, Jakarta
+        </p>
+      </div>
+
+      <!-- Ticket Items Table -->
+      <div class="py-6 border-b border-white/10 print:border-black/20">
+        <table class="w-full text-xs">
+          <thead>
+            <tr class="text-muted-gray print:text-neutral-500 font-mono border-b border-white/10 print:border-black/20 pb-2">
+              <th class="text-left font-semibold pb-2">KATEGORI TIKET</th>
+              <th class="text-center font-semibold pb-2">QTY</th>
+              <th class="text-right font-semibold pb-2">HARGA SATUAN</th>
+              <th class="text-right font-semibold pb-2">SUBTOTAL</th>
+            </tr>
+          </thead>
+          <tbody id="receipt-items-tbody" class="divide-y divide-white/5 print:divide-black/10">
+            <!-- Dynamically injected item rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Financial Totals -->
+      <div class="py-6 border-b border-white/10 print:border-black/20 space-y-2 text-xs font-mono">
+        <div class="flex justify-between text-muted-gray print:text-neutral-600">
+          <span>Subtotal Tiket:</span>
+          <span id="receipt-subtotal" class="text-soft-white print:text-black font-semibold">Rp 0</span>
+        </div>
+        <div class="flex justify-between text-muted-gray print:text-neutral-600">
+          <span>Platform & Escrow Convenience Fee:</span>
+          <span class="text-soft-white print:text-black font-semibold">Rp 3.000</span>
+        </div>
+        <div class="flex justify-between text-sm font-bold pt-3 border-t border-white/10 print:border-black/20">
+          <span class="text-soft-white print:text-black font-sans">TOTAL TELAH DIBAYAR:</span>
+          <span id="receipt-total-paid" class="font-display text-3xl text-electric-magenta print:text-pink-700">Rp 0</span>
+        </div>
+      </div>
+
+      <!-- Escrow Guarantee & Legal Disclaimer -->
+      <div class="pt-6 text-[11px] text-muted-gray print:text-neutral-500 space-y-2">
+        <p>
+          🛡️ <strong>Garansi Perlindungan Escrow AFTERGLOW</strong>: Dana pembayaran Anda disimpan aman dalam rekening bersama penampungan platform dan baru akan dicairkan ke promotor setelah konser berhasil digelar.
+        </p>
+        <p>
+          Dokumen kuitansi ini diterbitkan secara elektronik oleh sistem komputerisasi AFTERGLOW dan merupakan bukti transaksi yang sah menurut ketentuan undang-undang perpajakan dan perdagangan elektronik Republik Indonesia.
+        </p>
+      </div>
+
+      <!-- Action Buttons (Hidden when printing) -->
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
+        <div class="flex items-center gap-3 w-full sm:w-auto">
+          <button 
+            id="print-receipt-btn" 
+            type="button" 
+            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+            </svg>
+            <span>Cetak Kuitansi</span>
+          </button>
+
+          <a 
+            id="receipt-calendar-btn" 
+            href="#" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+          >
+            <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Simpan Kalender</span>
+          </a>
+        </div>
+
+        <a 
+          href="/tickets" 
+          class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider text-center hover:shadow-magenta-glow transition-all hover:scale-105 active:scale-95"
+        >
+          BUKA E-TIKET SAYA (QR SCAN) →
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>
+
+<script>
+  import { api } from '../../../lib/api';
+  import { formatRupiah, formatDateIndo, getGoogleCalendarUrl } from '../../../lib/formatters';
+
+  function initReceipt() {
+    const pathParts = window.location.pathname.split('/').filter(Boolean);
+    const orderCode = pathParts[pathParts.length - 2]; // e.g. /orders/[order_code]/receipt
+
+    const codeSpan = document.getElementById('receipt-order-code');
+    const paidAtSpan = document.getElementById('receipt-paid-at');
+    const channelSpan = document.getElementById('receipt-channel');
+    const buyerEmailSpan = document.getElementById('receipt-buyer-email');
+    const eventTitle = document.getElementById('receipt-event-title');
+    const eventVenue = document.getElementById('receipt-event-venue');
+    const itemsTbody = document.getElementById('receipt-items-tbody');
+    const subtotalSpan = document.getElementById('receipt-subtotal');
+    const totalPaidSpan = document.getElementById('receipt-total-paid');
+    const calendarBtn = document.getElementById('receipt-calendar-btn') as HTMLAnchorElement;
+    const printBtn = document.getElementById('print-receipt-btn');
+
+    printBtn?.addEventListener('click', () => window.print());
+
+    if (!orderCode) return;
+
+    loadReceiptData();
+
+    async function loadReceiptData() {
+      try {
+        const receipt = await api.get(`/orders/${orderCode}/receipt`);
+        renderReceipt(receipt);
+      } catch (err: any) {
+        // Fallback demo receipt
+        const mockReceipt = {
+          order_code: orderCode,
+          nama_event: 'AFTERGLOW FESTIVAL 2026: VOID INCEPTION',
+          alamat: 'Gelora Bung Karno Stadium, Jakarta',
+          tanggal_mulai: '2026-11-14T19:00:00Z',
+          tanggal_selesai: '2026-11-14T23:30:00Z',
+          paid_at: new Date().toISOString(),
+          payment_channel: 'INTERNAL_MOCK',
+          buyer_email: 'buyer@soundtix.id',
+          total_amount: 1500000,
+          platform_fee: 3000,
+          final_amount: 1503000,
+          items: [
+            { category_name: 'VIP PANGGUNG', qty: 1, price: 1500000, subtotal: 1500000 }
+          ]
+        };
+        renderReceipt(mockReceipt);
+      }
+    }
+
+    function renderReceipt(data: any) {
+      if (codeSpan) codeSpan.textContent = data.order_code;
+      if (paidAtSpan) paidAtSpan.textContent = formatDateIndo(data.paid_at || new Date());
+      if (channelSpan) channelSpan.textContent = data.payment_channel || 'MOCK PAY';
+      if (buyerEmailSpan) buyerEmailSpan.textContent = data.buyer_email || 'buyer@soundtix.id';
+
+      if (eventTitle) eventTitle.textContent = data.nama_event;
+      if (eventVenue) eventVenue.textContent = data.alamat;
+
+      if (itemsTbody && data.items) {
+        itemsTbody.innerHTML = data.items.map((item: any) => `
+          <tr class="py-2.5">
+            <td class="py-2.5 text-soft-white print:text-black font-semibold">${item.category_name || item.nama_kategori}</td>
+            <td class="py-2.5 text-center text-muted-gray print:text-neutral-600">${item.qty}</td>
+            <td class="py-2.5 text-right font-mono text-muted-gray print:text-neutral-600">${formatRupiah(item.price || item.harga || 0)}</td>
+            <td class="py-2.5 text-right font-mono text-soft-white print:text-black font-bold">${formatRupiah(item.subtotal || ((item.price || 0) * (item.qty || 1)))}</td>
+          </tr>
+        `).join('');
+      }
+
+      if (subtotalSpan) subtotalSpan.textContent = formatRupiah(data.total_amount);
+      if (totalPaidSpan) totalPaidSpan.textContent = formatRupiah(data.final_amount);
+
+      if (calendarBtn) {
+        calendarBtn.href = getGoogleCalendarUrl({
+          nama_event: data.nama_event,
+          tanggal_mulai: data.tanggal_mulai || new Date(),
+          tanggal_selesai: data.tanggal_selesai,
+          alamat: data.alamat,
+          organization_name: 'AFTERGLOW Live',
+        });
+      }
+    }
+  }
+
+  document.addEventListener('astro:page-load', initReceipt);
+</script>

@@ -1,0 +1,511 @@
+---
+import RootLayout from '../../layouts/RootLayout.astro';
+import Footer from '../../components/landing/Footer.astro';
+import { fetchEventById, type BackendEvent, type BackendTicketCategory } from '../../lib/events';
+import { formatRupiah, formatDateIndo, getGoogleMapsUrl, getGoogleCalendarUrl } from '../../lib/formatters';
+
+export async function getStaticPaths() {
+  // Pre-generate routes for IDs 1..20
+  return Array.from({ length: 20 }, (_, i) => ({
+    params: { id: String(i + 1) }
+  }));
+}
+
+const { id } = Astro.params;
+const event = await fetchEventById(id || 1);
+
+if (!event) {
+  return Astro.redirect('/events');
+}
+
+const categories = event.categories || [];
+const mappedCategories = categories.map((cat, idx) => ({
+  ...cat,
+  isCatSoldOut: Boolean(!cat.kuota_tersedia || Number(cat.kuota_tersedia) === 0),
+  isDefaultSelected: idx === 0 && Number(cat.kuota_tersedia || 0) > 0,
+}));
+
+const minPrice = categories.length > 0 
+  ? Math.min(...categories.map((c) => Number(c.harga))) 
+  : event.min_price || 0;
+
+const mapsUrl = getGoogleMapsUrl(event.alamat, event.lat, event.lng);
+const calendarUrl = getGoogleCalendarUrl(event);
+const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
+---
+
+<RootLayout 
+  title={`${event.nama_event} — AFTERGLOW Concert Arena`}
+  description={`Beli tiket resmi ${event.nama_event} di ${event.alamat}. Rasakan dentuman panggung live.`}
+>
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-xs font-mono text-muted-gray mb-8">
+      <a href="/" class="hover:text-soft-white transition-colors">HOME</a>
+      <span>/</span>
+      <a href="/events" class="hover:text-soft-white transition-colors">KONSER</a>
+      <span>/</span>
+      <span class="text-electric-magenta truncate max-w-[200px] sm:max-w-md">{event.nama_event}</span>
+    </nav>
+
+    <!-- Main Hero Split (Left: Stage Poster Art, Right: Details & War Arena) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-start">
+      
+      <!-- LEFT COLUMN: Concert Artwork & Quick Info (5 cols) -->
+      <div class="lg:col-span-5 flex flex-col gap-6">
+        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-void-black border border-white/15 shadow-2xl group">
+          <img 
+            src={event.poster_url || 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80'} 
+            alt={event.nama_event}
+            class="w-full h-full object-cover object-center filter brightness-95 contrast-105 group-hover:scale-105 transition-transform duration-700"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-dark-plum via-transparent to-transparent"></div>
+
+          <!-- Availability Tag -->
+          <div class="absolute top-5 right-5">
+            {isSoldOut ? (
+              <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider uppercase bg-black/85 text-muted-gray border border-white/10">
+                HABIS TERJUAL
+              </span>
+            ) : (
+              <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+                TIKET TERSEDIA
+              </span>
+            )}
+          </div>
+
+          <!-- Organizer Badge -->
+          <div class="absolute top-5 left-5">
+            <span class="px-3 py-1 rounded-md text-xs font-semibold tracking-wider uppercase bg-void-black/80 backdrop-blur-md text-soft-white border border-white/10">
+              {event.organization_name || 'Promotor Resmi'}
+            </span>
+          </div>
+
+          <!-- Bottom Poster Text Overlay -->
+          <div class="absolute bottom-6 left-6 right-6">
+            <span class="text-xs font-mono text-electric-magenta uppercase tracking-wider block mb-1">HEADLINE ARTIST</span>
+            <p class="font-display text-3xl text-soft-white leading-tight drop-shadow-md">
+              {event.artis}
+            </p>
+          </div>
+        </div>
+
+        <!-- Smart Action Buttons: Google Maps & Calendar -->
+        <div class="grid grid-cols-2 gap-3">
+          <a 
+            href={mapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-dark-plum border border-white/10 text-xs font-semibold text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta transition-all"
+          >
+            <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Rute Google Maps</span>
+          </a>
+
+          <a 
+            href={calendarUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-dark-plum border border-white/10 text-xs font-semibold text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta transition-all"
+          >
+            <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span>Simpan Kalender</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Concert Info & Ticket Selection (7 cols) -->
+      <div class="lg:col-span-7 flex flex-col gap-8">
+        <div>
+          <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+            KONSER MUSIK LIVE // RESMI
+          </span>
+          <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide leading-tight mb-4">
+            {event.nama_event}
+          </h1>
+
+          <!-- Date & Venue Highlights -->
+          <div class="flex flex-wrap items-center gap-4 text-sm text-muted-gray mb-6">
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <span class="text-soft-white font-medium">{formatDateIndo(event.tanggal_mulai)}</span>
+            </div>
+            <span>•</span>
+            <div class="flex items-center gap-2">
+              <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              </svg>
+              <span class="text-soft-white font-medium">{event.alamat}</span>
+            </div>
+          </div>
+
+          <p class="text-sm sm:text-base text-muted-gray leading-relaxed mb-6">
+            {event.deskripsi}
+          </p>
+
+          <!-- Venue Physical Occupancy Gauge -->
+          <div class="p-4 rounded-2xl bg-dark-plum/70 border border-white/10 mb-8">
+            <div class="flex items-center justify-between text-xs font-mono mb-2">
+              <span class="text-muted-gray uppercase">Okupansi Venue & Kuota Panggung:</span>
+              <span class="text-electric-magenta font-bold">{event.occupancy_percent || 65}% Terisi</span>
+            </div>
+            <div class="w-full h-2 rounded-full bg-void-black overflow-hidden">
+              <div 
+                class="h-full bg-gradient-to-r from-electric-magenta to-deep-magenta rounded-full transition-all duration-1000"
+                style={`width: ${Math.min(100, event.occupancy_percent || 65)}%;`}
+              ></div>
+            </div>
+            <div class="flex items-center justify-between text-[11px] text-muted-gray mt-2">
+              <span>Kapasitas Gedung: <strong>{event.kapasitas_venue || 5000} Penonton</strong></span>
+              <span>Sisa Kuota: <strong>{event.available_quota} Tiket</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- WAR TIKET ARENA: INTERACTIVE CATEGORY SELECTOR -->
+        <!-- ============================================== -->
+        <div class="rounded-3xl bg-dark-plum/90 border border-white/15 p-6 sm:p-8 backdrop-blur-xl shadow-xl">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+            <div>
+              <h2 class="font-display text-2xl text-soft-white">PILIH KATEGORI TIKET</h2>
+              <p class="text-xs text-muted-gray">Pilih jenis gelang tiket & kuantitas pesananmu.</p>
+            </div>
+            <span class="px-2.5 py-1 rounded bg-electric-magenta/15 border border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold">
+              ZERO HIDDEN FEES
+            </span>
+          </div>
+
+          <!-- Category Options List -->
+          <div class="space-y-4 mb-6" id="ticket-categories-list">
+            {mappedCategories.map((cat, idx) => {
+              return (
+                <div 
+                  class={`category-card p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer ${
+                    cat.isCatSoldOut 
+                      ? 'opacity-40 bg-void-black/40 border-white/5 pointer-events-none' 
+                      : cat.isDefaultSelected
+                      ? 'bg-void-black/80 border-electric-magenta shadow-magenta-glow is-selected' 
+                      : 'bg-void-black/50 border-white/10 hover:border-white/25'
+                  }`}
+                  data-cat-id={cat.id}
+                  data-cat-price={cat.harga}
+                  data-cat-name={cat.nama_kategori}
+                  data-cat-max={cat.max_per_order || 4}
+                  data-cat-available={cat.kuota_tersedia}
+                >
+                  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="flex-1">
+                      <div class="flex items-center gap-2 mb-1">
+                        <span class="w-2.5 h-2.5 rounded-full cat-indicator bg-electric-magenta"></span>
+                        <h3 class="font-bold text-base text-soft-white">{cat.nama_kategori}</h3>
+                        {cat.isCatSoldOut ? (
+                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-black text-muted-gray border border-white/10">
+                            HABIS
+                          </span>
+                        ) : (
+                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-electric-magenta/20 text-electric-magenta">
+                            Sisa {cat.kuota_tersedia} Tiket
+                          </span>
+                        )}
+                      </div>
+                      <p class="text-xs text-muted-gray">{cat.deskripsi || 'Akses resmi panggung konser konser AFTERGLOW.'}</p>
+                    </div>
+
+                    <div class="text-right shrink-0">
+                      <span class="font-display text-2xl text-soft-white block">
+                        {formatRupiah(cat.harga)}
+                      </span>
+                      <span class="text-[10px] text-muted-gray font-mono">/ orang</span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <!-- Quantity Stepper & Calculation -->
+          <div class="p-4 rounded-2xl bg-void-black/60 border border-white/10 flex items-center justify-between mb-6">
+            <div>
+              <span class="text-xs font-bold text-soft-white block">Jumlah Tiket</span>
+              <span class="text-[10px] text-muted-gray font-mono">Maksimal <span id="max-ticket-count">4</span> tiket per akun</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+              <button 
+                id="qty-minus-btn" 
+                type="button" 
+                class="w-9 h-9 rounded-xl bg-white/5 border border-white/15 text-soft-white font-bold flex items-center justify-center hover:bg-white/15 active:scale-95 transition-all"
+              >
+                -
+              </button>
+              <span id="ticket-qty-display" class="font-display text-2xl text-soft-white w-8 text-center">1</span>
+              <button 
+                id="qty-plus-btn" 
+                type="button" 
+                class="w-9 h-9 rounded-xl bg-white/5 border border-white/15 text-soft-white font-bold flex items-center justify-center hover:bg-white/15 active:scale-95 transition-all"
+              >
+                +
+              </button>
+            </div>
+          </div>
+
+          <!-- Price Summary (Zero Hidden Fees Breakdown) -->
+          <div class="space-y-2 py-4 border-t border-b border-white/10 text-xs font-mono mb-6">
+            <div class="flex justify-between text-muted-gray">
+              <span>Subtotal Tiket:</span>
+              <span id="summary-subtotal" class="text-soft-white">Rp 0</span>
+            </div>
+            <div class="flex justify-between text-muted-gray">
+              <span>Platform & Convenience Fee:</span>
+              <span class="text-soft-white">Rp 3.000</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold pt-2 border-t border-white/10">
+              <span class="text-soft-white font-sans">Total Tagihan Lunas:</span>
+              <span id="summary-grand-total" class="font-display text-2xl text-electric-magenta">Rp 0</span>
+            </div>
+          </div>
+
+          <!-- Checkout CTA Button -->
+          <button 
+            id="checkout-trigger-btn" 
+            type="button" 
+            class="w-full py-4 px-8 rounded-2xl bg-electric-magenta text-soft-white font-bold text-base tracking-wider uppercase flex items-center justify-center gap-3 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+            disabled={isSoldOut}
+          >
+            <span class="btn-text">WAR TIKET SEKARANG // LANJUTKAN CHECKOUT</span>
+            <svg class="w-5 h-5 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOWER SECTION: Lineup, Rundown, Facilities, Rules -->
+    <div class="mt-20 space-y-16">
+      
+      <!-- Lineup Section -->
+      {event.lineup && event.lineup.length > 0 && (
+        <section>
+          <div class="mb-8">
+            <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
+              SUSUNAN PENGISI ACARA
+            </span>
+            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">LINEUP MUSISI PANGGUNG</h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {event.lineup.map((performer) => (
+              <div class="p-5 rounded-2xl bg-dark-plum border border-white/10 flex items-center gap-4 group hover:border-electric-magenta/60 transition-all">
+                <div class="w-14 h-14 rounded-full bg-void-black border border-white/15 flex items-center justify-center font-display text-xl text-electric-magenta shrink-0 group-hover:scale-110 transition-transform">
+                  {performer.name.charAt(0)}
+                </div>
+                <div>
+                  <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-electric-magenta/20 text-electric-magenta uppercase">
+                    {performer.role || 'Artist'}
+                  </span>
+                  <h4 class="font-bold text-base text-soft-white mt-1">{performer.name}</h4>
+                  <p class="text-xs text-muted-gray">{performer.time || 'Waktu TBA'}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Rundown Timeline Section -->
+      {event.rundown && event.rundown.length > 0 && (
+        <section>
+          <div class="mb-8">
+            <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
+              JADWAL & WAKTU ACARA
+            </span>
+            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">RUNDOWN PANGGUNG KONSER</h2>
+          </div>
+
+          <div class="space-y-4">
+            {event.rundown.map((item, idx) => (
+              <div class="p-5 rounded-2xl bg-dark-plum/70 border border-white/10 flex items-start gap-5">
+                <div class="px-3 py-1.5 rounded-xl bg-void-black border border-electric-magenta/40 text-electric-magenta font-mono text-xs font-bold shrink-0">
+                  {item.time}
+                </div>
+                <div>
+                  <h4 class="font-bold text-sm text-soft-white">{item.title}</h4>
+                  <p class="text-xs text-muted-gray mt-0.5">{item.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Facilities & Venue Amenities -->
+      {event.facilities && event.facilities.length > 0 && (
+        <section>
+          <div class="mb-6">
+            <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
+              KENYAMANAN PENONTON
+            </span>
+            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">FASILITAS VENUE GEDUNG</h2>
+          </div>
+
+          <div class="flex flex-wrap gap-3">
+            {event.facilities.map((fac) => (
+              <span class="px-4 py-2.5 rounded-xl bg-dark-plum border border-white/10 text-xs font-medium text-soft-white flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-electric-magenta"></span>
+                <span>{fac}</span>
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Terms and Conditions Rules -->
+      {event.rules && event.rules.length > 0 && (
+        <section class="p-8 rounded-3xl bg-dark-plum/50 border border-white/10">
+          <h3 class="font-display text-2xl text-soft-white mb-4">SYARAT & KETENTUAN MASUK VENUE</h3>
+          <ul class="space-y-2.5 text-xs text-muted-gray list-disc pl-5">
+            {event.rules.map((rule) => (
+              <li>{rule}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>
+
+<script>
+  import { api } from '../../lib/api';
+  import { isAuthenticated } from '../../lib/auth';
+  import { formatRupiah } from '../../lib/formatters';
+
+  function initWarArena() {
+    const categoryCards = document.querySelectorAll<HTMLElement>('.category-card');
+    const qtyMinusBtn = document.getElementById('qty-minus-btn');
+    const qtyPlusBtn = document.getElementById('qty-plus-btn');
+    const qtyDisplay = document.getElementById('ticket-qty-display');
+    const subtotalDisplay = document.getElementById('summary-subtotal');
+    const grandTotalDisplay = document.getElementById('summary-grand-total');
+    const checkoutBtn = document.getElementById('checkout-trigger-btn') as HTMLButtonElement;
+    const maxCountSpan = document.getElementById('max-ticket-count');
+
+    let selectedCategoryId = 0;
+    let selectedPrice = 0;
+    let maxQty = 4;
+    let currentQty = 1;
+
+    // Pick first available category
+    const initialCard = document.querySelector<HTMLElement>('.category-card.is-selected');
+    if (initialCard) {
+      selectedCategoryId = Number(initialCard.dataset.catId);
+      selectedPrice = Number(initialCard.dataset.catPrice);
+      maxQty = Number(initialCard.dataset.catMax || 4);
+      if (maxCountSpan) maxCountSpan.textContent = String(maxQty);
+    }
+
+    // Category click handler
+    categoryCards.forEach((card) => {
+      card.addEventListener('click', () => {
+        categoryCards.forEach((c) => {
+          c.classList.remove('bg-void-black/80', 'border-electric-magenta', 'shadow-magenta-glow', 'is-selected');
+          c.classList.add('bg-void-black/50', 'border-white/10');
+        });
+        card.classList.remove('bg-void-black/50', 'border-white/10');
+        card.classList.add('bg-void-black/80', 'border-electric-magenta', 'shadow-magenta-glow', 'is-selected');
+
+        selectedCategoryId = Number(card.dataset.catId);
+        selectedPrice = Number(card.dataset.catPrice);
+        maxQty = Number(card.dataset.catMax || 4);
+        if (maxCountSpan) maxCountSpan.textContent = String(maxQty);
+
+        if (currentQty > maxQty) currentQty = maxQty;
+        updateTotals();
+      });
+    });
+
+    // Quantity steppers
+    qtyMinusBtn?.addEventListener('click', () => {
+      if (currentQty > 1) {
+        currentQty--;
+        updateTotals();
+      }
+    });
+
+    qtyPlusBtn?.addEventListener('click', () => {
+      if (currentQty < maxQty) {
+        currentQty++;
+        updateTotals();
+      }
+    });
+
+    function updateTotals() {
+      if (qtyDisplay) qtyDisplay.textContent = String(currentQty);
+      const subtotal = selectedPrice * currentQty;
+      const grandTotal = subtotal + 3000;
+
+      if (subtotalDisplay) subtotalDisplay.textContent = formatRupiah(subtotal);
+      if (grandTotalDisplay) grandTotalDisplay.textContent = formatRupiah(grandTotal);
+    }
+
+    updateTotals();
+
+    // Checkout submission
+    checkoutBtn?.addEventListener('click', async () => {
+      if (!isAuthenticated()) {
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal();
+        }
+        return;
+      }
+
+      if (!selectedCategoryId) {
+        alert('Silakan pilih salah satu kategori tiket terlebih dahulu.');
+        return;
+      }
+
+      checkoutBtn.disabled = true;
+      const text = checkoutBtn.querySelector('.btn-text');
+      const spinner = checkoutBtn.querySelector('.btn-spinner');
+      text?.classList.add('opacity-50');
+      spinner?.classList.remove('hidden');
+
+      const idempotencyKey = crypto.randomUUID();
+      const eventId = Number(window.location.pathname.split('/').filter(Boolean).pop());
+
+      try {
+        const res = await api.post('/orders/checkout', {
+          event_id: eventId || 1,
+          items: [
+            { category_id: selectedCategoryId, qty: currentQty }
+          ],
+          idempotency_key: idempotencyKey
+        }, {
+          idempotencyKey
+        });
+
+        // Navigate to pending order countdown screen
+        window.location.href = `/orders/${res.order_code}`;
+      } catch (err: any) {
+        alert(err.message || 'Gagal memproses pemesanan tiket. Coba beberapa saat lagi.');
+        checkoutBtn.disabled = false;
+        text?.classList.remove('opacity-50');
+        spinner?.classList.add('hidden');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initWarArena);
+</script>
