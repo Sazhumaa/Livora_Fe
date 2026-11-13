@@ -9,19 +9,21 @@
     <div class="text-center mb-16 sm:mb-20">
       <div data-animate="reveal" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30 mb-4">
         <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
-        STAGE CREDENTIAL ANATOMY
+        <span data-i18n="why.badge">KEUNGGULAN AFTERGLOW</span>
       </div>
       <h2 
         data-animate="reveal" 
+        data-i18n="why.title"
         class="delay-100 font-display text-5xl sm:text-7xl lg:text-8xl text-neutral-950 dark:text-soft-white tracking-wide leading-none mb-4"
       >
-        MORE THAN JUST A TICKET.
+        LEBIH DARI SEKADAR SELEMBAR TIKET.
       </h2>
       <p 
         data-animate="reveal" 
+        data-i18n="why.subtitle"
         class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-2xl mx-auto leading-relaxed"
       >
-        Bukan sekadar lembaran PDF. Ini adalah kredensial panggung terenkripsi yang mematikan bot calo, mengunci kuota resmi promotor, dan menjamin akses masuk dalam 0.3 detik.
+        Bukan sekadar tiket PDF biasa yang rawan dipalsukan. AFTERGLOW menjamin tiket asli resmi promotor, mematikan calo nakal, dan memastikan aksesmu ke depan panggung 100% aman.
       </p>
     </div>
 
@@ -31,47 +33,47 @@
       <!-- LEFT COLUMN: 2 Technical Wings (4 Cols) -->
       <div class="lg:col-span-4 space-y-6 sm:space-y-8 order-2 lg:order-1">
         
-        <!-- Node 01: Latency Core (Bun + Redis) -->
+        <!-- Node 01: Fair War Tiket -->
         <div 
           data-animate="reveal"
           id="node-card-1"
           class="tech-node group p-6 sm:p-7 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/70 hover:shadow-magenta-glow transition-all duration-300 cursor-pointer shadow-sm dark:shadow-none"
         >
           <div class="flex items-center justify-between mb-3 font-mono text-xs">
-            <span class="text-electric-magenta font-bold tracking-wider">[ 01 // LATENCY CORE ]</span>
-            <span class="text-emerald-600 dark:text-emerald-400 font-semibold">&lt; 12ms</span>
+            <span data-i18n="why.pillar1Tag" class="text-electric-magenta font-bold tracking-wider">[ 01 // WAR TIKET ADIL ]</span>
+            <span data-i18n="why.pillar1Speed" class="text-emerald-600 dark:text-emerald-400 font-semibold">BEBAS BOT</span>
           </div>
-          <h3 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
-            WAR TIKET ATOMIC SHIELD
+          <h3 data-i18n="why.pillar1Title" class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
+            WAR TIKET ADIL & ANTI-BOT
           </h3>
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
-            Arsitektur Bun + Redis atomic lock mengunci kursi dalam hitungan milidetik saat war tiket dibuka serentak. 0% server down, 0ms race condition.
+          <p data-i18n="why.pillar1Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
+            Sistem cerdas kami menghentikan bot calo dan spekulan nakal. Setiap fans mendapatkan kesempatan yang sama untuk mengamankan tiket musisi favorit dengan harga resmi tanpa markup liar.
           </p>
           <div class="mt-4 pt-3 border-t border-neutral-100 dark:border-white/10 flex items-center justify-between font-mono text-[10px] text-neutral-500 dark:text-muted-gray">
-            <span>ENGINE: DISTRIBUTED REDIS</span>
-            <span class="text-neutral-950 dark:text-white font-bold">100% ATOMIC</span>
+            <span data-i18n="why.pillar1Foot">SISTEM: AKSES KUOTA ADIL</span>
+            <span data-i18n="why.pillar1Status" class="text-neutral-950 dark:text-white font-bold">100% KHUSUS FANS</span>
           </div>
         </div>
 
-        <!-- Node 02: Bank-Grade Settlement -->
+        <!-- Node 02: Safe Payments -->
         <div 
           data-animate="reveal"
           class="delay-100 tech-node group p-6 sm:p-7 rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/70 hover:shadow-magenta-glow transition-all duration-300 cursor-pointer shadow-sm dark:shadow-none"
           id="node-card-2"
         >
           <div class="flex items-center justify-between mb-3 font-mono text-xs">
-            <span class="text-electric-magenta font-bold tracking-wider">[ 02 // ESCROW SETTLEMENT ]</span>
-            <span class="text-neutral-900 dark:text-white font-semibold">IDEMPOTENT</span>
+            <span data-i18n="why.pillar2Tag" class="text-electric-magenta font-bold tracking-wider">[ 02 // PEMBAYARAN AMAN ]</span>
+            <span data-i18n="why.pillar2Speed" class="text-neutral-900 dark:text-white font-semibold">SEKETIKA</span>
           </div>
-          <h3 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
-            BANK-GRADE TRANSACTIONS
+          <h3 data-i18n="why.pillar2Title" class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
+            TRANSAKSI AMAN & TANPA GAGAL
           </h3>
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
-            Integrasi payment gateway resmi berstandar perbankan dengan webhook idempoten. Transaksi tiket Anda tidak pernah terpotong ganda atau hang di tengah jalan.
+          <p data-i18n="why.pillar2Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
+            Didukung kanal pembayaran resmi berstandar perbankan. Tanpa biaya tersembunyi, tanpa saldo terpotong ganda, dan konfirmasi tiket langsung keluar tanpa menunggu lama.
           </p>
           <div class="mt-4 pt-3 border-t border-neutral-100 dark:border-white/10 flex items-center justify-between font-mono text-[10px] text-neutral-500 dark:text-muted-gray">
-            <span>CHANNELS: QRIS • VA • CARDS</span>
-            <span class="text-emerald-600 dark:text-emerald-400 font-bold">INSTANT VERIFIED</span>
+            <span data-i18n="why.pillar2Foot">METODE: QRIS • VA • KARTU KREDIT</span>
+            <span data-i18n="why.pillar2Status" class="text-emerald-600 dark:text-emerald-400 font-bold">TERKONFIRMASI INSTAN</span>
           </div>
         </div>
 
@@ -95,12 +97,12 @@
           <!-- Pass Brand Header -->
           <div class="flex items-start justify-between pb-4 border-b border-neutral-200 dark:border-white/10 font-mono">
             <div>
-              <span class="text-[9px] text-electric-magenta tracking-widest uppercase block font-bold">AFTERGLOW CREDENTIAL</span>
+              <span data-i18n="why.passBadge" class="text-[9px] text-electric-magenta tracking-widest uppercase block font-bold">KREDENSIAL AFTERGLOW</span>
               <h4 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white leading-tight">VOID STAGE '26</h4>
-              <span class="text-[10px] text-neutral-500 dark:text-muted-gray">GBK STADIUM • JAKARTA</span>
+              <span data-i18n="why.passVenue" class="text-[10px] text-neutral-500 dark:text-muted-gray">STADION GBK • JAKARTA</span>
             </div>
             <div class="w-11 h-11 rounded-2xl bg-neutral-100 dark:bg-black/60 border border-neutral-200 dark:border-white/15 flex flex-col items-center justify-center shrink-0">
-              <span class="text-[8px] text-neutral-400 dark:text-muted-gray">GATE</span>
+              <span data-i18n="why.passGate" class="text-[8px] text-neutral-400 dark:text-muted-gray">PINTU</span>
               <span class="text-sm font-bold text-electric-magenta">04</span>
             </div>
           </div>
@@ -110,9 +112,9 @@
             id="ticket-qr-zone" 
             class="my-5 p-4 rounded-2xl bg-neutral-50 dark:bg-void-black border border-neutral-200 dark:border-white/10 text-center transition-all duration-300"
           >
-            <span class="text-[9px] font-mono text-electric-magenta tracking-wider uppercase block mb-2 font-bold flex items-center justify-center gap-1.5">
+            <span data-i18n="why.passMatrix" class="text-[9px] font-mono text-electric-magenta tracking-wider uppercase block mb-2 font-bold flex items-center justify-center gap-1.5">
               <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-ping"></span>
-              DYNAMIC ENCRYPTED MATRIX
+              QR DINAMIS RESMI
             </span>
             <div class="w-24 h-24 sm:w-28 sm:h-28 mx-auto bg-white p-1.5 rounded-2xl flex items-center justify-center shadow-md border border-neutral-200 dark:border-none">
               <div class="grid grid-cols-4 gap-1 w-full h-full bg-black p-1 rounded-xl">
@@ -122,8 +124,8 @@
                 <div class="bg-white rounded-xs"></div><div class="bg-white rounded-xs"></div><div class="bg-black"></div><div class="bg-white rounded-xs"></div>
               </div>
             </div>
-            <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mt-2">
-              AUTO-ROTATES: <strong class="text-neutral-900 dark:text-white font-bold">15s</strong> • ANTI-SCREENSHOT
+            <span data-i18n="why.passRotate" class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mt-2">
+              BERGANTI TIAP: 15s • ANTI-SCREENSHOT
             </span>
           </div>
 
@@ -137,12 +139,12 @@
           <!-- Bottom Pass Meta -->
           <div class="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray pt-1">
             <div>
-              <span class="text-[9px] block text-neutral-400 dark:text-muted-gray/70">SECURITY TIER</span>
-              <span class="text-neutral-900 dark:text-soft-white font-bold">VIP ADMISSION</span>
+              <span data-i18n="why.passTier" class="text-[9px] block text-neutral-400 dark:text-muted-gray/70">KATEGORI TIKET</span>
+              <span data-i18n="why.passTierVal" class="text-neutral-900 dark:text-soft-white font-bold">VIP FESTIVAL</span>
             </div>
             <div class="text-right">
-              <span class="text-[9px] block text-neutral-400 dark:text-muted-gray/70">VERIFICATION</span>
-              <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% PROMOTOR</span>
+              <span data-i18n="why.passVerif" class="text-[9px] block text-neutral-400 dark:text-muted-gray/70">VERIFIKASI</span>
+              <span data-i18n="why.passVerifVal" class="text-emerald-600 dark:text-emerald-400 font-bold">100% PROMOTOR RESMI</span>
             </div>
           </div>
 
@@ -159,18 +161,18 @@
           id="node-card-3"
         >
           <div class="flex items-center justify-between mb-3 font-mono text-xs">
-            <span class="text-electric-magenta font-bold tracking-wider">[ 03 // DYNAMIC TURNSTILE ]</span>
-            <span class="text-neutral-900 dark:text-white font-semibold">0.3s SCAN</span>
+            <span data-i18n="why.pillar3Tag" class="text-electric-magenta font-bold tracking-wider">[ 03 // ANTI-PEMALSUAN ]</span>
+            <span data-i18n="why.pillar3Speed" class="text-neutral-900 dark:text-white font-semibold">SCAN 0.3s</span>
           </div>
-          <h3 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
-            ANTI-CALO ROTATING QR
+          <h3 data-i18n="why.pillar3Title" class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
+            QR DINAMIS ANTI-PEMALSUAN
           </h3>
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
-            QR Code dinamis berputar otomatis setiap 15 detik, mematikan calo tiket liar, bot borongan, dan screenshot palsu. Langsung tap di gate turnstile venue.
+          <p data-i18n="why.pillar3Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
+            Barcode dinamis yang otomatis berganti berkala mematikan aksi calo tiket palsu, jastip liar, dan screenshot berulang. Tinggal tap langsung di pintu gerbang venue.
           </p>
           <div class="mt-4 pt-3 border-t border-neutral-100 dark:border-white/10 flex items-center justify-between font-mono text-[10px] text-neutral-500 dark:text-muted-gray">
-            <span>PROTECTION: ANTI-SCREENSHOT</span>
-            <span class="text-electric-magenta font-bold">ZERO SECONDARY RESALE</span>
+            <span data-i18n="why.pillar3Foot">KEAMANAN: ANTI-SCREENSHOT</span>
+            <span data-i18n="why.pillar3Status" class="text-electric-magenta font-bold">BEBAS TIKET PALSU</span>
           </div>
         </div>
 
@@ -181,18 +183,18 @@
           id="node-card-4"
         >
           <div class="flex items-center justify-between mb-3 font-mono text-xs">
-            <span class="text-electric-magenta font-bold tracking-wider">[ 04 // PROMOTOR DIRECT ]</span>
-            <span class="text-emerald-600 dark:text-emerald-400 font-semibold">100% GENUINE</span>
+            <span data-i18n="why.pillar4Tag" class="text-electric-magenta font-bold tracking-wider">[ 04 // MITRA RESMI ]</span>
+            <span data-i18n="why.pillar4Speed" class="text-emerald-600 dark:text-emerald-400 font-semibold">100% ASLI</span>
           </div>
-          <h3 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
-            OFFICIAL STAGE ALLOCATION
+          <h3 data-i18n="why.pillar4Title" class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-2">
+            100% TIKET RESMI PROMOTOR
           </h3>
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
-            Setiap kuota tiket bersumber langsung dari promotor resmi festival dan operator venue. Bebas dari mark-up tidak masuk akal dan tanpa iklan spam yang mengganggu.
+          <p data-i18n="why.pillar4Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
+            Setiap alokasi tiket berasal langsung dari promotor resmi festival dan pengelola venue. Bebas dari penipuan pihak ketiga dan jaminan pasti masuk tanpa rasa was-was.
           </p>
           <div class="mt-4 pt-3 border-t border-neutral-100 dark:border-white/10 flex items-center justify-between font-mono text-[10px] text-neutral-500 dark:text-muted-gray">
-            <span>PARTNERSHIP: DIRECT PROMOTER</span>
-            <span class="text-neutral-950 dark:text-white font-bold">GUARANTEED ENTRY</span>
+            <span data-i18n="why.pillar4Foot">KERJASAMA: LANGSUNG PROMOTOR</span>
+            <span data-i18n="why.pillar4Status" class="text-neutral-950 dark:text-white font-bold">GARANSI MASUK VENUE</span>
           </div>
         </div>
 

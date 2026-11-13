@@ -65,6 +65,57 @@ const orderedSlugs = [
   'indie-local',
 ];
 
+const CATEGORY_I18N: Record<string, { titleKey: string; descKey: string; ctaKey: string; defaultTitle: string; defaultDesc: string; defaultCta: string }> = {
+  'music-festival': {
+    titleKey: 'categories.festivalsTitle',
+    descKey: 'categories.festivalsDesc',
+    ctaKey: 'categories.festivalsCta',
+    defaultTitle: 'Festival Musik',
+    defaultDesc: 'Panggung raksasa multi-stage, camping ground, dan euforia ribuan penonton bernyanyi bersama di bawah langit malam.',
+    defaultCta: 'Jelajahi Festival',
+  },
+  'electronic-edm': {
+    titleKey: 'categories.edmTitle',
+    descKey: 'categories.edmDesc',
+    ctaKey: 'categories.edmCta',
+    defaultTitle: 'Electronic & EDM',
+    defaultDesc: 'Dentuman synth berenergi tinggi, sorotan laser futuristik, dan rave spektakuler tanpa jeda.',
+    defaultCta: 'Masuk Lantai Dansa',
+  },
+  'pop-kpop': {
+    titleKey: 'categories.popTitle',
+    descKey: 'categories.popDesc',
+    ctaKey: 'categories.popCta',
+    defaultTitle: 'Pop & K-Pop',
+    defaultDesc: 'Koreografi spektakuler kelas dunia, visual panggung megah, dan nyanyian serentak ribuan penggemar.',
+    defaultCta: 'Lihat Tur Arena',
+  },
+  'rock-alternative': {
+    titleKey: 'categories.rockTitle',
+    descKey: 'categories.rockDesc',
+    ctaKey: 'categories.rockCta',
+    defaultTitle: 'Rock & Alternative',
+    defaultDesc: 'Riff gitar bertenaga, mosh pit yang membakar semangat, dan teriakan vokal yang menggetarkan dada.',
+    defaultCta: 'Gabung Mosh Pit',
+  },
+  'jazz-soul': {
+    titleKey: 'categories.jazzTitle',
+    descKey: 'categories.jazzDesc',
+    ctaKey: 'categories.jazzCta',
+    defaultTitle: 'Jazz & Soul',
+    defaultDesc: 'Harmoni tiupan brass nan anggun, akustik panggung hangat, dan keintiman vokal memikat.',
+    defaultCta: 'Nikmati Nuansa Soul',
+  },
+  'indie-local': {
+    titleKey: 'categories.indieTitle',
+    descKey: 'categories.indieDesc',
+    ctaKey: 'categories.indieCta',
+    defaultTitle: 'Indie & Panggung Lokal',
+    defaultDesc: 'Eksplorasi musisi independen berbakat, panggung intim penuh jiwa, dan komunitas musik yang solid.',
+    defaultCta: 'Dukung Panggung Indie',
+  },
+};
+
 const categories = orderedSlugs
   .map(slug => MOCK_CATEGORIES.find(c => c.slug === slug))
   .filter(Boolean) as typeof MOCK_CATEGORIES;
@@ -78,21 +129,23 @@ const categories = orderedSlugs
         <div data-animate="reveal" class="flex items-center gap-2 mb-3">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30">
             <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
-            SONIC ATMOSPHERE // BENTO MATRIX
+            <span data-i18n="categories.badge">PILIHAN PANGGUNG // FREKUENSI SUARA</span>
           </span>
-          <span class="text-xs text-neutral-500 dark:text-muted-gray font-mono">GENRE FREQUENCIES</span>
+          <span data-i18n="categories.genreFrequencies" class="text-xs text-neutral-500 dark:text-muted-gray font-mono">PANGGUNG TERBAIK</span>
         </div>
         <h2 
           data-animate="reveal" 
+          data-i18n="categories.title"
           class="delay-100 font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide"
         >
-          FIND YOUR FREQUENCY.
+          TEMUKAN ENERGI MUSIKMU.
         </h2>
         <p 
           data-animate="reveal" 
+          data-i18n="categories.subtitle"
           class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-xl mt-2 leading-relaxed"
         >
-          Pilih panggung berdasarkan resonansi gelombang suara — dari dentuman bass stadium hingga keintiman klub underground.
+          Setiap genre punya jiwanya sendiri. Pilih panggung konser yang paling menggetarkan hatimu — dari riuhnya festival raksasa hingga hangatnya klub jazz.
         </p>
       </div>
 
@@ -102,7 +155,7 @@ const categories = orderedSlugs
         href="/events" 
         class="self-start md:self-auto inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 hover:border-electric-magenta text-neutral-900 dark:text-soft-white hover:text-electric-magenta text-xs font-semibold uppercase tracking-wider transition-all duration-300 shadow-sm shrink-0"
       >
-        <span>View All 6 Genres</span>
+        <span data-i18n="categories.viewAll">JELAJAHI SEMUA GENRE</span>
         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
         </svg>
@@ -117,6 +170,14 @@ const categories = orderedSlugs
           tag: 'LIVE ROSTER',
           ctaText: 'EXPLORE GIGS',
           minHeight: 'min-h-[320px]',
+        };
+        const i18nInfo = CATEGORY_I18N[cat.slug] || {
+          titleKey: '',
+          descKey: '',
+          ctaKey: '',
+          defaultTitle: cat.name,
+          defaultDesc: cat.description,
+          defaultCta: meta.ctaText,
         };
 
         if (meta.isPanoramic) {
@@ -144,11 +205,11 @@ const categories = orderedSlugs
                   </span>
                   <span class="text-xs font-mono text-neutral-600 dark:text-muted-gray">• {cat.count} INDIE STAGES</span>
                 </div>
-                <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors mb-2">
-                  {cat.name}
+                <h3 data-i18n={i18nInfo.titleKey} class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors mb-2">
+                  {i18nInfo.defaultTitle}
                 </h3>
-                <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
-                  {cat.description}
+                <p data-i18n={i18nInfo.descKey} class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
+                  {i18nInfo.defaultDesc}
                 </p>
               </div>
 
@@ -158,8 +219,8 @@ const categories = orderedSlugs
                   <span class="w-2 h-2 rounded-full bg-electric-magenta animate-pulse"></span>
                   <span>CURATED ROSTER ACTIVE</span>
                 </div>
-                <span class="px-6 py-3 rounded-full bg-electric-magenta text-white font-semibold text-xs tracking-wider uppercase shadow-magenta-glow group-hover:scale-105 transition-all shrink-0">
-                  {meta.ctaText}
+                <span data-i18n={i18nInfo.ctaKey} class="px-6 py-3 rounded-full bg-electric-magenta text-white font-semibold text-xs tracking-wider uppercase shadow-magenta-glow group-hover:scale-105 transition-all shrink-0">
+                  {i18nInfo.defaultCta}
                 </span>
               </div>
             </a>
@@ -212,16 +273,16 @@ const categories = orderedSlugs
                 </span>
               )}
 
-              <h3 class={`font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors mb-2 leading-none`}>
-                {cat.name}
+              <h3 data-i18n={i18nInfo.titleKey} class={`font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors mb-2 leading-none`}>
+                {i18nInfo.defaultTitle}
               </h3>
 
-              <p class="text-xs sm:text-sm text-neutral-600 dark:text-muted-gray line-clamp-2 mb-4 leading-relaxed">
-                {cat.description}
+              <p data-i18n={i18nInfo.descKey} class="text-xs sm:text-sm text-neutral-600 dark:text-muted-gray line-clamp-2 mb-4 leading-relaxed">
+                {i18nInfo.defaultDesc}
               </p>
 
               <div class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-900 dark:text-soft-white group-hover:text-electric-magenta transition-colors">
-                <span>{meta.ctaText}</span>
+                <span data-i18n={i18nInfo.ctaKey}>{i18nInfo.defaultCta}</span>
                 <svg class="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>

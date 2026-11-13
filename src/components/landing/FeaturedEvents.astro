@@ -16,11 +16,11 @@ function formatRupiah(amount: number) {
     <!-- Clean Minimalist Header (DICE Style) -->
     <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-8 gap-4">
       <div>
-        <h2 data-animate="reveal" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white tracking-wide">
-          UPCOMING EXPERIENCES
+        <h2 data-animate="reveal" data-i18n="featured.title" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white tracking-wide">
+          KONSER & FESTIVAL TERDEKAT
         </h2>
-        <p data-animate="reveal" class="delay-100 text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-lg">
-          Check out the most anticipated live gigs coming up, from stadium world tours to intimate soundstages.
+        <p data-animate="reveal" data-i18n="featured.subtitle" class="delay-100 text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-lg">
+          Jangan sampai kehabisan momen langka melihat musisi favoritmu tampil live. Dari tur stadium megah hingga keintiman panggung underground.
         </p>
       </div>
 
@@ -29,7 +29,7 @@ function formatRupiah(amount: number) {
         href="/events" 
         class="self-start sm:self-auto px-5 py-2.5 rounded-full bg-neutral-950 text-white dark:bg-soft-white dark:text-void-black hover:bg-electric-magenta dark:hover:bg-electric-magenta dark:hover:text-white font-semibold text-xs tracking-wider uppercase transition-colors shrink-0"
       >
-        BROWSE ALL EVENTS
+        <span data-i18n="featured.browseAll">LIHAT SEMUA JADWAL</span>
       </a>
     </div>
 
@@ -76,13 +76,13 @@ function formatRupiah(amount: number) {
 
                   <!-- Status Tag (Top Left) -->
                   {event.status === 'ALMOST_SOLD_OUT' && (
-                    <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-electric-magenta text-soft-white font-mono text-[9px] font-bold tracking-tight uppercase shadow-sm">
-                      ALMOST SOLD OUT
+                    <span data-i18n="featured.almostSoldOut" class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-electric-magenta text-soft-white font-mono text-[9px] font-bold tracking-tight uppercase shadow-sm">
+                      HAMPIR HABIS
                     </span>
                   )}
                   {event.status === 'SOLD_OUT' && (
-                    <span class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/80 text-muted-gray border border-white/10 font-mono text-[9px] font-bold tracking-tight uppercase">
-                      SOLD OUT
+                    <span data-i18n="featured.soldOut" class="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md bg-black/80 text-muted-gray border border-white/10 font-mono text-[9px] font-bold tracking-tight uppercase">
+                      HABIS TERJUAL
                     </span>
                   )}
 
@@ -113,7 +113,7 @@ function formatRupiah(amount: number) {
                   </p>
 
                   <p class="text-xs font-semibold text-neutral-900 dark:text-soft-white mt-1">
-                    From {formatRupiah(event.startingPrice)}
+                    <span data-i18n="featured.startsFrom">Mulai Dari</span> {formatRupiah(event.startingPrice)}
                   </p>
                 </div>
               </a>

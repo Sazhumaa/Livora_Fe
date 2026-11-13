@@ -27,15 +27,15 @@
           </svg>
         </div>
 
-        <!-- Punchy, Short Geometric Headline (Requested: ringkas, bertenaga, 2 baris) -->
+        <!-- Punchy, Short Geometric Headline -->
         <h1 class="font-sans text-5xl sm:text-6xl md:text-7xl lg:text-[76px] xl:text-[84px] font-black tracking-tight text-neutral-950 dark:text-soft-white leading-[1.03] mb-6">
-          Discover Sound. <br />
-          Collect Passes.
+          <span data-i18n="hero.headline1">DENTUMAN PANGGUNG.</span> <br />
+          <span data-i18n="hero.headline2">BARIS TERDEPAN.</span>
         </h1>
 
         <!-- Subtitle Paragraph -->
-        <p class="text-base sm:text-lg text-neutral-600 dark:text-muted-gray font-normal leading-relaxed max-w-xl mb-10">
-          Digital marketplace for verified concert tickets and exclusive stage passes. War tiket anti-calo, secure dynamic QR admission, and collect live physical-digital memorabilia.
+        <p data-i18n="hero.subheadline" class="text-base sm:text-lg text-neutral-600 dark:text-muted-gray font-normal leading-relaxed max-w-xl mb-10">
+          Jangan cuma nonton rekaman orang lain di media sosial. Amankan tiket konser resmi musisi favoritmu dengan sistem anti-calo, pembayaran secepat kilat, dan akses gate langsung dari genggaman ponselmu.
         </p>
 
         <!-- CTA Buttons: Solid Pill & Outlined Pill -->
@@ -45,7 +45,7 @@
             href="/events" 
             class="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-neutral-950 text-white hover:bg-electric-magenta dark:bg-soft-white dark:text-void-black dark:hover:bg-electric-magenta dark:hover:text-white font-semibold text-base tracking-wide shadow-lg hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
-            <span>Explore Passes</span>
+            <span data-i18n="hero.exploreBtn">Amankan Tiket Konser</span>
             <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
@@ -56,23 +56,23 @@
             href="/organizer" 
             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-neutral-300 text-neutral-900 hover:border-neutral-950 hover:bg-neutral-100/80 dark:border-white/20 dark:text-soft-white dark:hover:border-white dark:hover:bg-white/10 font-semibold text-base tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
           >
-            <span>Create Event</span>
+            <span data-i18n="hero.createBtn">Gelar Konsermu</span>
           </a>
         </div>
 
-        <!-- Bottom Stats Row (3 Kolom ala referensi: 10K+ / 70K+ / 05K+) -->
+        <!-- Bottom Stats Row -->
         <div class="grid grid-cols-3 gap-6 sm:gap-12 pt-8 border-t border-neutral-200/80 dark:border-white/10 max-w-lg">
           <div>
             <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">120K+</span>
-            <span class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">PASSES SOLD</span>
+            <span data-i18n="hero.statPassesLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">TIKET TERJUAL</span>
           </div>
           <div>
             <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">450+</span>
-            <span class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">LIVE STAGES</span>
+            <span data-i18n="hero.statStagesLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">PANGGUNG LIVE</span>
           </div>
           <div>
-            <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">99.9%</span>
-            <span class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">ANTI-CALO PASS</span>
+            <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">100%</span>
+            <span data-i18n="hero.statAntiCaloLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">TIKET RESMI PROMOTOR</span>
           </div>
         </div>
 
@@ -140,8 +140,8 @@
                 fill="none"
               ></path>
               <text class="text-[9px] tracking-[0.24em] uppercase font-extrabold fill-neutral-900 dark:fill-soft-white group-hover:fill-electric-magenta transition-colors">
-                <textPath href="#heroCircleStampPath">
-                  • AFTERGLOW PASS • STAGE ACCESS •
+                <textPath href="#heroCircleStampPath" data-i18n="hero.stampText">
+                  • TIKET RESMI KONSER • BARIS TERDEPAN •
                 </textPath>
               </text>
             </svg>
@@ -190,7 +190,7 @@
             </div>
 
             <div class="flex items-center justify-between pt-1 border-t border-white/10 mt-1">
-              <span class="text-[10px] text-muted-gray uppercase font-mono">STAGE PASS</span>
+              <span data-i18n="hero.stagePass" class="text-[10px] text-muted-gray uppercase font-mono">TIKET PANGGUNG</span>
               <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-soft-white text-[11px] font-semibold">
                 <svg class="w-3.5 h-3.5 text-electric-magenta" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
@@ -227,7 +227,7 @@
                 <!-- Live Authentic Badge Tag (Top Right) -->
                 <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center gap-1.5 pointer-events-none">
                   <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-ping"></span>
-                  <span class="text-[10px] font-mono uppercase tracking-wider text-white">AUTHENTIC</span>
+                  <span data-i18n="hero.authenticBadge" class="text-[10px] font-mono uppercase tracking-wider text-white">100% RESMI</span>
                 </div>
               </div>
 
@@ -285,10 +285,10 @@
               <div class="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
                 <div class="flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta shadow-magenta-glow animate-ping"></span>
-                  <span class="font-display text-xl text-soft-white tracking-wider">AFTERGLOW PASS</span>
+                  <span data-i18n="hero.vipPassTitle" class="font-display text-xl text-soft-white tracking-wider">TIKET MASUK VIP</span>
                 </div>
-                <span class="px-2 py-0.5 rounded-full bg-electric-magenta/20 border border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase">
-                  VIP BARRICADE
+                <span data-i18n="hero.vipBarricade" class="px-2 py-0.5 rounded-full bg-electric-magenta/20 border border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase">
+                  VIP FESTIVAL PIT
                 </span>
               </div>
 
@@ -337,7 +337,7 @@
                   </span>
                   <span class="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 font-bold mt-0.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                    GATE SCANNER READY
+                    <span data-i18n="hero.scanLaserHint">Scan di Gate Pintu Masuk</span>
                   </span>
                 </div>
               </div>

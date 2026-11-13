@@ -39,21 +39,23 @@ const steps = [
       <div data-animate="reveal" class="flex items-center gap-2 mb-3">
         <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30">
           <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-pulse"></span>
-          ADMISSION PIPELINE
+          <span data-i18n="howItWorks.badge">ALUR TIKET KILAT</span>
         </span>
-        <span class="text-xs font-mono text-neutral-500 dark:text-muted-gray">• 0 TO FRONT ROW IN THREE BEATS</span>
+        <span class="text-xs font-mono text-neutral-500 dark:text-muted-gray">• <span data-i18n="howItWorks.subtitleBeat">0 DETIK MENUJU BARISAN TERDEPAN</span></span>
       </div>
       <h2 
         data-animate="reveal" 
+        data-i18n="howItWorks.title"
         class="delay-100 font-display text-5xl sm:text-7xl lg:text-8xl text-neutral-950 dark:text-soft-white tracking-wide leading-none"
       >
-        THREE STEPS TO THE MOMENT.
+        TIGA LANGKAH MENUJU PANGGUNG.
       </h2>
       <p 
         data-animate="reveal" 
+        data-i18n="howItWorks.subtitle"
         class="delay-200 text-sm sm:text-base text-neutral-600 dark:text-muted-gray max-w-2xl mt-4 leading-relaxed"
       >
-        Bukan sekadar transaksi tiket. Sebuah alur presisi tanpa calo, tanpa bot, dan nol antrean fiktif menuju barisan terdepan panggung konser Anda.
+        Bukan sekadar beli tiket biasa. Ini adalah alur tercepat dan teraman tanpa calo, tanpa bot, dan nol antrean fiktif menuju panggung impianmu.
       </p>
     </div>
 
@@ -82,16 +84,16 @@ const steps = [
             01
           </span>
 
-          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
-            PHASE 01 // 3D STAGE RADAR
+          <span data-i18n="howItWorks.step1Phase" class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            LANGKAH 01 // PILIH SPOT
           </span>
 
-          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
-            DISCOVER & MAP.
+          <h3 data-i18n="howItWorks.step1Title" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            PILIH PANGGUNG & DENAH
           </h3>
 
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
-            Jelajahi konser idaman berdasarkan kota, tanggal, atau lineup artis. Dapatkan visualisasi tata panggung 3D presisi untuk memilih titik pandang terbaik — dari VIP front-row pit hingga tribun akustik.
+          <p data-i18n="howItWorks.step1Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            Jelajahi konser idaman berdasarkan artis favorit atau kotamu. Dapatkan visual denah panggung interaktif untuk memilih titik pandang terbaik — dari VIP festival pit hingga tribun bernyanyi.
           </p>
 
           <!-- Minimalist Visual Blueprint (Frameless) -->
@@ -118,8 +120,8 @@ const steps = [
         </div>
 
         <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
-          <span>STAGE PROTOCOL</span>
-          <span class="text-electric-magenta font-bold">VERIFIED SEATING</span>
+          <span>DENAH RESMI</span>
+          <span data-i18n="howItWorks.step1Tag" class="text-electric-magenta font-bold">PANDANGAN MAKSIMAL</span>
         </div>
       </div>
 
@@ -131,16 +133,16 @@ const steps = [
             02
           </span>
 
-          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
-            PHASE 02 // ATOMIC REDIS ENGINE
+          <span data-i18n="howItWorks.step2Phase" class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            LANGKAH 02 // CHECKOUT KILAT
           </span>
 
-          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
-            SECURE & LOCK.
+          <h3 data-i18n="howItWorks.step2Title" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            WAR TIKET TANPA PANIK
           </h3>
 
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
-            War tiket tanpa server crash. Engine Redis atomik mengunci kuota tiket Anda secara eksklusif selama 10 menit checkout penuh. Selesaikan pembayaran dengan garansi 0ms race condition.
+          <p data-i18n="howItWorks.step2Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            War tiket tanpa server tumbang atau error tiba-tiba. Kursimu langsung dikunci aman selama 10 menit checkout penuh. Selesaikan pembayaran dengan QRIS, VA, atau Kartu tanpa rasa cemas.
           </p>
 
           <!-- Minimalist Hold Timer (Frameless) -->
@@ -165,8 +167,8 @@ const steps = [
         </div>
 
         <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
-          <span>CONCURRENCY</span>
-          <span class="text-emerald-600 dark:text-emerald-400 font-bold">100% ATOMIC</span>
+          <span>KUOTA TERKUNCI</span>
+          <span data-i18n="howItWorks.step2Tag" class="text-emerald-600 dark:text-emerald-400 font-bold">BEBAS REBUTAN</span>
         </div>
       </div>
 
@@ -178,16 +180,16 @@ const steps = [
             03
           </span>
 
-          <span class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
-            PHASE 03 // DYNAMIC TURNSTILE GATE
+          <span data-i18n="howItWorks.step3Phase" class="text-xs font-mono text-electric-magenta uppercase tracking-widest block font-bold mb-2">
+            LANGKAH 03 // SCAN & GO
           </span>
 
-          <h3 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
-            EXPERIENCE.
+          <h3 data-i18n="howItWorks.step3Title" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors leading-none mb-4">
+            TIKET AKTIF, LANGSUNG MASUK
           </h3>
 
-          <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
-            Pass digital aktif seketika di akun Anda dengan dynamic rotating QR code anti-screenshot dan anti-calo. Dekatkan ponsel di turnstile gate venue, dan nikmati dentuman panggung terbaik.
+          <p data-i18n="howItWorks.step3Desc" class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mb-8">
+            Tiket digital langsung aktif di ponselmu dengan QR code dinamis anti-palsu dan anti-screenshot. Cukup tempelkan layar di pintu masuk venue, dan nikmati dentuman panggung terbaik.
           </p>
 
           <!-- Minimalist Gate Scan (Frameless) -->
@@ -217,8 +219,8 @@ const steps = [
         </div>
 
         <div class="mt-8 pt-4 border-t border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-muted-gray">
-          <span>CHECK-IN SPEED</span>
-          <span class="text-electric-magenta font-bold">0.3 SECONDS</span>
+          <span>SCAN GATE RESMI</span>
+          <span data-i18n="howItWorks.step3Tag" class="text-electric-magenta font-bold">MASUK DALAM 0.3 DETIK</span>
         </div>
       </div>
 
