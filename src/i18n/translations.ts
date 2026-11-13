@@ -11,8 +11,8 @@ export const translations = {
     'nav.getTickets': 'Beli Tiket',
 
     // Hero Section
-    'hero.headline1': 'SAKSIKAN MUSISI FAVORITMU.',
-    'hero.headline2': 'LANGSUNG DARI BARISAN DEPAN.',
+    'hero.headline1': 'DENGARKAN LAGUNYA.',
+    'hero.headline2': 'SIMPAN MOMENNYA.',
     'hero.subheadline': 'Rasakan getaran musik dan momen tak terlupakan di depan panggung. Amankan tiket resmi konser idamanmu dengan mudah, aman, dan bebas calo.',
     'hero.exploreBtn': 'Beli Tiket Konser',
     'hero.createBtn': 'Buat Event Konser',
@@ -248,8 +248,8 @@ export const translations = {
     'nav.getTickets': 'Get Passes',
 
     // Hero Section
-    'hero.headline1': 'SEE YOUR FAVORITE ARTISTS.',
-    'hero.headline2': 'LIVE FROM THE FRONT ROW.',
+    'hero.headline1': 'HEAR THE MUSIC.',
+    'hero.headline2': 'KEEP THE MOMENT.',
     'hero.subheadline': 'Feel the raw thrill of the crowd and unforgettable live moments. Secure official concert passes to the shows you love with ease and zero scalpers.',
     'hero.exploreBtn': 'Get Concert Tickets',
     'hero.createBtn': 'Create Concert Event',
