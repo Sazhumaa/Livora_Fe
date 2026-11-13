@@ -153,16 +153,16 @@ export const translations = {
     'about.100Verified': '100% TERVERIFIKASI',
 
     // Final CTA
-    'cta.telemetry': '// PANGGUNG SIAP • TIKET DIBUKA',
+    'cta.telemetry': '// TIKET RESMI DIBUKA',
     'cta.promoterBacked': '100% PROMOTOR RESMI',
     'cta.headline1': 'JANGAN CUMA DENGAR CERITANYA.',
-    'cta.headline2': 'JADILAH BAGIAN DARI PANGGUNG.',
-    'cta.subtitle': 'Puluhan ribu penikmat musik telah mengamankan tiket resmi mereka tanpa cemas calo atau bot. Saat intro musisi favoritmu meledak dan ribuan tangan terangkat, pastikan kamu berada di sana.',
-    'cta.primaryBtn': 'AMANKAN TIKET SEKARANG',
+    'cta.headline2': 'SAKSIKAN LANGSUNG.',
+    'cta.subtitle': 'Beli tiket resmi tanpa calo. Saat panggung membara dan musik dimulai, pastikan kamu ada di barisan depan.',
+    'cta.primaryBtn': 'CARI TIKET SEKARANG',
     'cta.secondaryBtn': 'GELAR KONSERMU',
     'cta.stagesInfo': 'PANGGUNG: JKT // BDG // DPS // YOG',
-    'cta.dynamicQrInfo': 'SCAN GATE 0.3s',
-    'cta.zeroBotInfo': 'JAMINAN BEBAS CALO & BOT',
+    'cta.dynamicQrInfo': 'SCAN MASUK CEPAT',
+    'cta.zeroBotInfo': '100% BEBAS CALO',
 
     // Floating HUD
     'hud.audioToggle': 'AUDIO PANGGUNG',
@@ -372,16 +372,16 @@ export const translations = {
     'about.100Verified': '100% VERIFIED',
 
     // Final CTA
-    'cta.telemetry': '// ENCORE • GATES READY',
-    'cta.promoterBacked': '100% PROMOTER BACKED',
+    'cta.telemetry': '// OFFICIAL PASSES OPEN',
+    'cta.promoterBacked': '100% OFFICIAL PROMOTER',
     'cta.headline1': "DON'T JUST HEAR ABOUT IT.",
-    'cta.headline2': 'BE THERE IN THE CROWD.',
-    'cta.subtitle': "Thousands of concertgoers have already secured their official passes with zero scalper stress. When the house lights die and the opening chord rings out, make sure you're right there.",
-    'cta.primaryBtn': 'CLAIM YOUR PASS NOW',
+    'cta.headline2': 'BE THERE.',
+    'cta.subtitle': "Official tickets with zero scalpers. When the house lights fade and the show starts, make sure you're in the front row.",
+    'cta.primaryBtn': 'EXPLORE PASSES NOW',
     'cta.secondaryBtn': 'HOST AN EVENT',
     'cta.stagesInfo': 'STAGES: JKT // BDG // DPS // YOG',
-    'cta.dynamicQrInfo': '0.3s DYNAMIC QR',
-    'cta.zeroBotInfo': 'ZERO SCALPER GUARANTEE',
+    'cta.dynamicQrInfo': 'FAST GATE ENTRY',
+    'cta.zeroBotInfo': '100% NO SCALPERS',
 
     // Floating HUD
     'hud.audioToggle': 'STAGE AUDIO',
