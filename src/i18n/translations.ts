@@ -11,8 +11,8 @@ export const translations = {
     'nav.getTickets': 'Beli Tiket',
 
     // Hero Section
-    'hero.headline1': 'DENGARKAN LAGUNYA.',
-    'hero.headline2': 'SIMPAN MOMENNYA.',
+    'hero.headline1': 'DENGARKAN LAGU.',
+    'hero.headline2': 'SIMPAN MOMEN.',
     'hero.subheadline': 'Rasakan getaran musik dan momen tak terlupakan di depan panggung. Amankan tiket resmi konser idamanmu dengan mudah, aman, dan bebas calo.',
     'hero.exploreBtn': 'Beli Tiket Konser',
     'hero.createBtn': 'Buat Event Konser',
