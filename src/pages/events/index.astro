@@ -1,15 +1,17 @@
 ---
 import RootLayout from '../../layouts/RootLayout.astro';
-import { MOCK_EVENTS } from '../../data/mockEvents';
-import { MOCK_CATEGORIES } from '../../data/mockCategories';
 import Footer from '../../components/landing/Footer.astro';
+import { MOCK_CATEGORIES } from '../../data/mockCategories';
+import { fetchEvents, type BackendEvent } from '../../lib/events';
+import { formatRupiah, formatDateIndo } from '../../lib/formatters';
 
-function formatRupiah(amount: number) {
-  return new Intl.NumberFormat('id-ID', {
-    style: 'currency',
-    currency: 'IDR',
-    maximumFractionDigits: 0,
-  }).format(amount);
+// Initial server/build data
+const initialEvents = await fetchEvents({ sort: 'terdekat', limit: 24 });
+
+function getEventStatus(event: BackendEvent) {
+  const isSoldOut = Boolean(event.is_sold_out || Number(event.available_quota) <= 0);
+  const isAlmostSold = !isSoldOut && Number(event.occupancy_percent || 0) >= 80;
+  return { isSoldOut, isAlmostSold };
 }
 ---
 
@@ -21,132 +23,284 @@ function formatRupiah(amount: number) {
     <!-- Header Banner -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
       <div>
-        <span data-i18n="pages.eventsCatalog" class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
-          JADWAL KONSER
+        <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2 font-mono">
+          KATALOG RESMI // JADWAL TUR
         </span>
-        <h1 data-i18n="pages.eventsHeader" class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
+        <h1 class="font-display text-5xl sm:text-7xl text-soft-white tracking-wide">
           JADWAL & TIKET KONSER
         </h1>
-        <p data-i18n="pages.eventsSub" class="text-muted-gray text-base mt-2 max-w-xl">
-          Cari musisi favoritmu dan beli tiket resminya di sini.
+        <p class="text-muted-gray text-base mt-2 max-w-xl">
+          Amankan tiket konser resmi dari promotor terpercaya. Tanpa calo, transaksi transparan, dan garansi masuk venue 100%.
         </p>
       </div>
 
-      <!-- Quick Search Bar -->
-      <div class="relative w-full md:w-80">
+      <!-- Quick Search Bar (Debounced) -->
+      <div class="relative w-full md:w-96">
         <input 
           type="text" 
-          data-i18n-placeholder="pages.searchPlaceholder"
+          id="events-search-input"
           placeholder="Cari artis, konser, atau kota..." 
-          class="w-full px-4 py-3 pl-11 rounded-full bg-dark-plum border border-white/10 text-sm text-soft-white placeholder-muted-gray focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
+          class="w-full px-5 py-3.5 pl-12 rounded-full bg-dark-plum border border-white/15 text-sm text-soft-white placeholder-muted-gray focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta focus:shadow-magenta-glow transition-all"
         />
-        <svg class="w-4 h-4 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <svg class="w-4 h-4 text-muted-gray absolute left-4.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       </div>
     </div>
 
-    <!-- Category Filter Bar -->
-    <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 no-scrollbar">
-      <button class="px-5 py-2 rounded-full text-xs font-semibold bg-electric-magenta text-soft-white shadow-magenta-glow shrink-0">
-        <span data-i18n="pages.allGenres">Semua Genre</span>
-      </button>
-      {MOCK_CATEGORIES.map((cat) => (
-        <button class="px-5 py-2 rounded-full text-xs font-medium bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white hover:border-white/20 shrink-0 transition-colors">
-          {cat.name}
+    <!-- Category & Sort Controls Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10 pb-4 border-b border-white/10">
+      <!-- Category Filter Tabs -->
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 no-scrollbar" id="category-filter-group">
+        <button 
+          data-category="all" 
+          class="cat-filter-btn px-5 py-2 rounded-full text-xs font-semibold bg-electric-magenta text-soft-white shadow-magenta-glow shrink-0 transition-all"
+        >
+          Semua Genre
         </button>
-      ))}
+        {MOCK_CATEGORIES.map((cat) => (
+          <button 
+            data-category={cat.slug} 
+            class="cat-filter-btn px-5 py-2 rounded-full text-xs font-medium bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white hover:border-white/20 shrink-0 transition-colors"
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      <!-- Sort Selection -->
+      <div class="flex items-center gap-2 shrink-0">
+        <span class="text-xs text-muted-gray font-mono uppercase">Urutkan:</span>
+        <select 
+          id="events-sort-select" 
+          class="px-3.5 py-1.5 rounded-xl bg-dark-plum border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta font-medium"
+        >
+          <option value="terdekat">Terdekat</option>
+          <option value="terbaru">Terbaru Dibuat</option>
+          <option value="termurah">Harga Termurah</option>
+        </select>
+      </div>
     </div>
 
-    <!-- Catalog Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {MOCK_EVENTS.map((event) => {
-        const isSoldOut = event.status === 'SOLD_OUT';
-        const isAlmostSold = event.status === 'ALMOST_SOLD_OUT';
+    <!-- Catalog Grid Container -->
+    <div id="events-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      {initialEvents.map((event) => {
+        const { isSoldOut, isAlmostSold } = getEventStatus(event);
 
         return (
-          <article class="rounded-2xl bg-dark-plum border border-white/[0.08] overflow-hidden flex flex-col group hover:border-electric-magenta/50 hover:shadow-magenta-glow transition-all duration-300">
-            <div class="relative w-full aspect-[16/10] overflow-hidden bg-void-black">
+          <article 
+            class="event-card rounded-2xl bg-dark-plum border border-white/[0.08] overflow-hidden flex flex-col group hover:border-electric-magenta/50 hover:shadow-magenta-glow transition-all duration-300"
+            data-event-id={event.id}
+            data-search-text={`${event.nama_event} ${event.artis} ${event.alamat}`.toLowerCase()}
+          >
+            <a href={`/events/${event.id}`} class="relative w-full aspect-[16/10] overflow-hidden bg-void-black block">
               <img 
-                src={event.posterUrl} 
-                alt={event.title} 
+                src={event.poster_url || 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80'} 
+                alt={event.nama_event} 
                 class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 filter brightness-90 contrast-110"
                 loading="lazy"
               />
               <div class="absolute inset-0 bg-gradient-to-t from-dark-plum via-transparent to-transparent"></div>
 
+              <!-- Top Right Availability Badge -->
               <div class="absolute top-4 right-4">
                 {isSoldOut ? (
-                  <span data-i18n="featured.soldOut" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-muted-gray border border-white/10">
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-muted-gray border border-white/10 font-mono">
                     HABIS TERJUAL
                   </span>
                 ) : isAlmostSold ? (
-                  <span data-i18n="featured.almostSoldOut" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow font-mono">
                     HAMPIR HABIS
                   </span>
                 ) : (
-                  <span data-i18n="featured.available" class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md text-soft-white border border-white/20">
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-white/10 backdrop-blur-md text-soft-white border border-white/20 font-mono">
                     TERSEDIA
                   </span>
                 )}
               </div>
 
+              <!-- Top Left Promotor / Quota Badge -->
               <div class="absolute top-4 left-4">
-                <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-void-black/70 backdrop-blur-md text-muted-gray">
-                  {event.category}
+                <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-void-black/75 backdrop-blur-md text-muted-gray border border-white/10">
+                  {event.organization_name || 'AFTERGLOW'}
                 </span>
               </div>
-            </div>
+            </a>
 
             <div class="p-6 flex flex-col flex-1 justify-between gap-5">
               <div>
                 <div class="flex items-center gap-2 text-xs text-electric-magenta font-semibold tracking-wider uppercase mb-2">
-                  <span>{event.date}</span>
+                  <span>{formatDateIndo(event.tanggal_mulai, { showTime: false })}</span>
                   <span>•</span>
-                  <span>{event.city}</span>
+                  <span class="truncate">{event.alamat.split(',')[1] || event.alamat.split(',')[0]}</span>
                 </div>
 
-                <h3 class="font-display text-2xl text-soft-white leading-tight group-hover:text-electric-magenta transition-colors line-clamp-2">
-                  {event.title}
-                </h3>
+                <a href={`/events/${event.id}`} class="block group-hover:text-electric-magenta transition-colors">
+                  <h3 class="font-display text-2xl text-soft-white leading-tight line-clamp-2">
+                    {event.nama_event}
+                  </h3>
+                </a>
 
                 <p class="text-sm text-muted-gray mt-2 line-clamp-1 font-medium">
-                  {event.artist}
+                  {event.artis}
                 </p>
 
-                <p class="text-xs text-muted-gray/70 mt-1 flex items-center gap-1.5">
-                  <svg class="w-3.5 h-3.5 text-muted-gray" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <p class="text-xs text-muted-gray/70 mt-1 flex items-center gap-1.5 truncate">
+                  <svg class="w-3.5 h-3.5 text-muted-gray shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                   </svg>
-                  <span>{event.venue}</span>
+                  <span class="truncate">{event.alamat}</span>
                 </p>
               </div>
 
               <div class="pt-4 border-t border-white/[0.08] flex items-center justify-between">
                 <div>
-                  <span data-i18n="pages.startsFrom" class="text-[10px] text-muted-gray uppercase tracking-wider block">Mulai Dari</span>
-                  <span class="font-display text-xl text-soft-white">
-                    {formatRupiah(event.startingPrice)}
+                  <span class="text-[10px] text-muted-gray uppercase tracking-wider block font-mono">Mulai Dari</span>
+                  <span class="font-display text-2xl text-soft-white">
+                    {formatRupiah(event.min_price)}
                   </span>
                 </div>
 
-                {isSoldOut ? (
-                  <button disabled class="px-4 py-2 rounded-full bg-white/5 text-muted-gray text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
-                    <span data-i18n="pages.soldOutBtn">TIKET HABIS</span>
+                <div class="flex items-center gap-2">
+                  <!-- Wishlist Button -->
+                  <button 
+                    type="button" 
+                    data-bookmark-id={event.id}
+                    class="bookmark-btn w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-muted-gray hover:text-electric-magenta hover:border-electric-magenta/60 hover:bg-white/10 transition-all"
+                    aria-label="Simpan ke Wishlist"
+                  >
+                    <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
                   </button>
-                ) : (
-                  <button class="px-4 py-2 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-soft-white text-xs font-semibold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all">
-                    <span data-i18n="pages.getTicketsBtn">BELI TIKET</span>
-                  </button>
-                )}
+
+                  {isSoldOut ? (
+                    <button disabled class="px-5 py-2.5 rounded-full bg-white/5 text-muted-gray text-xs font-semibold uppercase tracking-wider cursor-not-allowed">
+                      HABIS
+                    </button>
+                  ) : (
+                    <a 
+                      href={`/events/${event.id}`} 
+                      class="px-5 py-2.5 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-soft-white text-xs font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all"
+                    >
+                      WAR TIKET
+                    </a>
+                  )}
+                </div>
               </div>
             </div>
           </article>
         );
       })}
     </div>
+
+    <!-- Empty Search State -->
+    <div id="events-empty-state" class="hidden text-center py-20">
+      <div class="w-20 h-20 rounded-full bg-dark-plum border border-white/10 flex items-center justify-center mx-auto mb-4 text-muted-gray">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+      <h3 class="font-display text-3xl text-soft-white mb-2">KONSER TIDAK DITEMUKAN</h3>
+      <p class="text-sm text-muted-gray max-w-md mx-auto">
+        Tidak ada jadwal konser yang cocok dengan kata kunci pencarianmu. Coba cari nama musisi lain atau reset filter.
+      </p>
+    </div>
   </div>
 
   <Footer />
 </RootLayout>
+
+<script>
+  import { toggleBookmark } from '../../lib/events';
+  import { isAuthenticated } from '../../lib/auth';
+
+  function initEventsCatalog() {
+    const searchInput = document.getElementById('events-search-input') as HTMLInputElement;
+    const sortSelect = document.getElementById('events-sort-select') as HTMLSelectElement;
+    const catBtns = document.querySelectorAll<HTMLButtonElement>('.cat-filter-btn');
+    const cards = document.querySelectorAll<HTMLElement>('.event-card');
+    const emptyState = document.getElementById('events-empty-state');
+    const grid = document.getElementById('events-grid-container');
+
+    let debounceTimer: any = null;
+
+    // Search input debounced filter
+    searchInput?.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(filterCards, 250);
+    });
+
+    // Category button filter
+    catBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        catBtns.forEach((b) => {
+          b.classList.remove('bg-electric-magenta', 'text-soft-white', 'shadow-magenta-glow');
+          b.classList.add('bg-dark-plum', 'text-muted-gray');
+        });
+        btn.classList.remove('bg-dark-plum', 'text-muted-gray');
+        btn.classList.add('bg-electric-magenta', 'text-soft-white', 'shadow-magenta-glow');
+
+        filterCards();
+      });
+    });
+
+    function filterCards() {
+      const query = searchInput?.value.trim().toLowerCase() || '';
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const text = card.dataset.searchText || '';
+        const matchesQuery = !query || text.includes(query);
+
+        if (matchesQuery) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      if (visibleCount === 0) {
+        emptyState?.classList.remove('hidden');
+      } else {
+        emptyState?.classList.add('hidden');
+      }
+    }
+
+    // Wishlist bookmark handlers
+    document.querySelectorAll<HTMLButtonElement>('.bookmark-btn').forEach((btn) => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (!isAuthenticated()) {
+          if (typeof window.openAuthModal === 'function') {
+            window.openAuthModal();
+          }
+          return;
+        }
+
+        const eventId = Number(btn.dataset.bookmarkId);
+        if (!eventId) return;
+
+        try {
+          const res = await toggleBookmark(eventId);
+          const icon = btn.querySelector('svg');
+          if (res.is_bookmarked) {
+            btn.classList.add('text-electric-magenta', 'border-electric-magenta');
+            icon?.setAttribute('fill', 'currentColor');
+          } else {
+            btn.classList.remove('text-electric-magenta', 'border-electric-magenta');
+            icon?.setAttribute('fill', 'none');
+          }
+        } catch (err: any) {
+          console.error('[Bookmark Error]:', err);
+        }
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initEventsCatalog);
+</script>
