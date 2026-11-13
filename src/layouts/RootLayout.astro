@@ -48,7 +48,7 @@ const {
       }
     </script>
 
-    <!-- Theme Flash Prevention -->
+    <!-- Theme & Language Flash Prevention -->
     <script is:inline>
       (function() {
         try {
@@ -61,6 +61,10 @@ const {
             document.documentElement.classList.remove('dark');
             document.documentElement.classList.add('light');
           }
+
+          const storedLang = localStorage.getItem('afterglow_lang') || 'id';
+          document.documentElement.lang = storedLang;
+          document.documentElement.setAttribute('data-lang', storedLang);
         } catch (e) {}
       })();
     </script>
@@ -86,13 +90,14 @@ const {
     <!-- Floating HUD Elements -->
     <FloatingHud />
 
-    <!-- Client-side Motion and Intersection Scripts -->
+    <!-- Client-side Motion, Intersection & Language Scripts -->
     <script>
       import '../scripts/scrollObserver';
       import '../scripts/stageEmbers';
       import '../scripts/hudObserver';
       import '../scripts/lenisInit';
       import '../scripts/theme';
+      import '../scripts/i18n';
     </script>
   </body>
 </html>
