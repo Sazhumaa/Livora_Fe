@@ -17,32 +17,62 @@ const pathname = Astro.url.pathname;
     <nav class="hidden md:flex items-center gap-8">
       <a 
         href="/events" 
+        data-i18n="nav.discoverEvents"
         class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/events') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
       >
-        Discover Events
+        Jelajahi Konser
       </a>
       <a 
         href="/#about" 
+        data-i18n="nav.about"
         class="text-sm tracking-wide text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors duration-200"
       >
-        About
+        Tentang Kami
       </a>
       <a 
         href="/tickets" 
+        data-i18n="nav.myTickets"
         class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/tickets') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
       >
-        My Tickets
+        Tiket Saya
       </a>
       <a 
         href="/organizer" 
+        data-i18n="nav.createEvent"
         class={`text-sm tracking-wide transition-colors duration-200 ${pathname.startsWith('/organizer') ? 'text-electric-magenta font-semibold' : 'text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}
       >
-        Create Event
+        Buat Event
       </a>
     </nav>
 
-    <!-- Right Action CTA & Theme Switcher -->
+    <!-- Right Action CTA & Switchers -->
     <div class="hidden md:flex items-center gap-3">
+      <!-- Bilingual Language Switcher (ID / EN) -->
+      <div 
+        class="flex items-center p-0.5 rounded-full border border-neutral-200 dark:border-white/10 bg-neutral-100/90 dark:bg-white/5 text-xs font-mono font-bold" 
+        role="group" 
+        aria-label="Pilih Bahasa / Select Language"
+      >
+        <button 
+          type="button" 
+          data-lang-btn="id" 
+          class="px-2.5 py-1 rounded-full transition-all duration-200 text-[11px] uppercase font-bold bg-electric-magenta text-white shadow-sm"
+          aria-pressed="true"
+          title="Bahasa Indonesia"
+        >
+          ID
+        </button>
+        <button 
+          type="button" 
+          data-lang-btn="en" 
+          class="px-2.5 py-1 rounded-full transition-all duration-200 text-[11px] uppercase font-bold text-neutral-500 dark:text-muted-gray hover:text-neutral-900 dark:hover:text-soft-white"
+          aria-pressed="false"
+          title="English"
+        >
+          EN
+        </button>
+      </div>
+
       <!-- Dark / Light Theme Toggle Button -->
       <button 
         type="button"
@@ -64,20 +94,43 @@ const pathname = Astro.url.pathname;
 
       <a 
         href="/#signin" 
+        data-i18n="nav.signIn"
         class="text-sm font-medium text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors duration-200 px-3 py-2"
       >
-        Sign In
+        Masuk
       </a>
       <a 
         href="/events" 
+        data-i18n="nav.getTickets"
         class="px-5 py-2.5 rounded-full bg-electric-magenta text-soft-white font-medium text-sm tracking-wide hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
       >
-        Get Tickets
+        Beli Tiket
       </a>
     </div>
 
-    <!-- Mobile Action Row: Theme toggle + Hamburger -->
+    <!-- Mobile Action Row: Lang Toggle + Theme toggle + Hamburger -->
     <div class="md:hidden flex items-center gap-2">
+      <!-- Mobile Language Switcher Pill -->
+      <div 
+        class="flex items-center p-0.5 rounded-full border border-neutral-200 dark:border-white/10 bg-neutral-100 dark:bg-white/5 text-xs font-mono font-bold" 
+        role="group"
+      >
+        <button 
+          type="button" 
+          data-lang-btn="id" 
+          class="px-2 py-0.5 rounded-full text-[10px] uppercase font-bold bg-electric-magenta text-white shadow-sm"
+        >
+          ID
+        </button>
+        <button 
+          type="button" 
+          data-lang-btn="en" 
+          class="px-2 py-0.5 rounded-full text-[10px] uppercase font-bold text-neutral-500 dark:text-muted-gray"
+        >
+          EN
+        </button>
+      </div>
+
       <button 
         type="button"
         data-theme-toggle
@@ -108,44 +161,55 @@ const pathname = Astro.url.pathname;
   <!-- Mobile Drawer Menu Overlay -->
   <div 
     id="mobile-menu-drawer" 
-    class="md:hidden hidden fixed inset-0 top-20 bg-white/95 dark:bg-void-black/95 backdrop-blur-xl border-t border-black/[0.08] dark:border-white/[0.08] flex-col p-8 gap-6 z-40 transition-all duration-300"
+    class="md:hidden hidden fixed inset-0 top-20 bg-white/95 dark:bg-void-black/95 backdrop-blur-xl border-t border-black/[0.08] dark:border-white/[0.08] flex-col p-8 gap-6 z-40 transition-all duration-300 overflow-y-auto"
   >
-    <a href="/events" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
-      Discover Events
+    <a href="/events" data-i18n="nav.discoverEvents" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Jelajahi Konser
     </a>
-    <a href="/#about" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
-      About
+    <a href="/#about" data-i18n="nav.about" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Tentang Kami
     </a>
-    <a href="/tickets" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
-      My Tickets
+    <a href="/tickets" data-i18n="nav.myTickets" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Tiket Saya
     </a>
-    <a href="/organizer" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
-      Create Event (Organizer)
+    <a href="/organizer" data-i18n="nav.createEvent" class="font-display text-3xl text-neutral-900 dark:text-soft-white hover:text-electric-magenta transition-colors">
+      Buat Event
     </a>
 
     <div class="h-px bg-black/10 dark:bg-white/10 my-2"></div>
 
     <div class="flex flex-col gap-4">
+      <!-- Mobile Drawer Language Selector Row -->
+      <div class="w-full flex items-center justify-between px-5 py-3.5 rounded-xl border border-neutral-300 dark:border-white/15 text-neutral-800 dark:text-soft-white font-medium text-sm">
+        <span>Bahasa / Language</span>
+        <div class="flex items-center p-0.5 rounded-full border border-neutral-300 dark:border-white/15 bg-neutral-100 dark:bg-white/5 text-xs font-mono font-bold">
+          <button type="button" data-lang-btn="id" class="px-3 py-1 rounded-full text-xs uppercase font-bold bg-electric-magenta text-white">ID</button>
+          <button type="button" data-lang-btn="en" class="px-3 py-1 rounded-full text-xs uppercase font-bold text-neutral-500 dark:text-muted-gray">EN</button>
+        </div>
+      </div>
+
       <button 
         type="button" 
         data-theme-toggle 
         class="w-full flex items-center justify-between px-5 py-3.5 rounded-xl border border-neutral-300 dark:border-white/15 text-neutral-800 dark:text-soft-white font-medium text-sm"
       >
-        <span>Toggle Theme</span>
+        <span>Mode Tampilan / Theme</span>
         <span data-theme-label class="text-xs uppercase font-mono text-electric-magenta">LIGHT MODE</span>
       </button>
 
       <a 
         href="/events" 
+        data-i18n="nav.getTickets"
         class="w-full text-center py-4 rounded-xl bg-electric-magenta text-soft-white font-semibold text-lg shadow-magenta-glow"
       >
-        Explore Events
+        Beli Tiket
       </a>
       <a 
         href="/#signin" 
+        data-i18n="nav.signIn"
         class="w-full text-center py-3.5 rounded-xl border border-neutral-300 dark:border-white/20 text-neutral-800 dark:text-soft-white font-medium text-base hover:bg-neutral-100 dark:hover:bg-white/5"
       >
-        Sign In / Register
+        Masuk
       </a>
     </div>
   </div>
