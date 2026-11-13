@@ -11,9 +11,9 @@ export const translations = {
     'nav.getTickets': 'Beli Tiket',
 
     // Hero Section
-    'hero.headline1': 'TIKET KONSER RESMI.',
-    'hero.headline2': 'BEBAS CALO.',
-    'hero.subheadline': 'Cari musisi favoritmu dan beli tiket resminya langsung tanpa ribet.',
+    'hero.headline1': 'SAKSIKAN MUSISI FAVORITMU.',
+    'hero.headline2': 'LANGSUNG DARI BARISAN DEPAN.',
+    'hero.subheadline': 'Rasakan getaran musik dan momen tak terlupakan di depan panggung. Amankan tiket resmi konser idamanmu dengan mudah, aman, dan bebas calo.',
     'hero.exploreBtn': 'Beli Tiket Konser',
     'hero.createBtn': 'Buat Event Konser',
     'hero.statPasses': '120K+',
@@ -33,7 +33,7 @@ export const translations = {
 
     // Featured Events
     'featured.title': 'KONSER TERDEKAT',
-    'featured.subtitle': 'Pilih jadwal konser favoritmu dan beli tiketnya sebelum kehabisan.',
+    'featured.subtitle': 'Jelajahi deretan konser musik dan festival spektakuler yang siap mengguncang panggung kotamu. Cek jadwal turnya dan amankan tiket resmi sekarang sebelum kehabisan!',
     'featured.browseAll': 'LIHAT SEMUA KONSER',
     'featured.startsFrom': 'Mulai Dari',
     'featured.getTickets': 'BELI TIKET',
@@ -248,9 +248,9 @@ export const translations = {
     'nav.getTickets': 'Get Passes',
 
     // Hero Section
-    'hero.headline1': 'OFFICIAL CONCERT PASSES.',
-    'hero.headline2': 'ZERO SCALPERS.',
-    'hero.subheadline': 'Find your favorite artists and get official passes easily without scalpers.',
+    'hero.headline1': 'SEE YOUR FAVORITE ARTISTS.',
+    'hero.headline2': 'LIVE FROM THE FRONT ROW.',
+    'hero.subheadline': 'Feel the raw thrill of the crowd and unforgettable live moments. Secure official concert passes to the shows you love with ease and zero scalpers.',
     'hero.exploreBtn': 'Get Concert Tickets',
     'hero.createBtn': 'Create Concert Event',
     'hero.statPasses': '120K+',
@@ -270,7 +270,7 @@ export const translations = {
 
     // Featured Events
     'featured.title': 'UPCOMING CONCERTS',
-    'featured.subtitle': 'Browse upcoming concerts and get tickets before they sell out.',
+    'featured.subtitle': 'Explore the upcoming lineup of live concerts and massive festivals heading to your city. Check the tour dates and secure your official passes before they sell out!',
     'featured.browseAll': 'VIEW ALL CONCERTS',
     'featured.startsFrom': 'Starts From',
     'featured.getTickets': 'GET PASS',
