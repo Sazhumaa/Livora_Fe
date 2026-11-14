@@ -5,22 +5,24 @@
 <div 
   data-element="floating-hud"
   transition:persist="floating-hud"
-  class="fixed right-6 bottom-8 z-40 flex flex-col items-end gap-5 transition-all duration-500 pointer-events-none select-none [&.is-intersecting-footer]:translate-y-[-70px]"
+  class="print:hidden fixed right-6 bottom-8 z-40 flex flex-col items-end gap-5 transition-all duration-500 pointer-events-none select-none [&.is-intersecting-footer]:translate-y-[-70px]"
 >
   <!-- Ambient Audio Toggle Pill -->
   <button 
     id="hud-audio-toggle" 
+    type="button"
+    aria-pressed="false"
     aria-label="Toggle Stage Ambiance" 
     class="pointer-events-auto flex items-center gap-2.5 px-3.5 py-2 rounded-full bg-white/90 dark:bg-dark-plum/90 backdrop-blur-md border border-neutral-200 dark:border-white/10 text-xs text-neutral-800 dark:text-soft-white hover:border-electric-magenta/60 hover:shadow-magenta-glow shadow-md dark:shadow-none transition-all duration-300 group"
   >
-    <span class="w-2 h-2 rounded-full bg-electric-magenta animate-pulse"></span>
+    <span id="hud-audio-dot" class="w-2 h-2 rounded-full bg-neutral-400 dark:bg-muted-gray transition-colors"></span>
     <span data-i18n="hud.audioToggle" class="font-medium tracking-wider text-[11px] text-neutral-600 dark:text-muted-gray group-hover:text-neutral-900 dark:group-hover:text-soft-white uppercase">AUDIO PANGGUNG</span>
     
-    <!-- Soundwave animation bars -->
-    <div class="flex items-center gap-0.5 h-3 ml-1">
-      <span class="w-0.5 h-2 bg-electric-magenta rounded-full animate-bounce"></span>
-      <span class="w-0.5 h-3 bg-electric-magenta rounded-full animate-bounce [animation-delay:0.2s]"></span>
-      <span class="w-0.5 h-1.5 bg-electric-magenta rounded-full animate-bounce [animation-delay:0.4s]"></span>
+    <!-- Soundwave animation bars (paused until active) -->
+    <div id="hud-eq-bars" class="flex items-center gap-0.5 h-3 ml-1 opacity-50 transition-opacity">
+      <span class="hud-eq-bar w-0.5 h-1.5 bg-electric-magenta rounded-full"></span>
+      <span class="hud-eq-bar w-0.5 h-2.5 bg-electric-magenta rounded-full [animation-delay:0.2s]"></span>
+      <span class="hud-eq-bar w-0.5 h-1.5 bg-electric-magenta rounded-full [animation-delay:0.4s]"></span>
     </div>
   </button>
 
@@ -58,16 +60,115 @@
 </div>
 
 <script>
+  interface StageAudioEngine {
+    ctx: AudioContext;
+    masterGain: GainNode;
+    oscillators: OscillatorNode[];
+  }
+
+  let audioEngine: StageAudioEngine | null = null;
+  let isPlaying = false;
+
+  function initStageSynth(): StageAudioEngine | null {
+    if (audioEngine) return audioEngine;
+    const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+    if (!AudioCtx) return null;
+
+    const ctx = new AudioCtx();
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(340, ctx.currentTime);
+    filter.Q.setValueAtTime(1.8, ctx.currentTime);
+
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+
+    // Subtle fifth pad (A2 + E3 + detuned warmth + slow sub)
+    const freqs = [110, 110.6, 164.81, 220];
+    const types: OscillatorType[] = ['triangle', 'sine', 'sine', 'triangle'];
+    const oscillators = freqs.map((freq, idx) => {
+      const osc = ctx.createOscillator();
+      osc.type = types[idx];
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      const voiceGain = ctx.createGain();
+      voiceGain.gain.setValueAtTime(idx === 3 ? 0.14 : 0.25, ctx.currentTime);
+      osc.connect(voiceGain);
+      voiceGain.connect(filter);
+      osc.start();
+      return osc;
+    });
+
+    // Gentle LFO breathing on the stage filter
+    const lfo = ctx.createOscillator();
+    const lfoGain = ctx.createGain();
+    lfo.frequency.setValueAtTime(0.18, ctx.currentTime);
+    lfoGain.gain.setValueAtTime(120, ctx.currentTime);
+    lfo.connect(lfoGain);
+    lfoGain.connect(filter.frequency);
+    lfo.start();
+    oscillators.push(lfo);
+
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    audioEngine = { ctx, masterGain, oscillators };
+    return audioEngine;
+  }
+
+  function updateAudioUi(active: boolean) {
+    const audioBtn = document.getElementById('hud-audio-toggle');
+    const audioDot = document.getElementById('hud-audio-dot');
+    const eqWrap = document.getElementById('hud-eq-bars');
+    if (!audioBtn) return;
+
+    audioBtn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    audioBtn.classList.toggle('border-electric-magenta', active);
+    audioBtn.classList.toggle('shadow-magenta-glow', active);
+
+    if (audioDot) {
+      audioDot.classList.toggle('bg-electric-magenta', active);
+      audioDot.classList.toggle('animate-pulse', active);
+      audioDot.classList.toggle('bg-neutral-400', !active);
+      audioDot.classList.toggle('dark:bg-muted-gray', !active);
+    }
+    if (eqWrap) {
+      eqWrap.classList.toggle('opacity-100', active);
+      eqWrap.classList.toggle('opacity-50', !active);
+      eqWrap.querySelectorAll('.hud-eq-bar').forEach((bar) => {
+        bar.classList.toggle('animate-bounce', active);
+      });
+    }
+  }
+
   function setupAudioToggle() {
     const audioBtn = document.getElementById('hud-audio-toggle');
-    if (!audioBtn || audioBtn.dataset.audioBound === '1') return;
+    if (!audioBtn) return;
+    updateAudioUi(isPlaying);
+
+    if (audioBtn.dataset.audioBound === '1') return;
     audioBtn.dataset.audioBound = '1';
 
-    let isPlaying = false;
-    audioBtn.addEventListener('click', () => {
+    audioBtn.addEventListener('click', async () => {
       isPlaying = !isPlaying;
-      audioBtn.classList.toggle('border-electric-magenta', isPlaying);
-      audioBtn.classList.toggle('shadow-magenta-glow', isPlaying);
+      updateAudioUi(isPlaying);
+
+      const engine = initStageSynth();
+      if (!engine) return;
+
+      try {
+        if (isPlaying) {
+          if (engine.ctx.state === 'suspended') {
+            await engine.ctx.resume();
+          }
+          engine.masterGain.gain.cancelScheduledValues(engine.ctx.currentTime);
+          engine.masterGain.gain.setTargetAtTime(0.055, engine.ctx.currentTime, 0.25);
+        } else {
+          engine.masterGain.gain.cancelScheduledValues(engine.ctx.currentTime);
+          engine.masterGain.gain.setTargetAtTime(0.0001, engine.ctx.currentTime, 0.15);
+        }
+      } catch {
+        // Fallback smoothly if Web Audio is blocked by browser policy
+      }
     });
   }
 

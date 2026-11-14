@@ -1,0 +1,51 @@
+---
+import RootLayout from '../layouts/RootLayout.astro';
+import Footer from '../components/landing/Footer.astro';
+---
+
+<RootLayout title="Syarat & Ketentuan — AFTERGLOW" description="Ketentuan resmi pembelian tiket konser, kebijakan anti-calo, biaya platform, dan mekanisme escrow promotor di AFTERGLOW.">
+  <main class="min-h-screen pt-28 pb-24 px-6 lg:px-12 max-w-4xl mx-auto">
+    <div class="space-y-4 mb-10">
+      <span class="inline-block px-3 py-1 rounded-full bg-electric-magenta/10 border border-electric-magenta/30 text-electric-magenta font-mono text-[11px] font-bold uppercase tracking-widest">
+        AFTERGLOW // KETENTUAN LAYANAN
+      </span>
+      <h1 data-i18n="terms.title" class="font-display text-5xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+        SYARAT & KETENTUAN RESMI
+      </h1>
+      <p data-i18n="terms.updated" class="text-xs font-mono text-neutral-500 dark:text-muted-gray uppercase tracking-wider">
+        Pembaruan Terakhir: Musim Konser 2026 • Berlaku untuk Penonton & Promotor Resmi
+      </p>
+    </div>
+
+    <div class="space-y-6 text-sm text-neutral-700 dark:text-muted-gray leading-relaxed">
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="terms.s1Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">1. Alokasi Kuota & Proteksi Anti-Calo</h2>
+        <p data-i18n="terms.s1Body">
+          Setiap pembelian tiket konser dibatasi sesuai kuota maksimal per transaksi yang ditetapkan promotor acara. Penjualan kembali tiket dengan harga melampaui nilai resmi, penggunaan bot otomatis, maupun penggandaan QR e-tiket dilarang keras dan dapat berakibat pembatalan akses masuk di gerbang venue.
+        </p>
+      </section>
+
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="terms.s2Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">2. Reservasi Checkout & Biaya Layanan Platform 5%</h2>
+        <p data-i18n="terms.s2Body">
+          Order yang baru dibuat akan mengunci stok kategori secara eksklusif selama 15 menit. Pembeli menanggung total harga tiket bersih (setelah potongan voucher bila berlaku) ditambah biaya layanan platform sebesar 5%. Jika batas waktu habis sebelum pembayaran selesai, kuota otomatis dikembalikan ke stok publik.
+        </p>
+      </section>
+
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="terms.s3Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">3. Validasi Gate Scanning & Satu Kali Masuk</h2>
+        <p data-i18n="terms.s3Body">
+          E-tiket resmi diterbitkan setelah status pembayaran terkonfirmasi lunas. Pemindaian QR di pintu masuk venue bersifat atomik dan satu kali pakai. Pastikan baterai perangkat mencukupi serta simpan kuitansi resmi atau kirim ulang e-tiket via email sebelum mendekati area gate.
+        </p>
+      </section>
+
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="terms.s4Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">4. Escrow Promotor & Pembatalan Acara</h2>
+        <p data-i18n="terms.s4Body">
+          Dana hasil penjualan tiket ditampung sementara pada sistem escrow dan baru dapat ditarik ke rekening promotor terverifikasi setelah konser berstatus selesai dan melewati jeda keamanan perubahan rekening 72 jam. Apabila konser dibatalkan, seluruh pesanan lunas otomatis berstatus refund penuh.
+        </p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</RootLayout>

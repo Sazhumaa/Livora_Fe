@@ -1,25 +1,97 @@
 ---
-// Section 01: Hero (Editorial Live Music Marketplace)
-// Headline: "Discover Sound. Collect Passes." (Punchy & Short)
+// Section 01: Hero (Editorial Live Concert Marketplace)
 // Centered layout with balanced viewport margin (Navbar h-20 compensated, vertically centered).
-// 3D Card Flip (Easter Egg: no spoiler hints, smooth 3D flip on click).
-// Smooth CSS hover (no rigid mousemove tracker).
+// 3D Card Flip (smooth 3D flip on click) + live concert catalog & DB stats from backend.
+import { api } from '../../lib/api';
+import { fetchEvents, type BackendEvent } from '../../lib/events';
+import { formatDateIndo, formatRupiah } from '../../lib/formatters';
+
+interface PlatformStats {
+  active_events_count: number;
+  tickets_sold_count: number;
+  verified_organizers_count: number;
+  cities_count: number;
+}
+
+const heroEvents = await fetchEvents({ limit: 4, sort: 'terdekat', scope: 'public' });
+
+let platformStats: PlatformStats = {
+  active_events_count: heroEvents.length,
+  tickets_sold_count: 0,
+  verified_organizers_count: 0,
+  cities_count: 0,
+};
+
+try {
+  const statsRes = await api.get<PlatformStats>('/events/stats');
+  if (statsRes && typeof statsRes.active_events_count === 'number') {
+    platformStats = statsRes;
+  }
+} catch {
+  // Keep graceful zero/fallback counters when backend API is offline during build/preview
+}
+
+const getCityLabel = (ev?: BackendEvent | null) => {
+  if (!ev) return 'Indonesia';
+  if (ev.kota && ev.kota.trim()) return ev.kota.trim();
+  const parts = String(ev.alamat || '').split(',');
+  return parts[parts.length - 1]?.trim() || 'Indonesia';
+};
+
+const getSoldCount = (ev?: BackendEvent | null) => {
+  if (!ev) return 0;
+  if (typeof ev.sold_quota === 'number') return Math.max(0, ev.sold_quota);
+  return Math.max(0, Number(ev.total_quota || 0) - Number(ev.available_quota || 0));
+};
+
+const frontEv = heroEvents[0] || null;
+const backEv = heroEvents[1] || heroEvents[0] || null;
+
+const frontTitle = frontEv?.nama_event || 'AFTERGLOW FESTIVAL 2026';
+const frontOrgName = frontEv?.organization_name || 'Promotor Resmi AFTERGLOW';
+const frontOrgUrl = frontEv?.organizer_id ? `/organizers/${frontEv.organizer_id}` : '/events';
+const frontPrice = frontEv ? formatRupiah(frontEv.min_price) : 'Rp 650.000';
+const frontCity = getCityLabel(frontEv);
+const frontImg =
+  frontEv?.poster_url ||
+  'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1000&q=85';
+const frontHref = frontEv?.id ? `/events/${frontEv.id}` : '/events';
+const frontSold = getSoldCount(frontEv);
+const frontDateShort = frontEv?.tanggal_mulai ? formatDateIndo(frontEv.tanggal_mulai, { showTime: false }) : 'SEGERA HADIR';
+const frontVenueShort = frontEv?.alamat ? frontEv.alamat.split(',')[0].trim() : 'Main Arena Stage';
+
+const backTitle = backEv?.nama_event || 'MIDNIGHT ECHOES: SYNTHWAVE';
+const backOrgName = backEv?.organization_name || 'Promotor Resmi AFTERGLOW';
+const backOrgUrl = backEv?.organizer_id ? `/organizers/${backEv.organizer_id}` : '/events';
+const backPrice = backEv ? formatRupiah(backEv.min_price) : 'Rp 650.000';
+const backCity = getCityLabel(backEv);
+const backImg =
+  backEv?.poster_url ||
+  'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1000&q=85';
+const backHref = backEv?.id ? `/events/${backEv.id}` : '/events';
+const backSold = getSoldCount(backEv);
+const backDateShort = backEv?.tanggal_mulai ? formatDateIndo(backEv.tanggal_mulai, { showTime: false }) : 'SEGERA HADIR';
+const backVenueShort = backEv?.alamat ? backEv.alamat.split(',')[0].trim() : 'Festival Arena';
+
+const statSoldText = Number(platformStats.tickets_sold_count || 0).toLocaleString('id-ID');
+const statStagesText = Number(platformStats.active_events_count || heroEvents.length).toLocaleString('id-ID');
+const statPromotersText = Number(platformStats.verified_organizers_count || 0).toLocaleString('id-ID');
 ---
 
 <section class="relative w-full min-h-screen flex items-center justify-center pt-20 pb-8 px-6 sm:px-12 lg:px-16 overflow-hidden">
   
-  <!-- Subtle Atmospheric Stage Glows (Directly on Page Background) -->
+  <!-- Subtle Atmospheric Stage Glows -->
   <div class="absolute top-1/3 right-10 w-[550px] h-[550px] bg-electric-magenta/10 dark:bg-electric-magenta/20 rounded-full blur-[180px] pointer-events-none"></div>
   <div class="absolute bottom-16 left-12 w-[450px] h-[450px] bg-deep-magenta/5 dark:bg-deep-magenta/25 rounded-full blur-[160px] pointer-events-none"></div>
 
-  <!-- Max Width Centered Grid: Vertically & Horizontally Balanced in Viewport -->
+  <!-- Max Width Centered Grid -->
   <div class="relative z-10 w-full max-w-7xl mx-auto my-auto py-6 lg:py-10">
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-14 items-center">
       
-      <!-- LEFT COLUMN: Punchy Headline, Subheadline, Doodle Arrow, CTAs, Stats -->
+      <!-- LEFT COLUMN: Punchy Headline, Subheadline, Doodle Arrow, CTAs, Live Stats -->
       <div class="lg:col-span-7 flex flex-col justify-center text-left relative">
         
-        <!-- Wavy Hand-drawn Doodle Arrow (Ala Referensi di sisi kiri) -->
+        <!-- Wavy Hand-drawn Doodle Arrow -->
         <div class="hidden md:block absolute -left-12 lg:-left-16 bottom-36 pointer-events-none select-none text-neutral-800 dark:text-soft-white/70">
           <svg class="w-14 h-18 transform -rotate-12" viewBox="0 0 60 80" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M 8 72 C 16 52, 6 36, 26 22 C 38 14, 46 12, 52 8" />
@@ -27,20 +99,19 @@
           </svg>
         </div>
 
-        <!-- Punchy, Short Geometric Headline -->
+        <!-- Headline -->
         <h1 class="font-sans text-3xl sm:text-4xl md:text-[38px] lg:text-[44px] xl:text-[48px] font-black tracking-tight text-neutral-950 dark:text-soft-white leading-[1.12] mb-6">
           <span data-i18n="hero.headline1">DENGARKAN LAGU.</span> <br class="hidden sm:inline" />
           <span data-i18n="hero.headline2">SIMPAN MOMEN.</span>
         </h1>
 
-        <!-- Subtitle Paragraph -->
+        <!-- Subtitle -->
         <p data-i18n="hero.subheadline" class="text-base sm:text-lg text-neutral-600 dark:text-muted-gray font-normal leading-relaxed max-w-xl mb-10">
           Rasakan getaran musik dan momen tak terlupakan di depan panggung. Amankan tiket resmi konser idamanmu dengan mudah, aman, dan bebas calo.
         </p>
 
-        <!-- CTA Buttons: Solid Pill & Outlined Pill -->
+        <!-- CTA Buttons -->
         <div class="flex flex-wrap items-center gap-4 mb-14">
-          <!-- Primary Pill Button (Explore) -->
           <a 
             href="/events" 
             class="group inline-flex items-center gap-3 px-8 py-4 rounded-full bg-neutral-950 text-white hover:bg-electric-magenta dark:bg-soft-white dark:text-void-black dark:hover:bg-electric-magenta dark:hover:text-white font-semibold text-base tracking-wide shadow-lg hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
@@ -51,7 +122,6 @@
             </svg>
           </a>
 
-          <!-- Secondary Outlined Pill Button (Create) -->
           <a 
             href="/organizer" 
             class="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-neutral-300 text-neutral-900 hover:border-neutral-950 hover:bg-neutral-100/80 dark:border-white/20 dark:text-soft-white dark:hover:border-white dark:hover:bg-white/10 font-semibold text-base tracking-wide transition-all duration-300 hover:scale-[1.03] active:scale-[0.98]"
@@ -60,28 +130,28 @@
           </a>
         </div>
 
-        <!-- Bottom Stats Row -->
+        <!-- Bottom Live Stats Row (Database-backed via GET /events/stats) -->
         <div class="grid grid-cols-3 gap-6 sm:gap-12 pt-8 border-t border-neutral-200/80 dark:border-white/10 max-w-lg">
           <div>
-            <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">120K+</span>
+            <span id="hero-stat-tickets" class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">{statSoldText}</span>
             <span data-i18n="hero.statPassesLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">TIKET TERJUAL</span>
           </div>
           <div>
-            <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">450+</span>
+            <span id="hero-stat-stages" class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">{statStagesText}</span>
             <span data-i18n="hero.statStagesLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">PANGGUNG LIVE</span>
           </div>
           <div>
-            <span class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">100%</span>
-            <span data-i18n="hero.statAntiCaloLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">TIKET RESMI PROMOTOR</span>
+            <span id="hero-stat-promoters" class="block text-3xl sm:text-4xl font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">{statPromotersText}</span>
+            <span data-i18n="hero.statAntiCaloLabel" class="block text-[11px] sm:text-xs font-semibold tracking-wider uppercase text-neutral-500 dark:text-muted-gray mt-1.5">PROMOTOR RESMI</span>
           </div>
         </div>
 
       </div>
 
-      <!-- RIGHT COLUMN: Clean 3D Collectible Cards, Rotating Badge & Orbital Rings -->
+      <!-- RIGHT COLUMN: Interactive Live Concert Pass Cards -->
       <div class="lg:col-span-5 relative flex items-center justify-center min-h-[480px] sm:min-h-[520px] lg:min-h-[580px] w-full select-none">
         
-        <!-- 1. Cosmic Planetary Orbital Rings (SVG background paths) -->
+        <!-- 1. Orbital Rings -->
         <svg class="absolute inset-0 w-full h-full pointer-events-none overflow-visible" viewBox="0 0 520 520">
           <ellipse 
             cx="260" cy="270" rx="240" ry="115" 
@@ -96,43 +166,38 @@
           />
         </svg>
 
-        <!-- 2. Sparkle Stars (✦ 4-Point Stars - Safely below Navbar & 100% Unobstructed in Open Space) -->
-        <!-- Star 1: Top-Right (Safely below Navbar, floating in clear open space to the right of back card) -->
+        <!-- 2. Sparkle Stars -->
         <div class="absolute top-2 sm:top-4 -right-2 sm:-right-4 lg:-right-6 text-neutral-900 dark:text-soft-white animate-pulse pointer-events-none z-30">
           <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
           </svg>
         </div>
 
-        <!-- Star 2: Middle-Left (Floating in clear space between headline and front card) -->
         <div class="absolute top-1/3 -left-10 sm:-left-14 lg:-left-16 text-neutral-900 dark:text-soft-white animate-pulse [animation-delay:0.5s] pointer-events-none z-30">
           <svg class="w-7 h-7 sm:w-8 sm:h-8" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
           </svg>
         </div>
 
-        <!-- Star 3: Bottom-Left (Floating cleanly below front card on the left) -->
         <div class="absolute -bottom-6 sm:-bottom-8 left-2 sm:left-6 text-neutral-900 dark:text-soft-white animate-pulse [animation-delay:0.8s] pointer-events-none z-30">
           <svg class="w-6 h-6 sm:w-7 sm:h-7" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
           </svg>
         </div>
 
-        <!-- Star 4: Bottom-Center (Underneath cards, well away from FloatingHUD) -->
         <div class="absolute -bottom-4 sm:-bottom-6 right-24 sm:right-32 text-neutral-900 dark:text-soft-white animate-pulse [animation-delay:1.2s] pointer-events-none z-30">
           <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="currentColor">
             <path d="M12 0 L14.5 9.5 L24 12 L14.5 14.5 L12 24 L9.5 14.5 L0 12 L9.5 9.5 Z" />
           </svg>
         </div>
 
-        <!-- 3. Circular Graphic Stage Stamp Badge (Statis, Tidak Berputar, Sesuai Referensi & Relevan ke Tiket Konser) -->
+        <!-- 3. Circular Graphic Stage Stamp Badge -->
         <div class="absolute -top-3 sm:top-2 -left-2 sm:left-4 z-30 pointer-events-auto">
           <a 
             href="/events" 
             aria-label="Explore All Live Concert Passes"
             class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-white/95 dark:bg-[#150F17]/95 backdrop-blur-md border border-neutral-300 dark:border-white/20 shadow-xl flex items-center justify-center group cursor-pointer hover:scale-105 hover:border-electric-magenta/60 hover:shadow-magenta-glow transition-all duration-300"
           >
-            <!-- Static Circular Graphic Text (No continuous spin, clean editorial print stamp) -->
             <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 100 100">
               <path
                 id="heroCircleStampPath"
@@ -146,7 +211,6 @@
               </text>
             </svg>
 
-            <!-- Center Stage Pass Action Circle with Angled Arrow -->
             <div class="w-11 h-11 rounded-full bg-neutral-950 dark:bg-electric-magenta text-white flex items-center justify-center group-hover:scale-110 group-hover:bg-electric-magenta transition-all duration-300 shadow-md">
               <svg class="w-4 h-4 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 17L17 7M17 7H7M17 7V17" />
@@ -155,16 +219,22 @@
           </a>
         </div>
 
-        <!-- 4. BACK COLLECTIBLE CARD (Click to Swap with Front Card) -->
+        <!-- 4. BACK COLLECTIBLE CONCERT CARD (Click to Swap with Front Card) -->
         <div 
           id="hero-back-card"
+          data-event-id={backEv?.id ?? ''}
+          data-href={backHref}
+          data-org-url={backOrgUrl}
+          data-city={backCity}
+          data-date={backDateShort}
+          data-venue={backVenueShort}
           class="absolute right-0 sm:right-4 lg:right-6 top-6 sm:top-8 w-[230px] sm:w-[270px] md:w-[300px] rounded-3xl bg-white dark:bg-[#181119] border border-neutral-200 dark:border-white/15 shadow-[0_20px_50px_-12px_rgba(18,12,17,0.16)] dark:shadow-2xl p-3 sm:p-4 rotate-6 hover:rotate-3 hover:scale-[1.02] transition-all duration-300 cursor-pointer z-10 group hover:shadow-magenta-glow"
         >
           <div class="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-950 mb-3.5">
             <img 
               id="back-card-img"
-              src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1000&q=85" 
-              alt="Live Stage Sculpture Collectible" 
+              src={backImg}
+              alt={backTitle} 
               class="w-full h-full object-cover filter brightness-95 contrast-110 group-hover:scale-105 transition-transform duration-500"
               loading="eager"
             />
@@ -173,19 +243,19 @@
 
           <div class="flex flex-col gap-2">
             <h3 id="back-card-title" class="text-sm sm:text-base font-bold text-neutral-950 dark:text-soft-white tracking-tight truncate">
-              Chroma Distortion: Hideout
+              {backTitle}
             </h3>
 
-            <div class="flex items-center justify-between">
-              <div class="flex items-center gap-1.5">
-                <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-electric-magenta to-deep-magenta flex items-center justify-center text-[9px] text-white font-bold">
-                  N
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1.5 min-w-0">
+                <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-electric-magenta to-deep-magenta flex items-center justify-center text-[9px] text-white font-bold shrink-0">
+                  A
                 </div>
-                <span id="back-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray">@nocturne</span>
+                <span id="back-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray truncate">{backOrgName}</span>
               </div>
 
-              <div class="flex items-center gap-1 text-neutral-950 dark:text-soft-white text-xs font-semibold">
-                <span id="back-card-price">3 BNB</span>
+              <div class="flex items-center gap-1 text-neutral-950 dark:text-soft-white text-xs font-extrabold shrink-0">
+                <span id="back-card-price">{backPrice}</span>
               </div>
             </div>
 
@@ -195,80 +265,83 @@
                 <svg class="w-3.5 h-3.5 text-electric-magenta" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                 </svg>
-                <span id="back-card-likes">3890</span>
+                <span id="back-card-likes">{backSold}</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 5. FRONT COLLECTIBLE CARD WITH BULLETPROOF 3D FLIP ON CLICK -->
+        <!-- 5. FRONT COLLECTIBLE CONCERT CARD WITH 3D FLIP -->
         <div class="relative w-[260px] sm:w-[300px] md:w-[330px] [perspective:1400px] z-20">
           
-          <!-- Inner Flipper Container with Dedicated Pure CSS 3D Rotation -->
           <div 
             id="hero-card-flipper"
+            data-event-id={frontEv?.id ?? ''}
+            data-href={frontHref}
+            data-org-url={frontOrgUrl}
+            data-city={frontCity}
+            data-date={frontDateShort}
+            data-venue={frontVenueShort}
             class="flipper-card relative w-full rounded-3xl shadow-[0_24px_60px_-15px_rgba(18,12,17,0.2)] dark:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.95)] cursor-pointer"
           >
             
-            <!-- A. FRONT FACE: Collectible Artwork & Clean Minimal Metadata (No Spoiler Hints) -->
+            <!-- A. FRONT FACE -->
             <div class="face-front w-full rounded-3xl bg-white dark:bg-[#0E080F] border border-neutral-200 dark:border-white/20 p-3.5 sm:p-4">
               
-              <!-- Card Image Container -->
+              <!-- Poster Image -->
               <div class="relative w-full aspect-[4/4.5] rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 mb-3.5">
                 <img 
                   id="front-card-img"
-                  src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=85" 
-                  alt="Deadzone 13 Hideout Stage Pass Artwork" 
+                  src={frontImg}
+                  alt={frontTitle}
                   class="w-full h-full object-cover filter contrast-105"
                   loading="eager"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/45 dark:from-black/80 via-transparent to-transparent"></div>
                 
-                <!-- Live Authentic Badge Tag (Top Right) -->
+                <!-- Live Authentic Badge -->
                 <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/85 dark:bg-black/60 backdrop-blur-md border border-white/60 dark:border-white/20 shadow-sm flex items-center gap-1.5 pointer-events-none">
                   <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-ping"></span>
                   <span data-i18n="hero.authenticBadge" class="text-[10px] font-mono uppercase tracking-wider text-neutral-950 dark:text-white font-semibold">100% RESMI</span>
                 </div>
               </div>
 
-              <!-- Card Metadata Tray -->
+              <!-- Card Metadata -->
               <div class="flex flex-col gap-2">
-                <h3 id="front-card-title" class="text-base sm:text-lg font-bold text-neutral-950 dark:text-soft-white tracking-tight">
-                  Deadzone 13 Hideout
+                <h3 id="front-card-title" class="text-base sm:text-lg font-bold text-neutral-950 dark:text-soft-white tracking-tight truncate">
+                  {frontTitle}
                 </h3>
 
-                <div class="flex items-center gap-2">
-                  <div class="w-5 h-5 rounded-full overflow-hidden bg-electric-magenta/20 border border-electric-magenta/40">
-                    <img 
-                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80" 
-                      alt="Creator Avatar" 
-                      class="w-full h-full object-cover"
-                    />
+                <a id="front-card-creator-link" href={frontOrgUrl} class="flex items-center gap-2 group/org w-fit max-w-full">
+                  <div class="w-5 h-5 rounded-full overflow-hidden bg-electric-magenta/20 border border-electric-magenta/40 flex items-center justify-center text-[10px] font-bold text-electric-magenta shrink-0">
+                    ✓
                   </div>
-                  <span id="front-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray font-medium">@morteluns</span>
-                </div>
+                  <span id="front-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray group-hover/org:text-electric-magenta transition-colors font-medium truncate">
+                    {frontOrgName}
+                  </span>
+                </a>
 
                 <div class="flex items-center justify-between pt-2 border-t border-neutral-200 dark:border-white/10 mt-1">
-                  <div>
-                    <span id="front-card-price" class="block text-sm sm:text-base font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">
-                      $ 0.49 BNB
+                  <div class="min-w-0 pr-2">
+                    <span id="front-card-price" class="block text-sm sm:text-base font-extrabold text-neutral-950 dark:text-soft-white tracking-tight truncate">
+                      {frontPrice}
                     </span>
-                    <span class="block text-[11px] font-mono text-neutral-500 dark:text-muted-gray">
-                      ~$140.05
+                    <span id="front-card-city" class="block text-[11px] font-mono text-neutral-500 dark:text-muted-gray truncate">
+                      {frontCity} • IDR
                     </span>
                   </div>
 
-                  <!-- Like Button (Does not trigger flip) -->
+                  <!-- Save / Wishlist Toggle Button -->
                   <button 
                     type="button"
                     id="hero-card-like-btn" 
-                    aria-label="Like Stage Pass" 
-                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-white/15 dark:text-soft-white text-xs font-semibold transition-all duration-200 active:scale-95"
+                    aria-label="Simpan Konser ke Wishlist" 
+                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-white/15 dark:text-soft-white text-xs font-semibold transition-all duration-200 active:scale-95 shrink-0"
                   >
                     <svg id="hero-card-heart-icon" class="w-4 h-4 text-electric-magenta transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                     </svg>
-                    <span id="hero-card-like-count">1200</span>
+                    <span id="hero-card-like-count">{frontSold}</span>
                   </button>
                 </div>
               </div>
@@ -278,37 +351,30 @@
             <!-- B. BACK FACE (REVEALED ON CLICK FLIP): Technical VIP Gate QR Stub -->
             <div class="face-back absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-[#140C15] border-2 border-electric-magenta/70 shadow-xl dark:shadow-magenta-glow p-5 flex flex-col justify-between overflow-hidden">
               
-              <!-- Ambient Holographic Foil Sheen Line -->
               <div class="absolute -inset-full bg-gradient-to-r from-transparent via-electric-magenta/[0.06] dark:via-white/[0.08] to-transparent transform rotate-45 pointer-events-none animate-[pulse_3s_infinite]"></div>
 
               <!-- Stub Top Bar -->
               <div class="relative z-10 flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-white/10">
-                <div class="flex items-center gap-2">
-                  <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta shadow-magenta-glow animate-ping"></span>
-                  <span data-i18n="hero.vipPassTitle" class="font-display text-xl text-neutral-950 dark:text-soft-white tracking-wider">TIKET MASUK VIP</span>
+                <div class="flex items-center gap-2 min-w-0">
+                  <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta shadow-magenta-glow animate-ping shrink-0"></span>
+                  <span data-i18n="hero.vipPassTitle" class="font-display text-xl text-neutral-950 dark:text-soft-white tracking-wider truncate">TIKET MASUK VIP</span>
                 </div>
-                <span data-i18n="hero.vipBarricade" class="px-2 py-0.5 rounded-full bg-electric-magenta/10 dark:bg-electric-magenta/20 border border-electric-magenta/30 dark:border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase">
+                <span data-i18n="hero.vipBarricade" class="px-2 py-0.5 rounded-full bg-electric-magenta/10 dark:bg-electric-magenta/20 border border-electric-magenta/30 dark:border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase shrink-0">
                   VIP FESTIVAL PIT
                 </span>
               </div>
 
-              <!-- Animated Dynamic QR Code Container with Laser Scanning Line -->
+              <!-- Dynamic QR Preview -->
               <div class="relative z-10 my-auto flex flex-col items-center justify-center p-4 rounded-2xl bg-neutral-50 dark:bg-black/60 border border-neutral-200 dark:border-white/10 backdrop-blur-sm">
-                <!-- QR Code SVG -->
                 <div class="relative w-32 h-32 flex items-center justify-center">
-                  <!-- Laser Scan Beam Line -->
                   <div class="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-electric-magenta to-transparent shadow-[0_0_12px_#D14D91] animate-[bounce_2s_infinite]"></div>
-                  
-                  <!-- Technical QR Vector -->
                   <svg class="w-full h-full text-neutral-950 dark:text-soft-white" viewBox="0 0 100 100" fill="currentColor">
-                    <!-- Corner anchors -->
                     <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="4"/>
                     <rect x="11" y="11" width="13" height="13" fill="#D14D91"/>
                     <rect x="70" y="5" width="25" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="4"/>
                     <rect x="76" y="11" width="13" height="13" fill="#D14D91"/>
                     <rect x="5" y="70" width="25" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="4"/>
                     <rect x="11" y="76" width="13" height="13" fill="#D14D91"/>
-                    <!-- Data pixels -->
                     <rect x="36" y="8" width="6" height="6"/>
                     <rect x="46" y="8" width="6" height="6"/>
                     <rect x="56" y="14" width="6" height="6"/>
@@ -330,10 +396,9 @@
                   </svg>
                 </div>
 
-                <!-- Dynamic Security Hash -->
                 <div class="mt-2 text-center">
-                  <span class="block font-mono text-[9px] text-neutral-500 dark:text-muted-gray tracking-widest uppercase">
-                    HASH: AG#2026-9481-BARRICADE
+                  <span id="hero-stub-event" class="block font-mono text-[9px] text-neutral-600 dark:text-soft-white tracking-wider uppercase truncate max-w-[210px]">
+                    {frontTitle}
                   </span>
                   <span class="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">
                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
@@ -344,18 +409,19 @@
 
               <!-- Stub Bottom Details -->
               <div class="relative z-10 pt-3 border-t border-neutral-200 dark:border-white/10 space-y-2">
-                <div class="flex items-center justify-between text-xs">
-                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">SECTION</span>
-                  <span class="font-bold text-neutral-950 dark:text-soft-white tracking-wide">FESTIVAL A - ROW 01</span>
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">VENUE</span>
+                  <span id="hero-stub-venue" class="font-bold text-neutral-950 dark:text-soft-white tracking-wide truncate">{frontVenueShort}</span>
                 </div>
-                <div class="flex items-center justify-between text-xs">
-                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">DOORS OPEN</span>
-                  <span class="font-mono text-electric-magenta font-semibold">18:00 WIB</span>
+                <div class="flex items-center justify-between text-xs gap-2">
+                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">SCHEDULE</span>
+                  <span id="hero-stub-date" class="font-mono text-electric-magenta font-semibold truncate">{frontDateShort}</span>
                 </div>
 
-                <!-- War Tiket Fast Action Button -->
                 <a 
-                  href="/events" 
+                  id="hero-front-cta"
+                  href={frontHref}
+                  data-i18n="hero.warTiketBtn"
                   class="w-full mt-2 py-2.5 rounded-xl bg-electric-magenta hover:bg-electric-magenta/90 text-white dark:text-soft-white font-bold text-xs tracking-wider uppercase text-center block shadow-magenta-glow transition-all active:scale-95"
                 >
                   WAR TIKET SEKARANG →
@@ -374,7 +440,6 @@
 
 </section>
 
-<!-- Dedicated 3D Card Flip & Smooth Hover Styles -->
 <style>
   .flipper-card {
     transform-style: preserve-3d;
@@ -401,8 +466,98 @@
   }
 </style>
 
-<!-- Interactive Scripts: Reliable Click Flip, Card Swap, and Heart Like -->
 <script>
+  import { api } from '../../lib/api';
+  import { isAuthenticated } from '../../lib/auth';
+  import { fetchEvents, toggleBookmark, type BackendEvent } from '../../lib/events';
+  import { formatDateIndo, formatRupiah } from '../../lib/formatters';
+
+  function getCardCity(ev: BackendEvent): string {
+    if (ev.kota && ev.kota.trim()) return ev.kota.trim();
+    const parts = String(ev.alamat || '').split(',');
+    return parts[parts.length - 1]?.trim() || 'Indonesia';
+  }
+
+  function applyHeroCardData(prefix: 'front' | 'back', ev: BackendEvent) {
+    const imgEl = document.getElementById(`${prefix}-card-img`) as HTMLImageElement | null;
+    const titleEl = document.getElementById(`${prefix}-card-title`);
+    const creatorEl = document.getElementById(`${prefix}-card-creator`);
+    const priceEl = document.getElementById(`${prefix}-card-price`);
+
+    if (imgEl && ev.poster_url) {
+      imgEl.src = ev.poster_url;
+      imgEl.alt = ev.nama_event;
+    }
+    if (titleEl) titleEl.textContent = ev.nama_event;
+    if (creatorEl) creatorEl.textContent = ev.organization_name || 'Promotor Resmi AFTERGLOW';
+    if (priceEl) priceEl.textContent = formatRupiah(ev.min_price);
+
+    const sold =
+      typeof ev.sold_quota === 'number'
+        ? Math.max(0, ev.sold_quota)
+        : Math.max(0, Number(ev.total_quota || 0) - Number(ev.available_quota || 0));
+
+    const container = document.getElementById(prefix === 'front' ? 'hero-card-flipper' : 'hero-back-card');
+    if (container) {
+      container.dataset.eventId = String(ev.id);
+      container.dataset.href = `/events/${ev.id}`;
+      container.dataset.orgUrl = ev.organizer_id ? `/organizers/${ev.organizer_id}` : '/events';
+      container.dataset.city = getCardCity(ev);
+      container.dataset.date = ev.tanggal_mulai ? formatDateIndo(ev.tanggal_mulai, { showTime: false }) : 'SEGERA HADIR';
+      container.dataset.venue = ev.alamat ? ev.alamat.split(',')[0].trim() : 'Main Arena Stage';
+    }
+
+    if (prefix === 'front') {
+      const orgLink = document.getElementById('front-card-creator-link') as HTMLAnchorElement | null;
+      const cityEl = document.getElementById('front-card-city');
+      const likeCountEl = document.getElementById('hero-card-like-count');
+      const stubEventEl = document.getElementById('hero-stub-event');
+      const stubVenueEl = document.getElementById('hero-stub-venue');
+      const stubDateEl = document.getElementById('hero-stub-date');
+      const ctaEl = document.getElementById('hero-front-cta') as HTMLAnchorElement | null;
+
+      if (orgLink) orgLink.href = ev.organizer_id ? `/organizers/${ev.organizer_id}` : '/events';
+      if (cityEl) cityEl.textContent = `${getCardCity(ev)} • IDR`;
+      if (likeCountEl) likeCountEl.textContent = String(sold);
+      if (stubEventEl) stubEventEl.textContent = ev.nama_event;
+      if (stubVenueEl) stubVenueEl.textContent = ev.alamat ? ev.alamat.split(',')[0].trim() : 'Main Arena Stage';
+      if (stubDateEl) stubDateEl.textContent = ev.tanggal_mulai ? formatDateIndo(ev.tanggal_mulai, { showTime: false }) : 'SEGERA HADIR';
+      if (ctaEl) ctaEl.href = `/events/${ev.id}`;
+    } else {
+      const likesEl = document.getElementById('back-card-likes');
+      if (likesEl) likesEl.textContent = String(sold);
+    }
+  }
+
+  async function refreshHeroLiveState() {
+    try {
+      const [statsRes, eventsRes] = await Promise.all([
+        api.get<{
+          active_events_count: number;
+          tickets_sold_count: number;
+          verified_organizers_count: number;
+        }>('/events/stats').catch(() => null),
+        fetchEvents({ limit: 4, sort: 'terdekat', scope: 'public', strict: true }).catch(() => []),
+      ]);
+
+      if (statsRes && typeof statsRes.active_events_count === 'number') {
+        const ticketsEl = document.getElementById('hero-stat-tickets');
+        const stagesEl = document.getElementById('hero-stat-stages');
+        const promosEl = document.getElementById('hero-stat-promoters');
+        if (ticketsEl) ticketsEl.textContent = Number(statsRes.tickets_sold_count || 0).toLocaleString('id-ID');
+        if (stagesEl) stagesEl.textContent = Number(statsRes.active_events_count || 0).toLocaleString('id-ID');
+        if (promosEl) promosEl.textContent = Number(statsRes.verified_organizers_count || 0).toLocaleString('id-ID');
+      }
+
+      if (Array.isArray(eventsRes) && eventsRes.length > 0) {
+        applyHeroCardData('front', eventsRes[0]);
+        if (eventsRes[1]) applyHeroCardData('back', eventsRes[1]);
+      }
+    } catch {
+      // Keep SSR fallback values smoothly
+    }
+  }
+
   function setupHeroInteractiveCard() {
     const flipper = document.getElementById('hero-card-flipper');
     const backCard = document.getElementById('hero-back-card');
@@ -410,9 +565,12 @@
     const heartIcon = document.getElementById('hero-card-heart-icon');
     const countSpan = document.getElementById('hero-card-like-count');
 
-    if (!flipper) return;
+    if (!flipper || flipper.dataset.heroBound === '1') return;
+    flipper.dataset.heroBound = '1';
 
-    // 1. Bulletproof Click Flip (Toggle class 'is-flipped', ignore clicks on like button or links)
+    refreshHeroLiveState();
+
+    // 1. Click Flip (ignore clicks on wishlist button or anchor links)
     flipper.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       if (target.closest('#hero-card-like-btn') || target.closest('a')) {
@@ -421,69 +579,104 @@
       flipper.classList.toggle('is-flipped');
     });
 
-    // 2. Interactive Like Toggle
+    // 2. Interactive Save / Wishlist Toggle
     if (likeBtn && heartIcon && countSpan) {
       let isLiked = false;
-      const baseCount = 1200;
 
-      likeBtn.addEventListener('click', (e) => {
+      likeBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
-        isLiked = !isLiked;
+
+        const evId = Number(flipper.dataset.eventId || 0);
+        const currentCount = Number(countSpan.textContent || '0') || 0;
+
+        if (isAuthenticated() && evId > 0) {
+          try {
+            const res = await toggleBookmark(evId);
+            isLiked = Boolean(res.bookmarked);
+          } catch {
+            isLiked = !isLiked;
+          }
+        } else {
+          isLiked = !isLiked;
+        }
 
         if (isLiked) {
           heartIcon.setAttribute('fill', 'currentColor');
           heartIcon.classList.add('scale-125');
           setTimeout(() => heartIcon.classList.remove('scale-125'), 200);
-          countSpan.textContent = String(baseCount + 1);
+          countSpan.textContent = String(currentCount + 1);
           likeBtn.classList.add('border-electric-magenta/60', 'bg-electric-magenta/20');
         } else {
           heartIcon.setAttribute('fill', 'none');
-          countSpan.textContent = String(baseCount);
+          countSpan.textContent = String(Math.max(0, currentCount - 1));
           likeBtn.classList.remove('border-electric-magenta/60', 'bg-electric-magenta/20');
         }
       });
     }
 
-    // 3. Card Swap Interaction: Clicking back card swaps artwork & details with front card
+    // 3. Card Swap Interaction
     if (backCard) {
-      const frontImg = document.getElementById('front-card-img') as HTMLImageElement;
-      const frontTitle = document.getElementById('front-card-title');
-      const frontCreator = document.getElementById('front-card-creator');
-      const frontPrice = document.getElementById('front-card-price');
-
-      const backImg = document.getElementById('back-card-img') as HTMLImageElement;
-      const backTitle = document.getElementById('back-card-title');
-      const backCreator = document.getElementById('back-card-creator');
-      const backPrice = document.getElementById('back-card-price');
-
       backCard.addEventListener('click', () => {
         backCard.classList.add('scale-105', '-translate-x-3');
         setTimeout(() => backCard.classList.remove('scale-105', '-translate-x-3'), 300);
 
+        const frontImg = document.getElementById('front-card-img') as HTMLImageElement | null;
+        const frontTitle = document.getElementById('front-card-title');
+        const frontCreator = document.getElementById('front-card-creator');
+        const frontPrice = document.getElementById('front-card-price');
+        const frontCity = document.getElementById('front-card-city');
+        const frontOrgLink = document.getElementById('front-card-creator-link') as HTMLAnchorElement | null;
+        const frontCta = document.getElementById('hero-front-cta') as HTMLAnchorElement | null;
+        const stubEvent = document.getElementById('hero-stub-event');
+        const stubVenue = document.getElementById('hero-stub-venue');
+        const stubDate = document.getElementById('hero-stub-date');
+
+        const backImg = document.getElementById('back-card-img') as HTMLImageElement | null;
+        const backTitle = document.getElementById('back-card-title');
+        const backCreator = document.getElementById('back-card-creator');
+        const backPrice = document.getElementById('back-card-price');
+        const backLikes = document.getElementById('back-card-likes');
+
         if (frontImg && backImg && frontTitle && backTitle && frontCreator && backCreator && frontPrice && backPrice) {
-          // Swap image sources
-          const tempImg = frontImg.src;
+          const tmpImg = frontImg.src;
           frontImg.src = backImg.src;
-          backImg.src = tempImg;
+          backImg.src = tmpImg;
 
-          // Swap titles
-          const tempTitle = frontTitle.textContent;
+          const tmpTitle = frontTitle.textContent || '';
           frontTitle.textContent = backTitle.textContent;
-          backTitle.textContent = tempTitle;
+          backTitle.textContent = tmpTitle;
 
-          // Swap creators
-          const tempCreator = frontCreator.textContent;
+          const tmpCreator = frontCreator.textContent || '';
           frontCreator.textContent = backCreator.textContent;
-          backCreator.textContent = tempCreator;
+          backCreator.textContent = tmpCreator;
 
-          // Swap prices
-          const tempPrice = frontPrice.textContent;
+          const tmpPrice = frontPrice.textContent || '';
           frontPrice.textContent = backPrice.textContent;
-          backPrice.textContent = tempPrice;
+          backPrice.textContent = tmpPrice;
+
+          if (countSpan && backLikes) {
+            const tmpCount = countSpan.textContent || '0';
+            countSpan.textContent = backLikes.textContent;
+            backLikes.textContent = tmpCount;
+          }
+
+          // Swap dataset metadata & update links
+          const keys = ['eventId', 'href', 'orgUrl', 'city', 'date', 'venue'] as const;
+          keys.forEach((k) => {
+            const tmp = flipper.dataset[k] || '';
+            flipper.dataset[k] = backCard.dataset[k] || '';
+            backCard.dataset[k] = tmp;
+          });
+
+          if (frontCity) frontCity.textContent = `${flipper.dataset.city || 'Indonesia'} • IDR`;
+          if (frontOrgLink) frontOrgLink.href = flipper.dataset.orgUrl || '/events';
+          if (frontCta) frontCta.href = flipper.dataset.href || '/events';
+          if (stubEvent) stubEvent.textContent = frontTitle.textContent;
+          if (stubVenue) stubVenue.textContent = flipper.dataset.venue || 'Main Arena Stage';
+          if (stubDate) stubDate.textContent = flipper.dataset.date || 'SEGERA HADIR';
         }
 
-        // Unflip so user sees new artwork
         flipper.classList.remove('is-flipped');
       });
     }

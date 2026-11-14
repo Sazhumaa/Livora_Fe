@@ -1,0 +1,44 @@
+---
+import RootLayout from '../layouts/RootLayout.astro';
+import Footer from '../components/landing/Footer.astro';
+---
+
+<RootLayout title="Kebijakan Privasi — AFTERGLOW" description="Cara AFTERGLOW melindungi data identitas pemegang tiket, sesi autentikasi OTP, serta pemisahan data sensitif promotor.">
+  <main class="min-h-screen pt-28 pb-24 px-6 lg:px-12 max-w-4xl mx-auto">
+    <div class="space-y-4 mb-10">
+      <span class="inline-block px-3 py-1 rounded-full bg-electric-magenta/10 border border-electric-magenta/30 text-electric-magenta font-mono text-[11px] font-bold uppercase tracking-widest">
+        AFTERGLOW // KEBIJAKAN PRIVASI
+      </span>
+      <h1 data-i18n="privacy.title" class="font-display text-5xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+        KEBIJAKAN PRIVASI & KEAMANAN DATA
+      </h1>
+      <p data-i18n="privacy.subtitle" class="text-xs font-mono text-neutral-500 dark:text-muted-gray uppercase tracking-wider">
+        Perlindungan Identitas Penonton & Integritas Transaksi Konser
+      </p>
+    </div>
+
+    <div class="space-y-6 text-sm text-neutral-700 dark:text-muted-gray leading-relaxed">
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="privacy.p1Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">1. Data yang Dikumpulkan</h2>
+        <p data-i18n="privacy.p1Body">
+          Kami memproses alamat email, nama pengguna (username), riwayat order tiket, daftar acara tersimpan (wishlist), serta status pemindaian e-tiket untuk menerbitkan akses masuk konser resmi dan mengirim notifikasi transaksi melalui email.
+        </p>
+      </section>
+
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="privacy.p2Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">2. Keamanan Sesi & Autentikasi Tanpa Password</h2>
+        <p data-i18n="privacy.p2Body">
+          AFTERGLOW menggunakan verifikasi One-Time Password (OTP) berbatas waktu dengan penandatanganan JWT terenkripsi serta token refresh yang dapat dicabut sewaktu-waktu saat kamu keluar sesi (logout).
+        </p>
+      </section>
+
+      <section class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 space-y-2">
+        <h2 data-i18n="privacy.p3Title" class="text-base font-bold text-neutral-950 dark:text-soft-white">3. Pemisahan Data Perbankan Promotor</h2>
+        <p data-i18n="privacy.p3Body">
+          Nomor rekening bank dan informasi pencairan promotor hanya dapat diakses oleh promotor pemilik akun terkait serta administrator platform terotorisasi. Halaman profil publik promotor tidak pernah mengekspos data rekening perbankan.
+        </p>
+      </section>
+    </div>
+  </main>
+  <Footer />
+</RootLayout>

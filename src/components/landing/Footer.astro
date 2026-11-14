@@ -2,7 +2,7 @@
 // Section 08: Footer
 ---
 
-<footer data-element="footer" class="relative w-full bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.08] pt-20 pb-12 px-6 lg:px-12 text-neutral-600 dark:text-muted-gray">
+<footer data-element="footer" class="print:hidden relative w-full bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.08] pt-20 pb-12 px-6 lg:px-12 text-neutral-600 dark:text-muted-gray">
   <div class="max-w-7xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
       <!-- Col 1: Brand & Manifesto -->
@@ -40,10 +40,11 @@
       <!-- Col 4: Support & Legal -->
       <div class="flex flex-col gap-3">
         <span data-i18n="footer.legalHelp" class="text-xs font-bold tracking-widest text-neutral-950 dark:text-soft-white uppercase mb-2">BANTUAN & AKSES</span>
-        <a href="/#how-it-works" data-i18n="footer.faq" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Cara Beli Tiket</a>
-        <a href="/#why" data-i18n="footer.contact" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Proteksi Anti-Calo</a>
-        <a href="/tickets" data-i18n="footer.terms" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Dompet E-Tiket QR</a>
-        <a href="/account" data-i18n="footer.privacy" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Riwayat Order & Refund</a>
+        <a href="/faq" data-i18n="footer.faq" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">FAQ & Panduan Gate</a>
+        <a href="/tickets" data-i18n="footer.wallet" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Dompet E-Tiket QR</a>
+        <a href="/account?tab=orders" data-i18n="footer.orders" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Riwayat Order & Refund</a>
+        <a href="/terms" data-i18n="footer.terms" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Syarat & Ketentuan</a>
+        <a href="/privacy" data-i18n="footer.privacy" class="text-sm hover:text-electric-magenta transition-colors py-1 min-h-[44px] flex items-center">Kebijakan Privasi</a>
       </div>
     </div>
 

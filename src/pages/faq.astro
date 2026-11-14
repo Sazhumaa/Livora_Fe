@@ -1,0 +1,94 @@
+---
+import RootLayout from '../layouts/RootLayout.astro';
+import Footer from '../components/landing/Footer.astro';
+
+const faqItems = [
+  {
+    tag: 'WAR TIKET & ANTI-BOT',
+    qKey: 'faq.q1',
+    aKey: 'faq.a1',
+    q: 'Bagaimana sistem reservasi kuota menjaga war tiket tetap adil?',
+    a: 'Saat kamu menekan tombol checkout, sistem secara atomik menahan kuota tiket pilihanmu di database PostgreSQL selama 15 menit penuh. Tidak ada pemotongan ganda maupun serobotan saat kamu sedang memproses pembayaran.',
+  },
+  {
+    tag: 'BIAYA & PEMBAYARAN',
+    qKey: 'faq.q2',
+    aKey: 'faq.a2',
+    q: 'Apa rincian biaya pada setiap transaksi tiket konser?',
+    a: 'Total pembayaran terdiri dari harga tiket bersih (setelah potongan kode voucher bila ada) ditambah biaya layanan platform 5% untuk pemeliharaan infrastruktur server war tiket, payment gateway, dan sistem keamanan QR gate.',
+  },
+  {
+    tag: 'E-TIKET & QR GATE',
+    qKey: 'faq.q3',
+    aKey: 'faq.a3',
+    q: 'Mengapa QR Code e-tiket tidak boleh dibagikan ke orang lain?',
+    a: 'Setiap e-tiket memiliki token kriptografi unik sekali pakai. Saat kru gerbang venue memindai QR melalui Gate Scanner, status tiket otomatis terkunci menjadi "USED". Screenshot yang sudah dipindai tidak bisa digunakan ulang.',
+  },
+  {
+    tag: 'PEMBATALAN & REFUND',
+    qKey: 'faq.q4',
+    aKey: 'faq.a4',
+    q: 'Bagaimana jika konser dibatalkan oleh pihak promotor?',
+    a: 'Jika promotor resmi membatalkan konser, seluruh order berstatus lunas (paid) secara otomatis ditandai refund penuh melalui sistem escrow platform dan dana dikembalikan tanpa potongan oleh promotor.',
+  },
+  {
+    tag: 'PROMOTOR & SCANNER',
+    qKey: 'faq.q5',
+    aKey: 'faq.a5',
+    q: 'Bagaimana promotor mengaktifkan Gate Scanner di hari-H konser?',
+    a: 'Promotor terverifikasi dapat mengatur PIN Scanner khusus acara di Studio Promotor, lalu membukanya di halaman /scanner. Petugas gerbang bisa memindai via kamera langsung, unggah foto QR, atau input manual kode tiket.',
+  },
+];
+---
+
+<RootLayout title="FAQ & Panduan Gate — AFTERGLOW" description="Pertanyaan umum seputar war tiket konser, pembayaran QRIS/VA, keamanan e-tiket gate scanning, dan perlindungan penonton di AFTERGLOW.">
+  <main class="min-h-screen pt-28 pb-24 px-6 lg:px-12 max-w-4xl mx-auto">
+    <div class="space-y-4 mb-12">
+      <span class="inline-block px-3 py-1 rounded-full bg-electric-magenta/10 border border-electric-magenta/30 text-electric-magenta font-mono text-[11px] font-bold uppercase tracking-widest">
+        AFTERGLOW // GATE GUIDE & FAQ
+      </span>
+      <h1 data-i18n="faq.title" class="font-display text-5xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+        PANDUAN & TANYA JAWAB KONSER
+      </h1>
+      <p data-i18n="faq.subtitle" class="text-neutral-600 dark:text-muted-gray text-sm sm:text-base max-w-2xl">
+        Semua informasi penting dari tahap war tiket, batas waktu pembayaran 15 menit, hingga tata cara gate scanning di pintu masuk arena.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      {faqItems.map((item) => (
+        <article class="rounded-2xl bg-white dark:bg-[#140E16] border border-neutral-200 dark:border-white/10 p-6 shadow-sm">
+          <span class="font-mono text-[10px] font-bold uppercase tracking-widest text-electric-magenta">
+            [ {item.tag} ]
+          </span>
+          <h2 data-i18n={item.qKey} class="text-lg font-bold text-neutral-950 dark:text-soft-white mt-2">
+            {item.q}
+          </h2>
+          <p data-i18n={item.aKey} class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed mt-2">
+            {item.a}
+          </p>
+        </article>
+      ))}
+    </div>
+
+    <div class="mt-12 p-6 rounded-2xl bg-electric-magenta/10 border border-electric-magenta/30 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <h3 data-i18n="faq.ctaTitle" class="font-display text-2xl text-neutral-950 dark:text-soft-white tracking-wide">
+          MASIH PUNYA TIKET AKTIF ATAU ORDER TERTUNDA?
+        </h3>
+        <p data-i18n="faq.ctaDesc" class="text-xs text-neutral-600 dark:text-muted-gray mt-1">
+          Periksa dompet e-tiket atau lanjutkan pembayaranmu langsung lewat akun terdaftar.
+        </p>
+      </div>
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="/tickets" class="px-5 py-2.5 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider shadow-magenta-glow">
+          Dompet E-Tiket
+        </a>
+        <a href="/account?tab=orders" class="px-5 py-2.5 rounded-full border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-soft-white font-semibold text-xs uppercase tracking-wider">
+          Riwayat Order
+        </a>
+      </div>
+    </div>
+  </main>
+  <Footer />
+</RootLayout>
