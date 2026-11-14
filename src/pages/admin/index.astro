@@ -25,7 +25,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
         AKSES KHUSUS ADMINISTRATOR
       </h1>
       <p id="admin-guard-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
-        Masuk menggunakan akun Administrator (`admin@soundtix.id`) untuk membuka pusat kontrol operasional platform.
+        Masuk menggunakan akun Administrator resmi platform untuk membuka pusat kontrol operasional AFTERGLOW.
       </p>
       <div class="flex flex-wrap justify-center gap-3">
         <button id="admin-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
@@ -48,11 +48,11 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
             </span>
             <span id="admin-operator-badge" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray"></span>
           </div>
-          <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+          <h1 data-i18n="adminPage.title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
             AFTERGLOW ADMIN CONSOLE
           </h1>
         </div>
-        <button id="admin-refresh-current-btn" type="button" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono font-bold uppercase transition-all">
+        <button id="admin-refresh-current-btn" type="button" data-i18n="adminPage.refreshBtn" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono font-bold uppercase transition-all">
           Refresh Data Aktif
         </button>
       </div>
@@ -240,6 +240,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
               <tbody id="adm-orders-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
           </div>
+          <div id="adm-orders-pagination" class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-200 dark:border-white/10 text-xs font-mono">
+            <span id="adm-orders-page-info" class="text-neutral-500 dark:text-muted-gray">Halaman 1</span>
+            <div class="flex items-center gap-2">
+              <button id="adm-orders-prev-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                ← Sebelumnya
+              </button>
+              <button id="adm-orders-next-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                Berikutnya →
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -254,9 +265,9 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
             <form id="adm-users-filter-form" class="flex flex-wrap items-center gap-2">
               <select id="adm-users-role" class="px-3 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white">
                 <option value="">Semua Role</option>
-                <option value="3">Penonton (USER)</option>
+                <option value="1">Penonton (USER)</option>
                 <option value="2">Promotor (ORGANIZER)</option>
-                <option value="1">Admin (ADMIN)</option>
+                <option value="3">Admin (ADMIN)</option>
               </select>
               <input id="adm-users-search" type="text" placeholder="Cari nama / email..." class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
               <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">Cari</button>
@@ -276,6 +287,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
               </thead>
               <tbody id="adm-users-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
+          </div>
+          <div id="adm-users-pagination" class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-200 dark:border-white/10 text-xs font-mono">
+            <span id="adm-users-page-info" class="text-neutral-500 dark:text-muted-gray">Halaman 1</span>
+            <div class="flex items-center gap-2">
+              <button id="adm-users-prev-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                ← Sebelumnya
+              </button>
+              <button id="adm-users-next-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                Berikutnya →
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -336,6 +358,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
               </thead>
               <tbody id="adm-audit-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
+          </div>
+          <div id="adm-audit-pagination" class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-200 dark:border-white/10 text-xs font-mono">
+            <span id="adm-audit-page-info" class="text-neutral-500 dark:text-muted-gray">Halaman 1</span>
+            <div class="flex items-center gap-2">
+              <button id="adm-audit-prev-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                ← Sebelumnya
+              </button>
+              <button id="adm-audit-next-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                Berikutnya →
+              </button>
+            </div>
           </div>
         </div>
       </section>
@@ -1071,14 +1104,20 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
     });
 
     // TAB 6: GLOBAL ORDERS & PAYMENTS MONITOR
+    let admOrdersOffset = 0;
+    const ADM_PAGE_LIMIT = 50;
+
     async function loadAdminOrders() {
       const tbody = document.getElementById('adm-orders-tbody');
       if (!tbody) return;
+      const prevBtn = document.getElementById('adm-orders-prev-btn') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('adm-orders-next-btn') as HTMLButtonElement | null;
+      const pageInfo = document.getElementById('adm-orders-page-info');
       const status = (document.getElementById('adm-orders-status') as HTMLSelectElement | null)?.value || '';
       const lateOnly = Boolean((document.getElementById('adm-orders-late-only') as HTMLInputElement | null)?.checked);
       const q = (document.getElementById('adm-orders-search') as HTMLInputElement | null)?.value.trim() || '';
 
-      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      const params = new URLSearchParams({ limit: String(ADM_PAGE_LIMIT), offset: String(admOrdersOffset) });
       if (status) params.set('status', status);
       if (lateOnly) params.set('late_only', 'true');
       if (q) params.set('q', q);
@@ -1088,6 +1127,12 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
         const rows = await api.get<any[]>(`/admin/orders?${params.toString()}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
+        const currentPage = Math.floor(admOrdersOffset / ADM_PAGE_LIMIT) + 1;
+        if (pageInfo) {
+          pageInfo.textContent = list.length > 0 ? `Halaman ${currentPage} (${admOrdersOffset + 1}–${admOrdersOffset + list.length})` : `Halaman ${currentPage}`;
+        }
+        if (prevBtn) prevBtn.disabled = admOrdersOffset <= 0;
+        if (nextBtn) nextBtn.disabled = list.length < ADM_PAGE_LIMIT;
         if (list.length === 0) {
           tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Tidak ada order yang cocok dengan filter.</td></tr>`;
           return;
@@ -1140,19 +1185,41 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
 
     document.getElementById('adm-orders-filter-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
+      admOrdersOffset = 0;
       loadAdminOrders();
     });
-    document.getElementById('adm-orders-status')?.addEventListener('change', loadAdminOrders);
-    document.getElementById('adm-orders-late-only')?.addEventListener('change', loadAdminOrders);
+    document.getElementById('adm-orders-status')?.addEventListener('change', () => {
+      admOrdersOffset = 0;
+      loadAdminOrders();
+    });
+    document.getElementById('adm-orders-late-only')?.addEventListener('change', () => {
+      admOrdersOffset = 0;
+      loadAdminOrders();
+    });
+    document.getElementById('adm-orders-prev-btn')?.addEventListener('click', () => {
+      if (admOrdersOffset >= ADM_PAGE_LIMIT) {
+        admOrdersOffset -= ADM_PAGE_LIMIT;
+        loadAdminOrders();
+      }
+    });
+    document.getElementById('adm-orders-next-btn')?.addEventListener('click', () => {
+      admOrdersOffset += ADM_PAGE_LIMIT;
+      loadAdminOrders();
+    });
 
     // TAB 7: USERS DIRECTORY
+    let admUsersOffset = 0;
+
     async function loadAdminUsers() {
       const tbody = document.getElementById('adm-users-tbody');
       if (!tbody) return;
+      const prevBtn = document.getElementById('adm-users-prev-btn') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('adm-users-next-btn') as HTMLButtonElement | null;
+      const pageInfo = document.getElementById('adm-users-page-info');
       const roleId = (document.getElementById('adm-users-role') as HTMLSelectElement | null)?.value || '';
       const q = (document.getElementById('adm-users-search') as HTMLInputElement | null)?.value.trim() || '';
 
-      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      const params = new URLSearchParams({ limit: String(ADM_PAGE_LIMIT), offset: String(admUsersOffset) });
       if (roleId) params.set('role_id', roleId);
       if (q) params.set('q', q);
 
@@ -1161,18 +1228,24 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
         const rows = await api.get<any[]>(`/admin/users?${params.toString()}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
+        const currentPage = Math.floor(admUsersOffset / ADM_PAGE_LIMIT) + 1;
+        if (pageInfo) {
+          pageInfo.textContent = list.length > 0 ? `Halaman ${currentPage} (${admUsersOffset + 1}–${admUsersOffset + list.length})` : `Halaman ${currentPage}`;
+        }
+        if (prevBtn) prevBtn.disabled = admUsersOffset <= 0;
+        if (nextBtn) nextBtn.disabled = list.length < ADM_PAGE_LIMIT;
         if (list.length === 0) {
           tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Tidak ada akun pengguna yang sesuai.</td></tr>`;
           return;
         }
         const roleLabel = (id: number) =>
-          id === 1 ? 'ADMIN' : id === 2 ? 'ORGANIZER' : 'USER';
+          id === 3 ? 'ADMIN' : id === 2 ? 'ORGANIZER' : 'USER';
 
         tbody.innerHTML = list
           .map((u: any) => {
             const rLabel = roleLabel(Number(u.role_id));
             const rCls =
-              Number(u.role_id) === 1
+              Number(u.role_id) === 3
                 ? 'bg-electric-magenta/15 text-electric-magenta border-electric-magenta/40'
                 : Number(u.role_id) === 2
                 ? 'bg-cyan-50 dark:bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-500/30'
@@ -1210,9 +1283,23 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
 
     document.getElementById('adm-users-filter-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
+      admUsersOffset = 0;
       loadAdminUsers();
     });
-    document.getElementById('adm-users-role')?.addEventListener('change', loadAdminUsers);
+    document.getElementById('adm-users-role')?.addEventListener('change', () => {
+      admUsersOffset = 0;
+      loadAdminUsers();
+    });
+    document.getElementById('adm-users-prev-btn')?.addEventListener('click', () => {
+      if (admUsersOffset >= ADM_PAGE_LIMIT) {
+        admUsersOffset -= ADM_PAGE_LIMIT;
+        loadAdminUsers();
+      }
+    });
+    document.getElementById('adm-users-next-btn')?.addEventListener('click', () => {
+      admUsersOffset += ADM_PAGE_LIMIT;
+      loadAdminUsers();
+    });
 
     // TAB 8: AUDIT LOGS & CRON JOBS
     document.getElementById('adm-jobs-buttons')?.addEventListener('click', async (e) => {
@@ -1236,12 +1323,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
       }
     });
 
+    let admAuditOffset = 0;
+
     async function loadAuditLogs() {
       const tbody = document.getElementById('adm-audit-tbody');
       if (!tbody) return;
+      const prevBtn = document.getElementById('adm-audit-prev-btn') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('adm-audit-next-btn') as HTMLButtonElement | null;
+      const pageInfo = document.getElementById('adm-audit-page-info');
       const action = (document.getElementById('audit-action-input') as HTMLInputElement | null)?.value.trim() || '';
       const target = (document.getElementById('audit-target-input') as HTMLInputElement | null)?.value.trim() || '';
-      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      const params = new URLSearchParams({ limit: String(ADM_PAGE_LIMIT), offset: String(admAuditOffset) });
       if (action) params.set('action', action);
       if (target) params.set('target_type', target);
 
@@ -1250,6 +1342,12 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
         const rows = await api.get<any[]>(`/admin/audit-logs?${params.toString()}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
+        const currentPage = Math.floor(admAuditOffset / ADM_PAGE_LIMIT) + 1;
+        if (pageInfo) {
+          pageInfo.textContent = list.length > 0 ? `Halaman ${currentPage} (${admAuditOffset + 1}–${admAuditOffset + list.length})` : `Halaman ${currentPage}`;
+        }
+        if (prevBtn) prevBtn.disabled = admAuditOffset <= 0;
+        if (nextBtn) nextBtn.disabled = list.length < ADM_PAGE_LIMIT;
         if (list.length === 0) {
           tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Belum ada catatan audit log sesuai filter.</td></tr>`;
           return;
@@ -1274,6 +1372,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
 
     document.getElementById('adm-audit-filter-form')?.addEventListener('submit', (e) => {
       e.preventDefault();
+      admAuditOffset = 0;
+      loadAuditLogs();
+    });
+    document.getElementById('adm-audit-prev-btn')?.addEventListener('click', () => {
+      if (admAuditOffset >= ADM_PAGE_LIMIT) {
+        admAuditOffset -= ADM_PAGE_LIMIT;
+        loadAuditLogs();
+      }
+    });
+    document.getElementById('adm-audit-next-btn')?.addEventListener('click', () => {
+      admAuditOffset += ADM_PAGE_LIMIT;
       loadAuditLogs();
     });
 
@@ -1289,7 +1398,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'order
           loginBtn?.classList.add('hidden');
         } else {
           if (guardTitle) guardTitle.textContent = 'AKSES KHUSUS ADMINISTRATOR';
-          if (guardDesc) guardDesc.textContent = 'Masuk menggunakan akun Administrator (admin@soundtix.id) untuk membuka pusat kontrol platform.';
+          if (guardDesc) guardDesc.textContent = 'Masuk menggunakan akun Administrator resmi platform untuk membuka pusat kontrol AFTERGLOW.';
           loginBtn?.classList.remove('hidden');
         }
         return;

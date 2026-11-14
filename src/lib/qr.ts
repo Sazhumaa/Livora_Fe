@@ -31,3 +31,16 @@ export async function isNativeQrDetectorSupported(): Promise<boolean> {
     return false;
   }
 }
+
+let cachedJsQr: ((data: Uint8ClampedArray, width: number, height: number) => { data?: string } | null) | null = null;
+
+/**
+ * Lazy-load lightweight Canvas 2D QR decoder fallback (~45KB) when BarcodeDetector is unavailable
+ */
+export async function getJsQrDecoder() {
+  if (!cachedJsQr) {
+    const mod = await import('jsqr');
+    cachedJsQr = mod.default as any;
+  }
+  return cachedJsQr!;
+}

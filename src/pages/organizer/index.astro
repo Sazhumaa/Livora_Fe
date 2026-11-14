@@ -151,18 +151,21 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div>
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-bold uppercase">
+            <span data-i18n="organizerPage.badge" class="px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-bold uppercase">
               PROMOTOR TERVERIFIKASI
             </span>
             <span id="studio-org-id-badge" class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray"></span>
+            <a id="studio-public-link" href="/events" target="_blank" class="hidden text-[11px] font-mono text-electric-magenta hover:underline">
+              Profil Publik -&gt;
+            </a>
           </div>
-          <h1 id="studio-org-title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+          <h1 id="studio-org-title" data-i18n="organizerPage.title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
             PROMOTOR STUDIO
           </h1>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <button id="open-create-event-btn" type="button" class="px-5 py-3 rounded-full bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          <button id="open-create-event-btn" type="button" data-i18n="organizerPage.newEventBtn" class="px-5 py-3 rounded-full bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             + Buat Konser Baru (Draft)
           </button>
           <a href="/scanner" class="px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
@@ -301,6 +304,18 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
               <tbody id="org-orders-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
           </div>
+
+          <div id="org-orders-pagination" class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-neutral-200 dark:border-white/10 text-xs font-mono">
+            <span id="org-orders-page-info" class="text-neutral-500 dark:text-muted-gray">Halaman 1</span>
+            <div class="flex items-center gap-2">
+              <button id="org-orders-prev-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                ← Sebelumnya
+              </button>
+              <button id="org-orders-next-btn" type="button" disabled class="px-3.5 py-1.5 rounded-xl bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/15 text-neutral-800 dark:text-soft-white hover:border-electric-magenta disabled:opacity-40 disabled:pointer-events-none transition-all">
+                Berikutnya →
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -317,6 +332,9 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
             <div class="flex flex-wrap gap-2">
               <button id="gate-export-csv-btn" type="button" class="px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
                 Ekspor Penonton (.CSV)
+              </button>
+              <button id="gate-export-sales-btn" type="button" class="px-5 py-2.5 rounded-xl bg-cyan-50 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/40 text-cyan-700 dark:text-cyan-300 hover:bg-cyan-100 dark:hover:bg-cyan-500/25 text-xs font-bold uppercase tracking-wider transition-all">
+                Ekspor Penjualan (.CSV)
               </button>
               <a id="gate-open-scanner-link" href="/scanner" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
                 Buka Scanner →
@@ -390,12 +408,30 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
             </div>
           </div>
 
-          <!-- Right: Bank Account & 48h Security Cooldown (5 cols) -->
-          <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
-            <div>
-              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Keamanan Perbankan</span>
-              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">REKENING PENCAIRAN</h2>
+          <!-- Right: Promoter Profile & Bank Security Cooldown (5 cols) -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Identitas Publik Promotor</span>
+                <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">EDIT PROFIL ORGANISASI</h2>
+              </div>
+              <form id="org-profile-update-form" class="space-y-3">
+                <div>
+                  <label for="update-org-name" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Nama Organisasi Promotor</label>
+                  <input id="update-org-name" type="text" minlength="3" maxlength="50" required class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
+                </div>
+                <div id="org-profile-feedback" class="hidden p-3 rounded-xl border text-xs font-mono"></div>
+                <button id="org-profile-save-btn" type="submit" class="w-full py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+                  Simpan Nama Organisasi
+                </button>
+              </form>
             </div>
+
+            <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Keamanan Perbankan</span>
+                <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">REKENING PENCAIRAN</h2>
+              </div>
 
             <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 text-xs font-mono space-y-1.5">
               <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">Bank:</span><strong id="fin-bank-name" class="text-neutral-950 dark:text-soft-white">-</strong></div>
@@ -420,6 +456,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
                 Perbarui Rekening Bank
               </button>
             </form>
+            </div>
           </div>
         </div>
 
@@ -456,14 +493,50 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         <button id="close-ev-modal-btn" type="button" aria-label="Tutup modal" class="w-9 h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 flex items-center justify-center text-neutral-700 dark:text-soft-white transition-colors">✕</button>
       </div>
 
-      <!-- Subtabs inside modal (only active when event exists) -->
-      <div id="ev-modal-subtabs" class="hidden flex gap-2 px-6 py-3 bg-neutral-100 dark:bg-void-black/60 border-b border-neutral-200 dark:border-white/10 shrink-0 text-xs font-mono">
-        <button data-subtab="info" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg bg-electric-magenta text-white font-bold">1. Detail &amp; Poster</button>
-        <button data-subtab="categories" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">2. Kategori Tiket</button>
-        <button data-subtab="vouchers" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">3. Voucher Promo</button>
+      <!-- 3-Step Visual Stepper inside modal (visible when draft event exists) -->
+      <div id="ev-modal-subtabs" class="hidden px-5 sm:px-6 py-3 bg-neutral-50/90 dark:bg-void-black/70 border-b border-neutral-200 dark:border-white/10 shrink-0">
+        <div class="grid grid-cols-3 gap-2 sm:gap-3">
+          <button type="button" data-subtab="info" class="ev-subtab-btn group flex items-center gap-2.5 p-2 sm:px-3.5 sm:py-2 rounded-2xl border border-electric-magenta bg-electric-magenta/10 dark:bg-electric-magenta/15 text-left transition-all">
+            <span id="ev-step-dot-1" class="w-6 h-6 rounded-full bg-electric-magenta text-white text-[11px] font-mono font-bold flex items-center justify-center shrink-0">1</span>
+            <span class="min-w-0">
+              <span class="block text-[9px] font-mono uppercase tracking-wider text-electric-magenta font-bold">Step 1</span>
+              <span class="block text-xs font-bold text-neutral-950 dark:text-soft-white truncate">Detail &amp; Poster</span>
+            </span>
+          </button>
+
+          <button type="button" data-subtab="categories" class="ev-subtab-btn group flex items-center gap-2.5 p-2 sm:px-3.5 sm:py-2 rounded-2xl border border-neutral-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-left transition-all hover:border-electric-magenta/50">
+            <span id="ev-step-dot-2" class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-muted-gray text-[11px] font-mono font-bold flex items-center justify-center shrink-0">2</span>
+            <span class="min-w-0">
+              <span class="block text-[9px] font-mono uppercase tracking-wider text-neutral-500 dark:text-muted-gray font-bold">Step 2</span>
+              <span class="block text-xs font-bold text-neutral-700 dark:text-soft-white truncate">Kategori Tiket</span>
+            </span>
+          </button>
+
+          <button type="button" data-subtab="vouchers" class="ev-subtab-btn group flex items-center gap-2.5 p-2 sm:px-3.5 sm:py-2 rounded-2xl border border-neutral-200 dark:border-white/10 bg-white dark:bg-white/[0.03] text-left transition-all hover:border-electric-magenta/50">
+            <span id="ev-step-dot-3" class="w-6 h-6 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-muted-gray text-[11px] font-mono font-bold flex items-center justify-center shrink-0">3</span>
+            <span class="min-w-0">
+              <span class="block text-[9px] font-mono uppercase tracking-wider text-neutral-500 dark:text-muted-gray font-bold">Step 3</span>
+              <span class="block text-xs font-bold text-neutral-700 dark:text-soft-white truncate">Voucher &amp; Review</span>
+            </span>
+          </button>
+        </div>
+
+        <!-- Auto-Advance Toast Banner with instant 1-click Undo / Back -->
+        <div id="ev-wizard-toast" class="hidden mt-2.5 px-3.5 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/35 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 min-w-0">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0 animate-pulse"></span>
+            <span id="ev-wizard-toast-msg" class="font-medium text-emerald-800 dark:text-emerald-200 truncate">Step tersimpan.</span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button id="ev-wizard-toast-back" type="button" class="hidden px-2.5 py-1 rounded-lg bg-white dark:bg-void-black border border-emerald-300 dark:border-emerald-500/40 text-[11px] font-mono font-bold text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-colors">
+              ← Kembali ke step sebelumnya
+            </button>
+            <button id="ev-wizard-toast-close" type="button" aria-label="Tutup notifikasi" class="text-emerald-700/70 dark:text-emerald-300/70 hover:text-emerald-900 dark:hover:text-emerald-100 px-1 font-bold">✕</button>
+          </div>
+        </div>
       </div>
 
-      <div class="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1" data-lenis-prevent>
+      <div id="ev-modal-scroll-body" class="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1" data-lenis-prevent>
         <!-- SUBTAB 1: BASIC INFO + POSTER -->
         <div id="ev-subpanel-info" class="ev-subpanel space-y-6">
           <!-- Poster Upload Box (only when editing existing event) -->
@@ -490,6 +563,37 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
               <div>
                 <label for="ev-f-artis" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Headliner / Daftar Artis *</label>
                 <input id="ev-f-artis" type="text" required placeholder="Tulus, Hindia, .Feast" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="ev-f-genre" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Genre Musik Konser</label>
+                <input id="ev-f-genre" type="text" maxlength="60" list="ev-genre-datalist" placeholder="Electronic / Pop / Rock / Jazz" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
+                <datalist id="ev-genre-datalist">
+                  <option value="Festival" />
+                  <option value="Pop" />
+                  <option value="Rock" />
+                  <option value="Electronic" />
+                  <option value="Jazz" />
+                  <option value="Indie" />
+                  <option value="R&B" />
+                  <option value="Hip-Hop" />
+                </datalist>
+              </div>
+              <div>
+                <label for="ev-f-kota" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Kota Penyelenggaraan</label>
+                <input id="ev-f-kota" type="text" maxlength="80" list="ev-kota-datalist" placeholder="Jakarta / Bandung / Surabaya / Bali" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
+                <datalist id="ev-kota-datalist">
+                  <option value="Jakarta" />
+                  <option value="Bandung" />
+                  <option value="Surabaya" />
+                  <option value="Bali" />
+                  <option value="Yogyakarta" />
+                  <option value="Medan" />
+                  <option value="Semarang" />
+                  <option value="Makassar" />
+                </datalist>
               </div>
             </div>
 
@@ -553,47 +657,159 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
 
         <!-- SUBTAB 2: CATEGORIES -->
         <div id="ev-subpanel-categories" class="ev-subpanel hidden space-y-5">
+          <!-- Venue Capacity Allocation Strip -->
+          <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-2.5">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-electric-magenta/10 border border-electric-magenta/30 text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold">Kuota Panggung</span>
+                <span class="font-medium text-neutral-700 dark:text-soft-white">Alokasi Kategori vs Kapasitas Venue</span>
+              </div>
+              <div class="flex items-center gap-3 font-mono text-[11px]">
+                <span id="ev-cat-count-badge" class="text-neutral-500 dark:text-muted-gray">0 tier aktif</span>
+                <span class="font-bold text-neutral-950 dark:text-soft-white"><span id="ev-cap-used">0</span> / <span id="ev-cap-total">0</span> kursi</span>
+              </div>
+            </div>
+            <div class="w-full h-2 rounded-full bg-neutral-200 dark:bg-white/10 overflow-hidden">
+              <div id="ev-cap-bar" class="h-full bg-electric-magenta transition-all duration-300" style="width: 0%"></div>
+            </div>
+            <p class="text-[11px] text-neutral-500 dark:text-muted-gray">
+              Tip war tiket: pisahkan kuota penjualan publik &amp; kuota undangan (komplimen) agar stok gate tetap aman.
+            </p>
+          </div>
+
           <div id="ev-categories-list" class="space-y-3"></div>
 
           <!-- Inline Edit Category Form -->
-          <form id="ev-edit-cat-form" class="hidden p-4 rounded-2xl bg-electric-magenta/5 dark:bg-electric-magenta/10 border border-electric-magenta/35 space-y-3">
+          <form id="ev-edit-cat-form" class="hidden p-4 rounded-2xl bg-electric-magenta/5 dark:bg-electric-magenta/10 border border-electric-magenta/35 space-y-3.5">
             <div class="flex items-center justify-between gap-2">
               <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">EDIT KATEGORI #<span id="edit-cat-id-label"></span></h4>
               <button id="edit-cat-cancel-btn" type="button" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">Batal Edit</button>
             </div>
             <p id="edit-cat-price-lock-note" class="hidden text-[11px] font-mono text-amber-700 dark:text-amber-300">
-              Immutable Pricing Guard: Harga terkunci karena event sudah diajukan / dipublikasikan. Kuota & nama tetap dapat disesuaikan.
+              Immutable Pricing Guard: Harga terkunci karena event sudah diajukan / dipublikasikan. Kuota &amp; nama tetap dapat disesuaikan.
             </p>
-            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-              <input id="edit-cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="Nama Kategori" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
-              <input id="edit-cat-f-price" type="number" min="0" required placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white disabled:opacity-50" />
-              <input id="edit-cat-f-quota" type="number" min="1" required placeholder="Kuota Total" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="edit-cat-f-compliment" type="number" min="0" value="0" placeholder="Komplimen" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="edit-cat-f-max" type="number" min="1" max="10" value="4" placeholder="Maks/Akun" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <div>
+                <label for="edit-cat-f-name" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Nama Tier *</label>
+                <input id="edit-cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="cth. VIP Standing" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <label for="edit-cat-f-price" class="text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white">Harga (Rp) *</label>
+                  <span id="edit-cat-price-preview" class="text-[10px] font-mono text-electric-magenta font-bold">Rp 0</span>
+                </div>
+                <input id="edit-cat-f-price" type="number" min="0" step="1000" required placeholder="300000" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white disabled:opacity-50" />
+              </div>
+              <div>
+                <label for="edit-cat-f-quota" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Kuota Publik *</label>
+                <input id="edit-cat-f-quota" type="number" min="1" required placeholder="100" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="edit-cat-f-compliment" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Komplimen</label>
+                <input id="edit-cat-f-compliment" type="number" min="0" value="0" placeholder="0" title="Kuota Undangan / Media (Non-Publik)" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="edit-cat-f-max" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Maks / Akun</label>
+                <input id="edit-cat-f-max" type="number" min="1" max="10" value="4" placeholder="4" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
             </div>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
               Simpan Perubahan Kategori
             </button>
           </form>
 
-          <form id="ev-add-cat-form" class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-3">
-            <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">TAMBAH KATEGORI TIKET BARU</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-              <input id="cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="Nama (mis. VIP)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
-              <input id="cat-f-price" type="number" min="0" required placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="cat-f-quota" type="number" min="1" required placeholder="Kuota" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="cat-f-compliment" type="number" min="0" value="0" placeholder="Komplimen" title="Kuota Undangan / Media (Non-Publik)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="cat-f-max" type="number" min="1" max="10" value="4" placeholder="Maks/Akun" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+          <form id="ev-add-cat-form" class="p-4 sm:p-5 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">TAMBAH KATEGORI TIKET BARU</h4>
+                <p class="text-[11px] text-neutral-500 dark:text-muted-gray">Isi nominal harga tanpa titik/koma (contoh: <code class="font-mono text-neutral-800 dark:text-soft-white">300000</code> untuk Rp 300.000).</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+              <div>
+                <label for="cat-f-name" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Nama Tier *</label>
+                <input id="cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="cth. VIP Standing" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <label for="cat-f-price" class="text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white">Harga (Rp) *</label>
+                  <span id="cat-price-preview" class="text-[10px] font-mono text-electric-magenta font-bold">Rp 0</span>
+                </div>
+                <input id="cat-f-price" type="number" min="0" step="1000" required placeholder="300000" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="cat-f-quota" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Kuota Publik *</label>
+                <input id="cat-f-quota" type="number" min="1" required placeholder="100" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="cat-f-compliment" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Komplimen</label>
+                <input id="cat-f-compliment" type="number" min="0" value="0" placeholder="0" title="Kuota Undangan / Media (Non-Publik)" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="cat-f-max" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Maks / Akun</label>
+                <input id="cat-f-max" type="number" min="1" max="10" value="4" placeholder="4" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
             </div>
             <div id="cat-feedback" class="hidden p-2.5 rounded-xl border text-xs font-mono"></div>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
-              + Tambah Kategori
-            </button>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button id="cat-add-stay-btn" type="submit" data-cat-mode="stay" class="px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-300 dark:border-white/20 text-neutral-900 dark:text-soft-white hover:border-electric-magenta text-xs font-bold uppercase tracking-wider transition-all">
+                + Tambah &amp; Buat Tier Lain
+              </button>
+              <button id="cat-add-next-btn" type="submit" data-cat-mode="next" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+                + Simpan &amp; Lanjut ke Voucher →
+              </button>
+            </div>
           </form>
         </div>
 
-        <!-- SUBTAB 3: VOUCHERS -->
+        <!-- SUBTAB 3: VOUCHERS & READINESS -->
         <div id="ev-subpanel-vouchers" class="ev-subpanel hidden space-y-5">
+          <!-- Publish Readiness Checklist -->
+          <div class="p-4 sm:p-5 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-3">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Publish Checklist</span>
+                <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">KESIAPAN KONSER MENUJU STAGE</h4>
+              </div>
+              <span id="ev-ready-summary-badge" class="px-2.5 py-1 rounded-full border border-neutral-300 dark:border-white/15 bg-white dark:bg-void-black text-[11px] font-mono text-neutral-600 dark:text-muted-gray">
+                Cek kelengkapan
+              </span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5 text-xs">
+              <button type="button" data-jump-subtab="info" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-void-black/80 border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/50 text-left transition-colors">
+                <span id="ev-ready-info-icon" class="w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-mono text-[11px] font-bold flex items-center justify-center shrink-0">✓</span>
+                <span class="min-w-0">
+                  <span class="block font-bold text-neutral-950 dark:text-soft-white truncate">Detail &amp; Peta</span>
+                  <span id="ev-ready-info-note" class="block text-[10px] font-mono text-neutral-500 dark:text-muted-gray truncate">Tersimpan</span>
+                </span>
+              </button>
+
+              <button type="button" data-jump-subtab="info" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-void-black/80 border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/50 text-left transition-colors">
+                <span id="ev-ready-poster-icon" class="w-5 h-5 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-500 dark:text-muted-gray font-mono text-[11px] font-bold flex items-center justify-center shrink-0">○</span>
+                <span class="min-w-0">
+                  <span class="block font-bold text-neutral-950 dark:text-soft-white truncate">Poster Resmi</span>
+                  <span id="ev-ready-poster-note" class="block text-[10px] font-mono text-neutral-500 dark:text-muted-gray truncate">Belum diunggah</span>
+                </span>
+              </button>
+
+              <button type="button" data-jump-subtab="categories" class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-void-black/80 border border-neutral-200 dark:border-white/10 hover:border-electric-magenta/50 text-left transition-colors">
+                <span id="ev-ready-cats-icon" class="w-5 h-5 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-500 dark:text-muted-gray font-mono text-[11px] font-bold flex items-center justify-center shrink-0">○</span>
+                <span class="min-w-0">
+                  <span class="block font-bold text-neutral-950 dark:text-soft-white truncate">Kategori Tiket</span>
+                  <span id="ev-ready-cats-note" class="block text-[10px] font-mono text-neutral-500 dark:text-muted-gray truncate">Min. 1 tier</span>
+                </span>
+              </button>
+
+              <div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-white dark:bg-void-black/80 border border-neutral-200 dark:border-white/10 text-left">
+                <span id="ev-ready-vch-icon" class="w-5 h-5 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-500 dark:text-muted-gray font-mono text-[11px] font-bold flex items-center justify-center shrink-0">○</span>
+                <span class="min-w-0">
+                  <span class="block font-bold text-neutral-950 dark:text-soft-white truncate">Voucher Promo</span>
+                  <span id="ev-ready-vch-note" class="block text-[10px] font-mono text-neutral-500 dark:text-muted-gray truncate">Opsional</span>
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div id="ev-vouchers-list" class="space-y-3"></div>
 
           <!-- Inline Edit Voucher Form -->
@@ -625,45 +841,90 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
             </button>
           </form>
 
-          <form id="ev-add-voucher-form" class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-3">
-            <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">BUAT VOUCHER DISKON BARU</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <input id="vch-f-code" type="text" minlength="3" maxlength="50" required placeholder="KODE (mis. WAR20)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono uppercase text-neutral-950 dark:text-soft-white" />
-              <select id="vch-f-type" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white">
-                <option value="persen">Persen (%)</option>
-                <option value="nominal">Nominal Tetap (Rp)</option>
-              </select>
-              <input id="vch-f-val" type="number" min="1" required placeholder="Nilai (mis. 20 / 50000)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="vch-f-max-disc" type="number" min="0" placeholder="Maks Diskon (Rp, opsional)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+          <form id="ev-add-voucher-form" class="p-4 sm:p-5 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <div>
+                <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">BUAT VOUCHER DISKON BARU (OPSIONAL)</h4>
+                <p class="text-[11px] text-neutral-500 dark:text-muted-gray">Bagikan kode promo presale atau komunitas untuk mendorong war tiket tahap awal.</p>
+              </div>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <input id="vch-f-quota" type="number" min="1" value="50" required placeholder="Kuota Klaim" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="vch-f-min" type="number" min="0" value="0" placeholder="Min Transaksi" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
-              <input id="vch-f-start" type="datetime-local" required class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
-              <input id="vch-f-end" type="datetime-local" required class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label for="vch-f-code" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Kode Voucher *</label>
+                <input id="vch-f-code" type="text" minlength="3" maxlength="50" required placeholder="cth. WAR20" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono uppercase text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="vch-f-type" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Tipe Diskon *</label>
+                <select id="vch-f-type" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white">
+                  <option value="persen">Persen (%)</option>
+                  <option value="nominal">Nominal Tetap (Rp)</option>
+                </select>
+              </div>
+              <div>
+                <div class="flex items-center justify-between gap-1 mb-1">
+                  <label for="vch-f-val" class="text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white">Nilai Potongan *</label>
+                  <span id="vch-val-preview" class="text-[10px] font-mono text-electric-magenta font-bold">20% / Rp</span>
+                </div>
+                <input id="vch-f-val" type="number" min="1" required placeholder="20 atau 50000" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="vch-f-max-disc" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Maks. Diskon (Rp)</label>
+                <input id="vch-f-max-disc" type="number" min="0" placeholder="Opsional (cth. 100000)" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              <div>
+                <label for="vch-f-quota" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Kuota Klaim *</label>
+                <input id="vch-f-quota" type="number" min="1" value="50" required placeholder="50" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="vch-f-min" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Min. Transaksi (Rp)</label>
+                <input id="vch-f-min" type="number" min="0" value="0" placeholder="0" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="vch-f-start" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Mulai Berlaku *</label>
+                <input id="vch-f-start" type="datetime-local" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label for="vch-f-end" class="block text-[11px] font-mono font-semibold text-neutral-700 dark:text-soft-white mb-1">Berakhir Pada *</label>
+                <input id="vch-f-end" type="datetime-local" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/20 text-xs text-neutral-950 dark:text-soft-white" />
+              </div>
             </div>
             <div id="vch-feedback" class="hidden p-2.5 rounded-xl border text-xs font-mono"></div>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
               + Simpan Voucher Promo
             </button>
           </form>
         </div>
       </div>
 
-      <!-- Sticky Footer for Detail & Poster -->
-      <div id="ev-modal-footer" class="px-6 py-4 border-t border-neutral-200 dark:border-white/10 bg-neutral-50/90 dark:bg-void-black/70 flex flex-wrap items-center justify-between gap-3 shrink-0">
-        <span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">
-          Koordinat tersinkron: <code id="ev-footer-coord-readout" class="text-neutral-900 dark:text-soft-white font-bold">-6.2186,106.8026</code>
-        </span>
+      <!-- Unified Persistent 3-Step Wizard Footer -->
+      <div id="ev-modal-footer" class="px-5 sm:px-6 py-4 border-t border-neutral-200 dark:border-white/10 bg-neutral-50/95 dark:bg-void-black/80 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div class="flex flex-wrap items-center gap-2.5">
-          <button id="cancel-ev-modal-btn" type="button" class="px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-xs font-bold uppercase text-neutral-700 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors">
+          <button id="cancel-ev-modal-btn" type="button" class="px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-xs font-bold uppercase text-neutral-700 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-neutral-300 dark:hover:border-white/25 transition-colors">
             Tutup
           </button>
-          <button id="ev-submit-review-btn" type="button" class="hidden px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
-            Ajukan Review ke Admin
+          <span id="ev-footer-coord-wrap" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] font-mono text-neutral-500 dark:text-muted-gray">
+            Koordinat: <code id="ev-footer-coord-readout" class="text-neutral-900 dark:text-soft-white font-bold">-6.2186,106.8026</code>
+          </span>
+          <span id="ev-footer-step-hint" class="hidden text-[11px] font-mono text-neutral-500 dark:text-muted-gray"></span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="ev-info-save-stay-btn" type="submit" form="ev-info-form" data-ev-save-mode="stay" class="hidden px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-xs font-bold uppercase text-neutral-800 dark:text-soft-white hover:border-electric-magenta transition-colors">
+            Simpan Saja
           </button>
-          <button id="ev-info-save-btn" type="submit" form="ev-info-form" class="px-6 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          <button id="ev-info-save-btn" type="submit" form="ev-info-form" data-ev-save-mode="next" class="px-6 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             Simpan Konser
+          </button>
+          <button id="ev-goto-step3-btn" type="button" class="hidden px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+            Lanjut ke Voucher &amp; Review →
+          </button>
+          <button id="ev-finish-btn" type="button" class="hidden px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-xs font-bold uppercase text-neutral-800 dark:text-soft-white hover:border-electric-magenta transition-colors">
+            Simpan Draft
+          </button>
+          <button id="ev-submit-review-btn" type="button" class="hidden px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider transition-all shadow-sm">
+            Ajukan Review ke Admin ✓
           </button>
         </div>
       </div>
@@ -759,12 +1020,23 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
     const evModal = document.getElementById('event-studio-modal');
     const openCreateBtn = document.getElementById('open-create-event-btn');
     const closeEvModalBtn = document.getElementById('close-ev-modal-btn');
-    const cancelEvModalBtn = document.getElementById('cancel-ev-modal-btn');
+    const cancelEvModalBtn = document.getElementById('cancel-ev-modal-btn') as HTMLButtonElement | null;
     const evModalTitle = document.getElementById('ev-modal-title');
     const evModalSubtabs = document.getElementById('ev-modal-subtabs');
+    const evModalScrollBody = document.getElementById('ev-modal-scroll-body');
     const evModalFooter = document.getElementById('ev-modal-footer');
     const evSubtabBtns = document.querySelectorAll<HTMLButtonElement>('.ev-subtab-btn');
     const evSubpanels = document.querySelectorAll<HTMLElement>('.ev-subpanel');
+    const evWizardToast = document.getElementById('ev-wizard-toast');
+    const evWizardToastMsg = document.getElementById('ev-wizard-toast-msg');
+    const evWizardToastBack = document.getElementById('ev-wizard-toast-back') as HTMLButtonElement | null;
+    const evWizardToastClose = document.getElementById('ev-wizard-toast-close') as HTMLButtonElement | null;
+    const evFooterCoordWrap = document.getElementById('ev-footer-coord-wrap');
+    const evFooterStepHint = document.getElementById('ev-footer-step-hint');
+    const evInfoSaveStayBtn = document.getElementById('ev-info-save-stay-btn') as HTMLButtonElement | null;
+    const evInfoSaveBtn = document.getElementById('ev-info-save-btn') as HTMLButtonElement | null;
+    const evGotoStep3Btn = document.getElementById('ev-goto-step3-btn') as HTMLButtonElement | null;
+    const evFinishBtn = document.getElementById('ev-finish-btn') as HTMLButtonElement | null;
     const posterBox = document.getElementById('ev-poster-upload-box');
     const posterPreview = document.getElementById('ev-poster-preview') as HTMLImageElement | null;
     const posterFileInput = document.getElementById('ev-poster-file-input') as HTMLInputElement | null;
@@ -795,6 +1067,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
     let editingEventDetail: any = null;
     let editingCategoryId: number | null = null;
     let editingVoucherId: number | null = null;
+    let activeModalSubtab: 'info' | 'categories' | 'vouchers' = 'info';
+    let previousAutoSubtab: 'info' | 'categories' | 'vouchers' | null = null;
     let payoutIdempotencyKey = crypto.randomUUID();
     let isDisposed = false;
 
@@ -873,8 +1147,13 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
           studioWorkspace?.classList.remove('hidden');
           const titleEl = document.getElementById('studio-org-title');
           const idBadge = document.getElementById('studio-org-id-badge');
+          const pubLink = document.getElementById('studio-public-link') as HTMLAnchorElement | null;
           if (titleEl) titleEl.textContent = myProfile.organization_name || 'PROMOTOR STUDIO';
           if (idBadge) idBadge.textContent = `ORGANIZER #${myProfile.id}`;
+          if (pubLink && myProfile.id) {
+            pubLink.href = `/organizers/${myProfile.id}`;
+            pubLink.classList.remove('hidden');
+          }
           activateTab(currentTab);
         } else {
           hideAllRootStates();
@@ -1083,9 +1362,15 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       await loadOrganizerOrders();
     }
 
+    let orgOrdersOffset = 0;
+    const ORG_ORDERS_LIMIT = 50;
+
     async function loadOrganizerOrders() {
       if (!ordersTbody) return;
-      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      const prevBtn = document.getElementById('org-orders-prev-btn') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('org-orders-next-btn') as HTMLButtonElement | null;
+      const pageInfo = document.getElementById('org-orders-page-info');
+      const params = new URLSearchParams({ limit: String(ORG_ORDERS_LIMIT), offset: String(orgOrdersOffset) });
       const evId = ordersEventFilter?.value || '';
       const status = ordersStatusFilter?.value || '';
       const q = ordersSearchInput?.value.trim() || '';
@@ -1098,6 +1383,16 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         const rows = await api.get<any[]>(`/organizer/orders?${params.toString()}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
+        const currentPage = Math.floor(orgOrdersOffset / ORG_ORDERS_LIMIT) + 1;
+        if (pageInfo) {
+          pageInfo.textContent =
+            list.length > 0
+              ? `Halaman ${currentPage} (${orgOrdersOffset + 1}–${orgOrdersOffset + list.length})`
+              : `Halaman ${currentPage}`;
+        }
+        if (prevBtn) prevBtn.disabled = orgOrdersOffset <= 0;
+        if (nextBtn) nextBtn.disabled = list.length < ORG_ORDERS_LIMIT;
+
         if (list.length === 0) {
           ordersTbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-neutral-500 dark:text-muted-gray">Belum ada order masuk sesuai filter.</td></tr>`;
           return;
@@ -1148,10 +1443,27 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
 
     ordersFilterForm?.addEventListener('submit', (e) => {
       e.preventDefault();
+      orgOrdersOffset = 0;
       loadOrganizerOrders();
     });
-    ordersEventFilter?.addEventListener('change', loadOrganizerOrders);
-    ordersStatusFilter?.addEventListener('change', loadOrganizerOrders);
+    ordersEventFilter?.addEventListener('change', () => {
+      orgOrdersOffset = 0;
+      loadOrganizerOrders();
+    });
+    ordersStatusFilter?.addEventListener('change', () => {
+      orgOrdersOffset = 0;
+      loadOrganizerOrders();
+    });
+    document.getElementById('org-orders-prev-btn')?.addEventListener('click', () => {
+      if (orgOrdersOffset >= ORG_ORDERS_LIMIT) {
+        orgOrdersOffset -= ORG_ORDERS_LIMIT;
+        loadOrganizerOrders();
+      }
+    });
+    document.getElementById('org-orders-next-btn')?.addEventListener('click', () => {
+      orgOrdersOffset += ORG_ORDERS_LIMIT;
+      loadOrganizerOrders();
+    });
 
     // TAB 2: EVENTS CRUD
     async function loadOrganizerEvents() {
@@ -1181,6 +1493,9 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
                   <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
                       <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-neutral-100 dark:bg-white/10 text-neutral-800 dark:text-soft-white">${escapeHtml(ev.status)}</span>
+                      ${ev.is_paused ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-amber-50 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/35 text-amber-700 dark:text-amber-300">PENJUALAN DIJEDA</span>` : ''}
+                      ${ev.genre ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-electric-magenta/10 text-electric-magenta">${escapeHtml(ev.genre)}</span>` : ''}
+                      ${ev.kota ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono uppercase bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray">${escapeHtml(ev.kota)}</span>` : ''}
                       <span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">ID #${ev.id}</span>
                       ${ev.escrow_settled_at ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Escrow H+1 Settled</span>` : ''}
                     </div>
@@ -1201,6 +1516,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
                   ${canSubmit ? `<button type="button" data-submit-ev="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase">Ajukan Review</button>` : ''}
                   ${canDelete ? `<button type="button" data-delete-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Hapus</button>` : ''}
                   ${canCancel ? `
+                    <button type="button" data-toggle-pause-ev="${ev.id}" data-next-pause="${ev.is_paused ? '0' : '1'}" class="px-3.5 py-2 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-500/35 text-amber-800 dark:text-amber-300 text-xs font-bold uppercase">${ev.is_paused ? 'Lanjutkan Penjualan' : 'Jeda Penjualan'}</button>
                     <a href="/scanner?event_id=${ev.id}" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase">Scanner</a>
                     <button type="button" data-cancel-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Batalkan Konser</button>
                   ` : ''}
@@ -1259,6 +1575,21 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
           await loadOrganizerEvents();
         } catch (err: any) {
           alert(err?.message || 'Gagal menghapus konser.');
+        }
+        return;
+      }
+
+      const pauseBtn = target.closest('[data-toggle-pause-ev]') as HTMLButtonElement | null;
+      if (pauseBtn) {
+        const id = Number(pauseBtn.dataset.togglePauseEv);
+        const nextPaused = pauseBtn.dataset.nextPause === '1';
+        pauseBtn.disabled = true;
+        try {
+          await api.patch(`/organizer/events/${id}/pause`, { is_paused: nextPaused });
+          await loadOrganizerEvents();
+        } catch (err: any) {
+          alert(err?.message || 'Gagal mengubah status jeda penjualan.');
+          pauseBtn.disabled = false;
         }
         return;
       }
@@ -1345,31 +1676,247 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
     evAddLineupBtn?.addEventListener('click', () => appendLineupRow());
     evAddRundownBtn?.addEventListener('click', () => appendRundownRow());
 
-    function activateModalSubtab(subtab: string) {
-      evSubtabBtns.forEach((b) => {
-        const active = b.dataset.subtab === subtab;
-        b.classList.toggle('bg-electric-magenta', active);
-        b.classList.toggle('text-white', active);
-        b.classList.toggle('font-bold', active);
-        b.classList.toggle('text-neutral-600', !active);
-        b.classList.toggle('dark:text-muted-gray', !active);
-      });
-      evSubpanels.forEach((p) => p.classList.toggle('hidden', p.id !== `ev-subpanel-${subtab}`));
-      evModalFooter?.classList.toggle('hidden', subtab !== 'info');
-      if (subtab === 'info') venueMap.resize();
+    let modalVouchersCache: any[] = [];
+
+    function hideWizardToast() {
+      evWizardToast?.classList.add('hidden');
+      evWizardToastBack?.classList.add('hidden');
+      previousAutoSubtab = null;
     }
-    evSubtabBtns.forEach((b) => b.addEventListener('click', () => activateModalSubtab(b.dataset.subtab || 'info')));
+
+    function showWizardToast(msg: string, backToSubtab: 'info' | 'categories' | 'vouchers' | null = null) {
+      if (!evWizardToast || !evWizardToastMsg) return;
+      evWizardToastMsg.textContent = msg;
+      previousAutoSubtab = backToSubtab;
+      if (evWizardToastBack) {
+        if (backToSubtab) {
+          const backLabel = backToSubtab === 'info' ? '← Kembali ke Step 1 (Detail & Poster)' : '← Kembali ke Step 2 (Kategori Tiket)';
+          evWizardToastBack.textContent = backLabel;
+          evWizardToastBack.classList.remove('hidden');
+        } else {
+          evWizardToastBack.classList.add('hidden');
+        }
+      }
+      evWizardToast.classList.remove('hidden');
+    }
+
+    function refreshLivePricePreviews() {
+      const addPrice = Number((document.getElementById('cat-f-price') as HTMLInputElement | null)?.value || 0);
+      const addPreview = document.getElementById('cat-price-preview');
+      if (addPreview) addPreview.textContent = formatRupiah(Math.max(0, addPrice));
+
+      const editPrice = Number((document.getElementById('edit-cat-f-price') as HTMLInputElement | null)?.value || 0);
+      const editPreview = document.getElementById('edit-cat-price-preview');
+      if (editPreview) editPreview.textContent = formatRupiah(Math.max(0, editPrice));
+
+      const vchType = (document.getElementById('vch-f-type') as HTMLSelectElement | null)?.value || 'persen';
+      const vchVal = Number((document.getElementById('vch-f-val') as HTMLInputElement | null)?.value || 0);
+      const vchPreview = document.getElementById('vch-val-preview');
+      if (vchPreview) {
+        vchPreview.textContent = vchType === 'persen' ? `${Math.max(0, vchVal)}% OFF` : `${formatRupiah(Math.max(0, vchVal))} OFF`;
+      }
+    }
+
+    document.getElementById('cat-f-price')?.addEventListener('input', refreshLivePricePreviews);
+    document.getElementById('edit-cat-f-price')?.addEventListener('input', refreshLivePricePreviews);
+    document.getElementById('vch-f-val')?.addEventListener('input', refreshLivePricePreviews);
+    document.getElementById('vch-f-type')?.addEventListener('change', refreshLivePricePreviews);
+
+    function applyDefaultVoucherDates() {
+      const startEl = document.getElementById('vch-f-start') as HTMLInputElement | null;
+      const endEl = document.getElementById('vch-f-end') as HTMLInputElement | null;
+      if (startEl && !startEl.value) {
+        startEl.value = toLocalInputValue(new Date().toISOString());
+      }
+      if (endEl && !endEl.value) {
+        const fallbackEnd = editingEventDetail?.tanggal_mulai || new Date(Date.now() + 14 * 86400000).toISOString();
+        endEl.value = toLocalInputValue(fallbackEnd);
+      }
+    }
+
+    function setChecklistItem(prefix: string, done: boolean, noteText: string, optional = false) {
+      const iconEl = document.getElementById(`ev-ready-${prefix}-icon`);
+      const noteEl = document.getElementById(`ev-ready-${prefix}-note`);
+      if (iconEl) {
+        iconEl.textContent = done ? '✓' : '○';
+        iconEl.className = done
+          ? 'w-5 h-5 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-mono text-[11px] font-bold flex items-center justify-center shrink-0'
+          : optional
+            ? 'w-5 h-5 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-500 dark:text-muted-gray font-mono text-[11px] font-bold flex items-center justify-center shrink-0'
+            : 'w-5 h-5 rounded-full bg-amber-500/15 text-amber-600 dark:text-amber-300 font-mono text-[11px] font-bold flex items-center justify-center shrink-0';
+      }
+      if (noteEl) noteEl.textContent = noteText;
+    }
+
+    function syncWizardChrome() {
+      const hasDraft = Boolean(editingEventId);
+      const hasPoster = Boolean(editingEventDetail?.poster_url);
+      const catsList = Array.isArray(editingEventDetail?.categories) ? editingEventDetail.categories : [];
+      const hasCategories = catsList.length > 0;
+      const vchCount = modalVouchersCache.length;
+      const canSubmit = Boolean(editingEventDetail && (editingEventDetail.status === 'draft' || editingEventDetail.status === 'rejected'));
+
+      // 1. Update visual 3-step dots & buttons
+      const stepConfigs: Array<{ key: 'info' | 'categories' | 'vouchers'; dotId: string; num: string; done: boolean }> = [
+        { key: 'info', dotId: 'ev-step-dot-1', num: '1', done: hasDraft && hasPoster },
+        { key: 'categories', dotId: 'ev-step-dot-2', num: '2', done: hasCategories },
+        { key: 'vouchers', dotId: 'ev-step-dot-3', num: '3', done: vchCount > 0 },
+      ];
+      evSubtabBtns.forEach((b) => {
+        const key = (b.dataset.subtab || 'info') as 'info' | 'categories' | 'vouchers';
+        const isActive = key === activeModalSubtab;
+        const cfg = stepConfigs.find((s) => s.key === key);
+        b.classList.toggle('border-electric-magenta', isActive);
+        b.classList.toggle('bg-electric-magenta/10', isActive);
+        b.classList.toggle('dark:bg-electric-magenta/15', isActive);
+        b.classList.toggle('border-neutral-200', !isActive);
+        b.classList.toggle('dark:border-white/10', !isActive);
+        b.classList.toggle('bg-white', !isActive);
+        b.classList.toggle('dark:bg-white/[0.03]', !isActive);
+        const dotEl = cfg ? document.getElementById(cfg.dotId) : null;
+        if (dotEl && cfg) {
+          dotEl.textContent = cfg.done ? '✓' : cfg.num;
+          dotEl.className = isActive
+            ? 'w-6 h-6 rounded-full bg-electric-magenta text-white text-[11px] font-mono font-bold flex items-center justify-center shrink-0'
+            : cfg.done
+              ? 'w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 text-[11px] font-mono font-bold flex items-center justify-center shrink-0'
+              : 'w-6 h-6 rounded-full bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-muted-gray text-[11px] font-mono font-bold flex items-center justify-center shrink-0';
+        }
+      });
+
+      // 2. Venue capacity strip in Step 2
+      const capTotal = Number(editingEventDetail?.kapasitas_venue || (document.getElementById('ev-f-cap') as HTMLInputElement | null)?.value || 0);
+      const capUsed = catsList.reduce((acc: number, c: any) => acc + Number(c.kuota_total || 0) + Number(c.kuota_komplimen || 0), 0);
+      const capUsedEl = document.getElementById('ev-cap-used');
+      const capTotalEl = document.getElementById('ev-cap-total');
+      const catBadgeEl = document.getElementById('ev-cat-count-badge');
+      const capBarEl = document.getElementById('ev-cap-bar');
+      if (capUsedEl) capUsedEl.textContent = capUsed.toLocaleString('id-ID');
+      if (capTotalEl) capTotalEl.textContent = capTotal.toLocaleString('id-ID');
+      if (catBadgeEl) catBadgeEl.textContent = `${catsList.length} tier aktif`;
+      if (capBarEl) {
+        const pct = capTotal > 0 ? Math.min(100, Math.round((capUsed / capTotal) * 100)) : 0;
+        capBarEl.style.width = `${pct}%`;
+        capBarEl.classList.toggle('bg-red-500', capTotal > 0 && capUsed > capTotal);
+        capBarEl.classList.toggle('bg-electric-magenta', !(capTotal > 0 && capUsed > capTotal));
+      }
+
+      // 3. Publish readiness checklist in Step 3
+      setChecklistItem('info', hasDraft, hasDraft ? 'Info & koordinat OK' : 'Belum disimpan');
+      setChecklistItem('poster', hasPoster, hasPoster ? 'Poster terpasang' : 'Wajib unggah poster');
+      setChecklistItem('cats', hasCategories, hasCategories ? `${catsList.length} kategori siap` : 'Min. 1 kategori tiket');
+      setChecklistItem('vch', vchCount > 0, vchCount > 0 ? `${vchCount} voucher dibuat` : 'Opsional (boleh kosong)', true);
+      const readySummaryBadge = document.getElementById('ev-ready-summary-badge');
+      if (readySummaryBadge) {
+        const isReady = hasDraft && hasPoster && hasCategories;
+        readySummaryBadge.textContent = isReady ? 'Siap Ajukan Review ✓' : 'Lengkapi Poster & Kategori';
+        readySummaryBadge.className = isReady
+          ? 'px-2.5 py-1 rounded-full border border-emerald-300 dark:border-emerald-500/40 bg-emerald-50 dark:bg-emerald-500/15 text-[11px] font-mono text-emerald-700 dark:text-emerald-300 font-bold'
+          : 'px-2.5 py-1 rounded-full border border-amber-300 dark:border-amber-500/40 bg-amber-50 dark:bg-amber-500/15 text-[11px] font-mono text-amber-700 dark:text-amber-300';
+      }
+
+      // 4. Unified persistent sticky footer buttons
+      evModalFooter?.classList.remove('hidden');
+      if (cancelEvModalBtn) {
+        cancelEvModalBtn.textContent =
+          activeModalSubtab === 'categories'
+            ? '← Kembali ke Step 1'
+            : activeModalSubtab === 'vouchers'
+              ? '← Kembali ke Step 2'
+              : 'Tutup';
+      }
+      if (evFooterCoordWrap && evFooterStepHint) {
+        if (activeModalSubtab === 'info') {
+          evFooterCoordWrap.classList.remove('hidden');
+          evFooterCoordWrap.classList.add('sm:inline-flex');
+          evFooterStepHint.classList.add('hidden');
+        } else {
+          evFooterCoordWrap.classList.add('hidden');
+          evFooterCoordWrap.classList.remove('sm:inline-flex');
+          evFooterStepHint.classList.remove('hidden');
+          evFooterStepHint.textContent =
+            activeModalSubtab === 'categories'
+              ? hasCategories
+                ? `${catsList.length} tier siap • lanjut ke Step 3 atau tambah tier`
+                : 'Isi formulir di atas untuk menambah kategori tiket pertama'
+              : vchCount > 0
+                ? `${vchCount} voucher aktif • siap diajukan ke Admin`
+                : 'Voucher opsional — langsung ajukan review atau simpan draft';
+        }
+      }
+      evInfoSaveStayBtn?.classList.toggle('hidden', !(activeModalSubtab === 'info' && hasDraft));
+      evInfoSaveBtn?.classList.toggle('hidden', activeModalSubtab !== 'info');
+      if (evInfoSaveBtn) {
+        evInfoSaveBtn.textContent = hasDraft ? 'Simpan & Lanjut ke Kategori →' : 'Buat Draft & Lanjut →';
+      }
+      evGotoStep3Btn?.classList.toggle('hidden', activeModalSubtab !== 'categories');
+      evFinishBtn?.classList.toggle('hidden', activeModalSubtab !== 'vouchers');
+      evSubmitReviewBtn?.classList.toggle('hidden', !(hasDraft && canSubmit && (activeModalSubtab === 'vouchers' || (hasPoster && hasCategories))));
+    }
+
+    function activateModalSubtab(
+      subtab: 'info' | 'categories' | 'vouchers',
+      opts: { scrollTop?: boolean; autoToastFrom?: 'info' | 'categories' | 'vouchers'; toastMsg?: string } = {}
+    ) {
+      activeModalSubtab = subtab;
+      evSubpanels.forEach((p) => p.classList.toggle('hidden', p.id !== `ev-subpanel-${subtab}`));
+      syncWizardChrome();
+      if (subtab === 'info') venueMap.resize();
+      if (subtab === 'vouchers') applyDefaultVoucherDates();
+      if (opts.scrollTop !== false && evModalScrollBody) {
+        evModalScrollBody.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+      if (opts.autoToastFrom) {
+        showWizardToast(opts.toastMsg || 'Berhasil disimpan & diarahkan ke step berikutnya.', opts.autoToastFrom);
+      }
+    }
+
+    evSubtabBtns.forEach((b) =>
+      b.addEventListener('click', () => {
+        hideWizardToast();
+        activateModalSubtab((b.dataset.subtab as 'info' | 'categories' | 'vouchers') || 'info');
+      })
+    );
+    document.querySelectorAll<HTMLButtonElement>('[data-jump-subtab]').forEach((b) =>
+      b.addEventListener('click', () => {
+        hideWizardToast();
+        activateModalSubtab((b.dataset.jumpSubtab as 'info' | 'categories' | 'vouchers') || 'info');
+      })
+    );
+    evWizardToastBack?.addEventListener('click', () => {
+      const target = previousAutoSubtab || 'info';
+      hideWizardToast();
+      activateModalSubtab(target);
+    });
+    evWizardToastClose?.addEventListener('click', hideWizardToast);
+    evGotoStep3Btn?.addEventListener('click', () => {
+      hideWizardToast();
+      activateModalSubtab('vouchers');
+    });
 
     function closeEventModal() {
       evModal?.classList.add('hidden');
       evModal?.classList.remove('flex');
       editingCategoryId = null;
       editingVoucherId = null;
+      hideWizardToast();
       evEditCatForm?.classList.add('hidden');
       evEditVoucherForm?.classList.add('hidden');
     }
+    evFinishBtn?.addEventListener('click', closeEventModal);
     closeEvModalBtn?.addEventListener('click', closeEventModal);
-    cancelEvModalBtn?.addEventListener('click', closeEventModal);
+    cancelEvModalBtn?.addEventListener('click', () => {
+      hideWizardToast();
+      if (activeModalSubtab === 'categories') {
+        activateModalSubtab('info');
+        return;
+      }
+      if (activeModalSubtab === 'vouchers') {
+        activateModalSubtab('categories');
+        return;
+      }
+      closeEventModal();
+    });
     evModal?.addEventListener('click', (e) => {
       if (e.target === evModal) closeEventModal();
     });
@@ -1388,6 +1935,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       editingEventDetail = null;
       editingCategoryId = null;
       editingVoucherId = null;
+      modalVouchersCache = [];
+      hideWizardToast();
       evEditCatForm?.classList.add('hidden');
       evEditVoucherForm?.classList.add('hidden');
       evModal?.classList.remove('hidden');
@@ -1396,13 +1945,13 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       document.getElementById('ev-poster-msg')?.classList.add('hidden');
       document.getElementById('cat-feedback')?.classList.add('hidden');
       document.getElementById('vch-feedback')?.classList.add('hidden');
-      activateModalSubtab('info');
+      activateModalSubtab('info', { scrollTop: false });
+      if (evModalScrollBody) evModalScrollBody.scrollTop = 0;
 
       if (!evId) {
         if (evModalTitle) evModalTitle.textContent = 'BUAT KONSER BARU (DRAFT)';
         evModalSubtabs?.classList.add('hidden');
         posterBox?.classList.add('hidden');
-        evSubmitReviewBtn?.classList.add('hidden');
         evInfoForm?.reset();
         if (evLineupRowsEl) evLineupRowsEl.innerHTML = '';
         if (evRundownRowsEl) evRundownRowsEl.innerHTML = '';
@@ -1415,6 +1964,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         (document.getElementById('ev-f-start') as HTMLInputElement).value = toLocalInputValue(d1.toISOString());
         (document.getElementById('ev-f-end') as HTMLInputElement).value = toLocalInputValue(d2.toISOString());
         venueMap.syncFromInput(false);
+        refreshLivePricePreviews();
+        syncWizardChrome();
         return;
       }
 
@@ -1423,6 +1974,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       posterBox?.classList.remove('hidden');
       venueMap.resize();
       await hydrateModalEventDetail(evId);
+      refreshLivePricePreviews();
     }
 
     async function hydrateModalEventDetail(evId: number) {
@@ -1433,6 +1985,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         if (posterPreview) posterPreview.src = resolveAssetUrl(detail.poster_url);
         (document.getElementById('ev-f-name') as HTMLInputElement).value = detail.nama_event || '';
         (document.getElementById('ev-f-artis') as HTMLInputElement).value = detail.artis || '';
+        (document.getElementById('ev-f-genre') as HTMLInputElement).value = detail.genre || '';
+        (document.getElementById('ev-f-kota') as HTMLInputElement).value = detail.kota || '';
         (document.getElementById('ev-f-alamat') as HTMLInputElement).value = detail.alamat || '';
         (document.getElementById('ev-f-lokasi') as HTMLInputElement).value = detail.lat && detail.lng ? `${detail.lat},${detail.lng}` : '-6.2186,106.8026';
         venueMap.syncFromInput(true);
@@ -1457,11 +2011,9 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
           else appendRundownRow();
         }
 
-        const canSubmit = detail.status === 'draft' || detail.status === 'rejected';
-        evSubmitReviewBtn?.classList.toggle('hidden', !canSubmit);
-
         renderModalCategories(detail);
         await loadModalVouchers(evId);
+        syncWizardChrome();
       } catch (err: any) {
         showInlineMsg(document.getElementById('ev-info-feedback'), err?.message || 'Gagal memuat detail konser.', true);
       }
@@ -1469,7 +2021,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
 
     evInfoForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const btn = document.getElementById('ev-info-save-btn') as HTMLButtonElement | null;
+      const submitter = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+      const saveMode = submitter?.dataset.evSaveMode || 'next';
       const fb = document.getElementById('ev-info-feedback');
       const startVal = (document.getElementById('ev-f-start') as HTMLInputElement).value;
       const endVal = (document.getElementById('ev-f-end') as HTMLInputElement).value;
@@ -1482,9 +2035,14 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       const lineup = readLineupRows();
       const rundown = readRundownRows();
 
+      const genreVal = (document.getElementById('ev-f-genre') as HTMLInputElement | null)?.value.trim() || '';
+      const kotaVal = (document.getElementById('ev-f-kota') as HTMLInputElement | null)?.value.trim() || '';
+
       const payload: any = {
         nama_event: (document.getElementById('ev-f-name') as HTMLInputElement).value.trim(),
         artis: (document.getElementById('ev-f-artis') as HTMLInputElement).value.trim(),
+        ...(genreVal ? { genre: genreVal } : {}),
+        ...(kotaVal ? { kota: kotaVal } : {}),
         alamat: (document.getElementById('ev-f-alamat') as HTMLInputElement).value.trim(),
         lokasi: (document.getElementById('ev-f-lokasi') as HTMLInputElement).value.trim(),
         tanggal_mulai: new Date(startVal).toISOString(),
@@ -1498,7 +2056,8 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         ...(editingEventId || rules.length > 0 ? { rules } : {}),
       };
 
-      if (btn) btn.disabled = true;
+      if (evInfoSaveBtn) evInfoSaveBtn.disabled = true;
+      if (evInfoSaveStayBtn) evInfoSaveStayBtn.disabled = true;
       try {
         if (!editingEventId) {
           const created = await api.post<any>('/create/event', payload);
@@ -1507,18 +2066,29 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
           evModalSubtabs?.classList.remove('hidden');
           posterBox?.classList.remove('hidden');
           await hydrateModalEventDetail(newId);
-          showInlineMsg(fb, 'Draft konser dibuat! Sekarang unggah poster & tambahkan kategori tiket.');
+          showInlineMsg(fb, 'Draft konser dibuat! Silakan unggah poster resmi konser di bagian atas.');
+          showWizardToast('Draft konser tersimpan! Unggah poster resmi di atas atau langsung atur Kategori Tiket.', null);
+          evModalScrollBody?.scrollTo({ top: 0, behavior: 'smooth' });
           await loadOrganizerEvents();
         } else {
           await api.patch(`/events/${editingEventId}`, payload);
-          showInlineMsg(fb, 'Informasi konser berhasil diperbarui!');
           await hydrateModalEventDetail(editingEventId);
           await loadOrganizerEvents();
+          if (saveMode === 'next') {
+            activateModalSubtab('categories', {
+              autoToastFrom: 'info',
+              toastMsg: 'Detail konser disimpan! Lanjut atur Kategori Tiket.',
+            });
+          } else {
+            showInlineMsg(fb, 'Informasi konser berhasil diperbarui!');
+            showWizardToast('Perubahan Detail & Peta tersimpan.', null);
+          }
         }
       } catch (err: any) {
         showInlineMsg(fb, err?.message || 'Gagal menyimpan konser.', true);
       } finally {
-        if (btn) btn.disabled = false;
+        if (evInfoSaveBtn) evInfoSaveBtn.disabled = false;
+        if (evInfoSaveStayBtn) evInfoSaveStayBtn.disabled = false;
       }
     });
 
@@ -1534,8 +2104,19 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       try {
         const res = await api.upload<any>(`/events/${editingEventId}/poster`, fd);
         if (posterPreview && res?.poster_url) posterPreview.src = resolveAssetUrl(res.poster_url);
+        if (editingEventDetail && res?.poster_url) editingEventDetail.poster_url = res.poster_url;
         showInlineMsg(document.getElementById('ev-poster-msg'), 'Poster berhasil diunggah!');
         await loadOrganizerEvents();
+        const noCatsYet = !Array.isArray(editingEventDetail?.categories) || editingEventDetail.categories.length === 0;
+        if (noCatsYet) {
+          activateModalSubtab('categories', {
+            autoToastFrom: 'info',
+            toastMsg: 'Poster resmi diunggah! Lanjut buat Kategori Tiket.',
+          });
+        } else {
+          syncWizardChrome();
+          showWizardToast('Poster resmi berhasil diperbarui!', null);
+        }
       } catch (err: any) {
         showInlineMsg(document.getElementById('ev-poster-msg'), err?.message || 'Gagal mengunggah poster (cek format/ukuran 2MB).', true);
       } finally {
@@ -1550,10 +2131,13 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       try {
         await api.patch(`/events/${editingEventId}/submit`, {});
         showInlineMsg(document.getElementById('ev-info-feedback'), 'Event berhasil diajukan ke antrean review Admin!');
-        evSubmitReviewBtn.classList.add('hidden');
+        showWizardToast('Event berhasil diajukan ke antrean review Admin! Status kini Menunggu Review.', null);
+        await hydrateModalEventDetail(editingEventId);
         await loadOrganizerEvents();
       } catch (err: any) {
-        showInlineMsg(document.getElementById('ev-info-feedback'), err?.message || 'Gagal mengajukan review event.', true);
+        const errMsg = err?.message || 'Gagal mengajukan review event.';
+        showInlineMsg(document.getElementById('ev-info-feedback'), errMsg, true);
+        showWizardToast(`Gagal ajukan review: ${errMsg}`, null);
       } finally {
         evSubmitReviewBtn.disabled = false;
       }
@@ -1614,6 +2198,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         (document.getElementById('edit-cat-f-quota') as HTMLInputElement).value = String(Number(cat.kuota_total || 1));
         (document.getElementById('edit-cat-f-compliment') as HTMLInputElement).value = String(Number(cat.kuota_komplimen || 0));
         (document.getElementById('edit-cat-f-max') as HTMLInputElement).value = String(Number(cat.max_per_transaksi ?? 4));
+        refreshLivePricePreviews();
         evEditCatForm?.classList.remove('hidden');
         return;
       }
@@ -1660,10 +2245,17 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
     evAddCatForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!editingEventId) return;
+      const submitter = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+      const mode = submitter?.dataset.catMode || 'stay';
+      const stayBtn = document.getElementById('cat-add-stay-btn') as HTMLButtonElement | null;
+      const nextBtn = document.getElementById('cat-add-next-btn') as HTMLButtonElement | null;
       const fb = document.getElementById('cat-feedback');
+      const catName = (document.getElementById('cat-f-name') as HTMLInputElement).value.trim();
+      if (stayBtn) stayBtn.disabled = true;
+      if (nextBtn) nextBtn.disabled = true;
       try {
         await api.post(`/events/${editingEventId}/categories`, {
-          nama_kategori: (document.getElementById('cat-f-name') as HTMLInputElement).value.trim(),
+          nama_kategori: catName,
           harga: Number((document.getElementById('cat-f-price') as HTMLInputElement).value),
           kuota_total: Number((document.getElementById('cat-f-quota') as HTMLInputElement).value),
           kuota_komplimen: Number((document.getElementById('cat-f-compliment') as HTMLInputElement).value || 0),
@@ -1672,15 +2264,26 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         evAddCatForm.reset();
         (document.getElementById('cat-f-compliment') as HTMLInputElement).value = '0';
         (document.getElementById('cat-f-max') as HTMLInputElement).value = '4';
-        showInlineMsg(fb, 'Kategori tiket ditambahkan!');
+        refreshLivePricePreviews();
         await hydrateModalEventDetail(editingEventId);
         await loadOrganizerEvents();
+        if (mode === 'next') {
+          activateModalSubtab('vouchers', {
+            autoToastFrom: 'categories',
+            toastMsg: `Kategori "${catName}" tersimpan! Lanjut atur Voucher Promo atau Ajukan Review.`,
+          });
+        } else {
+          showInlineMsg(fb, `Kategori "${catName}" ditambahkan! Tambah tier lain atau lanjut ke Voucher & Review.`);
+          showWizardToast(`Kategori "${catName}" ditambahkan ke tier penjualan.`, null);
+        }
       } catch (err: any) {
         showInlineMsg(fb, err?.message || 'Gagal menambah kategori.', true);
+      } finally {
+        if (stayBtn) stayBtn.disabled = false;
+        if (nextBtn) nextBtn.disabled = false;
       }
     });
 
-    let modalVouchersCache: any[] = [];
     async function loadModalVouchers(evId: number) {
       if (!evVouchersList) return;
       try {
@@ -1689,6 +2292,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         modalVouchersCache = rows;
         if (rows.length === 0) {
           evVouchersList.innerHTML = `<p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Belum ada voucher diskon untuk event ini.</p>`;
+          syncWizardChrome();
           return;
         }
         evVouchersList.innerHTML = rows
@@ -1719,6 +2323,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
             `;
           })
           .join('');
+        syncWizardChrome();
       } catch {}
     }
 
@@ -1816,8 +2421,11 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         evAddVoucherForm.reset();
         (document.getElementById('vch-f-quota') as HTMLInputElement).value = '50';
         (document.getElementById('vch-f-min') as HTMLInputElement).value = '0';
+        applyDefaultVoucherDates();
+        refreshLivePricePreviews();
         showInlineMsg(fb, 'Voucher diskon berhasil dibuat!');
         await loadModalVouchers(editingEventId);
+        showWizardToast('Voucher promo ditambahkan! Klik "Ajukan Review ke Admin ✓" bila event siap.', null);
       } catch (err: any) {
         showInlineMsg(fb, err?.message || 'Gagal membuat voucher.', true);
       }
@@ -1987,11 +2595,24 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
       if (!evId) return;
       gateExportBtn.disabled = true;
       try {
-        await api.downloadBlob(`/organizer/events/${evId}/export-csv`, `attendance-event-${evId}.csv`);
+        await api.downloadBlob(`/organizer/events/${evId}/export-csv?type=attendance`, `attendance-event-${evId}.csv`);
       } catch (err: any) {
-        alert(err?.message || 'Gagal mengunduh CSV.');
+        alert(err?.message || 'Gagal mengunduh CSV kehadiran.');
       } finally {
         gateExportBtn.disabled = false;
+      }
+    });
+    const gateExportSalesBtn = document.getElementById('gate-export-sales-btn') as HTMLButtonElement | null;
+    gateExportSalesBtn?.addEventListener('click', async () => {
+      const evId = Number(gateEventSelect?.value || 0);
+      if (!evId) return;
+      gateExportSalesBtn.disabled = true;
+      try {
+        await api.downloadBlob(`/organizer/events/${evId}/export-csv?type=sales`, `sales-event-${evId}.csv`);
+      } catch (err: any) {
+        alert(err?.message || 'Gagal mengunduh CSV penjualan.');
+      } finally {
+        gateExportSalesBtn.disabled = false;
       }
     });
 
@@ -2044,6 +2665,7 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
 
         if (finBankName) finBankName.textContent = profile?.bank_account || '-';
         if (finAccNumber) finAccNumber.textContent = profile?.account_number || '-';
+        (document.getElementById('update-org-name') as HTMLInputElement).value = profile?.organization_name || '';
         (document.getElementById('update-bank-name') as HTMLInputElement).value = profile?.bank_account || '';
         (document.getElementById('update-acc-number') as HTMLInputElement).value = profile?.account_number || '';
 
@@ -2124,6 +2746,25 @@ const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(
         showInlineMsg(fb, err?.message || 'Gagal mengajukan penarikan dana.', true);
       } finally {
         payoutSubmitBtn.disabled = false;
+      }
+    });
+
+    document.getElementById('org-profile-update-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('org-profile-save-btn') as HTMLButtonElement | null;
+      const fb = document.getElementById('org-profile-feedback');
+      const orgName = (document.getElementById('update-org-name') as HTMLInputElement).value.trim();
+      if (!orgName || orgName.length < 3) return;
+      if (btn) btn.disabled = true;
+      try {
+        await api.patch('/organizer/me', { organization_name: orgName });
+        const titleEl = document.getElementById('studio-org-title');
+        if (titleEl) titleEl.textContent = orgName;
+        showInlineMsg(fb, 'Nama organisasi promotor berhasil diperbarui!');
+      } catch (err: any) {
+        showInlineMsg(fb, err?.message || 'Gagal memperbarui profil organisasi.', true);
+      } finally {
+        if (btn) btn.disabled = false;
       }
     });
 

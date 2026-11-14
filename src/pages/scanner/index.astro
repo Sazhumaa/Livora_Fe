@@ -12,10 +12,10 @@ import Footer from '../../components/landing/Footer.astro';
     <!-- Top Header -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
-        <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+        <span data-i18n="scannerPage.badge" class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
           KRU GATE // VALIDATOR PEMINDAI
         </span>
-        <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+        <h1 data-i18n="scannerPage.title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
           GATE SCANNER ARENA
         </h1>
         <p class="text-sm text-neutral-600 dark:text-muted-gray mt-1">
@@ -58,7 +58,7 @@ import Footer from '../../components/landing/Footer.astro';
     <!-- Shift Configuration Card (Dynamic Event / Gate / PIN) -->
     <div class="rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none p-6 space-y-4">
       <div class="flex items-center justify-between">
-        <h2 class="font-display text-xl text-neutral-950 dark:text-soft-white">KONFIGURASI SHIFT PINTU MASUK</h2>
+        <h2 data-i18n="scannerPage.shiftHeading" class="font-display text-xl text-neutral-950 dark:text-soft-white">KONFIGURASI SHIFT PINTU MASUK</h2>
         <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray uppercase">Tersimpan di Sesi Browser</span>
       </div>
 
@@ -240,7 +240,7 @@ import Footer from '../../components/landing/Footer.astro';
   import { api } from '../../lib/api';
   import { hasOrganizerAccess, isAuthenticated } from '../../lib/auth';
   import { escapeHtml, formatDateIndo } from '../../lib/formatters';
-  import { isNativeQrDetectorSupported } from '../../lib/qr';
+  import { getJsQrDecoder, isNativeQrDetectorSupported } from '../../lib/qr';
 
   const SHIFT_STORAGE_KEY = 'afterglow_scanner_shift';
 
@@ -315,6 +315,7 @@ import Footer from '../../components/landing/Footer.astro';
     let camStream: MediaStream | null = null;
     let camLoopId: number | null = null;
     let isScanning = false;
+    let useNativeDetector = false;
     let lastScannedCode = '';
     let lastScannedAt = 0;
     const historyItems: Array<{ time: string; code: string; status: 'VALID' | 'INVALID'; note: string }> = [];
@@ -643,17 +644,14 @@ import Footer from '../../components/landing/Footer.astro';
         .join('');
     }
 
-    // Native BarcodeDetector Camera & Image Support
+    // Native BarcodeDetector Camera & Image Support + jsQR Canvas Fallback
     isNativeQrDetectorSupported().then((supported) => {
       if (isDisposed || !camHint) return;
+      useNativeDetector = supported;
       if (supported) {
         camHint.textContent = 'Kamera QR native (BarcodeDetector) siap digunakan di browser ini.';
       } else {
-        camHint.textContent = 'Browser ini tidak mendukung BarcodeDetector stream — gunakan USB Scanner atau ketik/paste kode QR.';
-        if (camToggleBtn) {
-          camToggleBtn.disabled = true;
-          camToggleBtn.classList.add('opacity-40', 'cursor-not-allowed');
-        }
+        camHint.textContent = 'Kamera QR Canvas (jsQR fallback) aktif — mendukung semua browser & upload gambar QR.';
       }
     });
 
@@ -674,6 +672,14 @@ import Footer from '../../components/landing/Footer.astro';
     async function startCamera() {
       if (!videoEl || !navigator.mediaDevices?.getUserMedia) return;
       try {
+        const detector = useNativeDetector
+          ? new (window as any).BarcodeDetector({ formats: ['qr_code'] })
+          : null;
+        const jsQR = useNativeDetector ? null : await getJsQrDecoder();
+        const scanCanvas = useNativeDetector ? null : document.createElement('canvas');
+        const scanCtx = scanCanvas?.getContext('2d', { willReadFrequently: true }) || null;
+        let lastFallbackScanAt = 0;
+
         camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         videoEl.srcObject = camStream;
         await videoEl.play();
@@ -681,21 +687,33 @@ import Footer from '../../components/landing/Footer.astro';
         if (camToggleBtn) camToggleBtn.textContent = 'Matikan Kamera';
         isScanning = true;
 
-        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
         const detectFrame = async () => {
           if (!isScanning || isDisposed || !videoEl) return;
           try {
-            if (videoEl.readyState >= 2) {
-              const codes = await detector.detect(videoEl);
-              if (Array.isArray(codes) && codes.length > 0 && codes[0].rawValue) {
-                const rawVal = String(codes[0].rawValue).trim();
-                const now = Date.now();
-                if (rawVal && (rawVal !== lastScannedCode || now - lastScannedAt > 2500)) {
-                  lastScannedCode = rawVal;
-                  lastScannedAt = now;
-                  codeInput.value = rawVal;
-                  await processScan(rawVal);
+            if (videoEl.readyState >= 2 && videoEl.videoWidth > 0 && videoEl.videoHeight > 0) {
+              let rawVal = '';
+              const now = Date.now();
+
+              if (detector) {
+                const codes = await detector.detect(videoEl);
+                if (Array.isArray(codes) && codes.length > 0 && codes[0].rawValue) {
+                  rawVal = String(codes[0].rawValue).trim();
                 }
+              } else if (jsQR && scanCanvas && scanCtx && now - lastFallbackScanAt >= 150) {
+                lastFallbackScanAt = now;
+                scanCanvas.width = videoEl.videoWidth;
+                scanCanvas.height = videoEl.videoHeight;
+                scanCtx.drawImage(videoEl, 0, 0, scanCanvas.width, scanCanvas.height);
+                const imgData = scanCtx.getImageData(0, 0, scanCanvas.width, scanCanvas.height);
+                const decoded = jsQR(imgData.data, scanCanvas.width, scanCanvas.height);
+                if (decoded?.data) rawVal = String(decoded.data).trim();
+              }
+
+              if (rawVal && (rawVal !== lastScannedCode || now - lastScannedAt > 2500)) {
+                lastScannedCode = rawVal;
+                lastScannedAt = now;
+                codeInput.value = rawVal;
+                await processScan(rawVal);
               }
             }
           } catch {}
@@ -717,16 +735,32 @@ import Footer from '../../components/landing/Footer.astro';
       const file = qrImageInput.files?.[0];
       if (!file) return;
       try {
-        if (!('BarcodeDetector' in window)) {
-          alert('Browser ini belum mendukung pembacaan QR dari gambar. Ketik kode tiket secara manual.');
-          return;
-        }
-        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
         const bitmap = await createImageBitmap(file);
-        const results = await detector.detect(bitmap);
-        if (results?.[0]?.rawValue) {
-          codeInput.value = results[0].rawValue;
-          await processScan(results[0].rawValue);
+        let rawVal = '';
+        if (useNativeDetector && 'BarcodeDetector' in window) {
+          try {
+            const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+            const results = await detector.detect(bitmap);
+            rawVal = String(results?.[0]?.rawValue || '').trim();
+          } catch {}
+        }
+        if (!rawVal) {
+          const jsQR = await getJsQrDecoder();
+          const canvas = document.createElement('canvas');
+          canvas.width = bitmap.width;
+          canvas.height = bitmap.height;
+          const ctx = canvas.getContext('2d', { willReadFrequently: true });
+          if (ctx) {
+            ctx.drawImage(bitmap, 0, 0);
+            const imgData = ctx.getImageData(0, 0, bitmap.width, bitmap.height);
+            const decoded = jsQR(imgData.data, bitmap.width, bitmap.height);
+            if (decoded?.data) rawVal = String(decoded.data).trim();
+          }
+        }
+        bitmap.close?.();
+        if (rawVal) {
+          codeInput.value = rawVal;
+          await processScan(rawVal);
         } else {
           alert('Tidak ada QR Code yang terdeteksi pada gambar tersebut.');
         }
