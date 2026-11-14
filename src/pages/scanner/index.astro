@@ -5,12 +5,12 @@ import Footer from '../../components/landing/Footer.astro';
 
 <RootLayout 
   title="Kru Gate Scanner // Pemindaian Tiket Masuk — AFTERGLOW" 
-  description="Antarmuka validasi tiket konser di pintu gerbang venue dengan proteksi anti-double scan."
+  description="Antarmuka validasi tiket konser di pintu gerbang venue dengan proteksi anti-double scan dan kamera QR real-time."
 >
-  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-4xl mx-auto w-full">
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-5xl mx-auto w-full space-y-8">
     
     <!-- Top Header -->
-    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
       <div>
         <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
           KRU GATE // VALIDATOR PEMINDAI
@@ -19,106 +19,216 @@ import Footer from '../../components/landing/Footer.astro';
           GATE SCANNER ARENA
         </h1>
         <p class="text-sm text-muted-gray mt-1">
-          Validasi tiket konser resmi di pintu gerbang. Proteksi anti-double scan & anti cross-event aktif.
+          Validasi QR Boarding Pass di pintu masuk konser. Proteksi anti-double scan & anti cross-event aktif.
         </p>
       </div>
 
-      <!-- Quick PIN & Gate Settings -->
-      <div class="flex items-center gap-3 p-3 rounded-2xl bg-dark-plum border border-white/10 shrink-0 text-xs font-mono">
+      <!-- Active Shift Badge -->
+      <div class="flex items-center gap-3 p-3.5 rounded-2xl bg-dark-plum border border-white/10 shrink-0 text-xs font-mono">
         <div>
-          <span class="text-muted-gray block text-[10px]">SCANNER PIN:</span>
-          <strong id="scanner-pin-display" class="text-electric-magenta">888999</strong>
+          <span class="text-muted-gray block text-[10px]">EVENT ID:</span>
+          <strong id="shift-event-badge" class="text-electric-magenta">#-</strong>
         </div>
         <div class="h-6 w-px bg-white/10"></div>
         <div>
           <span class="text-muted-gray block text-[10px]">PINTU GATE:</span>
-          <strong id="scanner-gate-display" class="text-soft-white">VIP Gate 1</strong>
+          <strong id="scanner-gate-display" class="text-soft-white">Main Gate</strong>
+        </div>
+        <div class="h-6 w-px bg-white/10"></div>
+        <div>
+          <span class="text-muted-gray block text-[10px]">PIN SHIFT:</span>
+          <strong id="scanner-pin-display" class="text-soft-white">OFF</strong>
         </div>
       </div>
     </div>
 
-    <!-- Scanner Interactive Console Card -->
-    <div class="rounded-3xl bg-dark-plum/90 border border-white/15 p-6 sm:p-10 shadow-2xl backdrop-blur-2xl space-y-8">
-      
-      <!-- Input Mode Form -->
-      <form id="scanner-form" class="space-y-4">
-        <div>
-          <label for="scanner-ticket-input" class="block text-xs font-mono font-bold uppercase tracking-wider text-muted-gray mb-2">
-            Arahkan Scanner Barcode atau Ketik Kode Tiket
-          </label>
-          <div class="relative">
+    <!-- Auth Guard Notice (Gate Crew / Organizer / Admin Login Required) -->
+    <div id="scanner-auth-notice" class="hidden p-8 rounded-3xl bg-dark-plum/80 border border-electric-magenta/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>
+        <h2 class="font-display text-2xl text-soft-white">LOGIN KRU GATE / PROMOTOR DIPERLUKAN</h2>
+        <p class="text-xs text-muted-gray mt-1">
+          Masuk dengan akun Promotor, Admin, atau akun Kru Gate (`gatecrew@...`) + PIN shift event untuk mengaktifkan validator.
+        </p>
+      </div>
+      <button id="scanner-login-btn" type="button" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all shrink-0">
+        Masuk Akun Gate
+      </button>
+    </div>
+
+    <!-- Shift Configuration Card (Dynamic Event / Gate / PIN) -->
+    <div class="rounded-3xl bg-dark-plum/85 border border-white/15 p-6 space-y-4">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-xl text-soft-white">KONFIGURASI SHIFT PINTU MASUK</h2>
+        <span class="text-[10px] font-mono text-muted-gray uppercase">Tersimpan di Sesi Browser</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div id="organizer-event-picker-wrap" class="hidden md:col-span-5">
+          <label for="scanner-event-select" class="text-[11px] font-mono text-muted-gray block mb-1.5">Pilih Konser Milikmu</label>
+          <select id="scanner-event-select" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="">Memuat daftar konser...</option>
+          </select>
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="scanner-event-id-input" class="text-[11px] font-mono text-muted-gray block mb-1.5">Event ID *</label>
+          <input id="scanner-event-id-input" type="number" min="1" placeholder="1" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+        </div>
+
+        <div class="md:col-span-3">
+          <label for="scanner-gate-input" class="text-[11px] font-mono text-muted-gray block mb-1.5">Nama Pintu / Gate</label>
+          <input id="scanner-gate-input" type="text" maxlength="60" placeholder="VIP Gate 1" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="scanner-pin-input" class="text-[11px] font-mono text-muted-gray block mb-1.5">Scanner PIN</label>
+          <input id="scanner-pin-input" type="password" autocomplete="off" placeholder="Opsional bg Owner" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Scanner & Camera Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <!-- Left: Scanner Input + Camera Viewport (7 cols) -->
+      <div class="lg:col-span-7 rounded-3xl bg-dark-plum/90 border border-white/15 p-6 sm:p-8 shadow-2xl backdrop-blur-2xl space-y-6">
+        
+        <!-- Camera QR Controls -->
+        <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <span class="text-xs font-bold text-soft-white block">Pemindai Kamera QR Langsung</span>
+              <span id="camera-support-hint" class="text-[11px] font-mono text-muted-gray">Memeriksa dukungan BarcodeDetector browser...</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                id="camera-toggle-btn"
+                class="px-4 py-2 rounded-xl bg-electric-magenta/20 border border-electric-magenta/50 text-electric-magenta hover:bg-electric-magenta hover:text-soft-white text-xs font-bold uppercase transition-all"
+              >
+                Aktifkan Kamera
+              </button>
+              <label class="px-3 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono cursor-pointer transition-all">
+                Scan Gambar
+                <input id="qr-image-input" type="file" accept="image/*" class="hidden" />
+              </label>
+            </div>
+          </div>
+
+          <div id="camera-viewport-wrap" class="hidden relative rounded-2xl overflow-hidden bg-black aspect-video border border-electric-magenta/40">
+            <video id="scanner-video" playsinline muted class="w-full h-full object-cover"></video>
+            <div class="pointer-events-none absolute inset-0 flex items-center justify-center">
+              <div class="w-44 h-44 border-2 border-electric-magenta rounded-2xl shadow-[0_0_25px_rgba(209,77,145,0.45)]"></div>
+            </div>
+            <span class="absolute bottom-2 left-3 px-2.5 py-1 rounded bg-black/75 text-[10px] font-mono text-emerald-400">
+              LIVE CAMERA SCANNING...
+            </span>
+          </div>
+        </div>
+
+        <!-- Manual / Hardware Barcode Wedge Form -->
+        <form id="scanner-form" class="space-y-4">
+          <div>
+            <label for="scanner-ticket-input" class="block text-xs font-mono font-bold uppercase tracking-wider text-muted-gray mb-2">
+              Kode Tiket atau Payload QR (<span class="text-soft-white">TKT-XXX|SECRET</span>)
+            </label>
+            <div class="relative">
+              <input 
+                type="text" 
+                id="scanner-ticket-input" 
+                placeholder="Scan QR / tempel TKT-XXX|SECRET" 
+                autocomplete="off"
+                required 
+                class="w-full px-5 py-4 pl-12 rounded-2xl bg-void-black/80 border border-white/20 text-base font-mono text-soft-white placeholder-muted-gray/50 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/40 transition-all"
+              />
+              <svg class="w-6 h-6 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+              </svg>
+            </div>
+          </div>
+
+          <div>
+            <label for="scanner-secret-input" class="block text-[11px] font-mono text-muted-gray mb-1.5">
+              QR Secret Terpisah (Opsional — terisi otomatis jika payload berformat KODE|SECRET)
+            </label>
             <input 
               type="text" 
-              id="scanner-ticket-input" 
-              placeholder="Scan barcode atau ketik TKT-..." 
+              id="scanner-secret-input" 
+              placeholder="Opsional untuk validasi ketat"
               autocomplete="off"
-              required 
-              class="w-full px-5 py-4 pl-12 rounded-2xl bg-void-black/80 border border-white/20 text-base sm:text-lg font-mono text-soft-white placeholder-muted-gray/50 focus:outline-none focus:border-electric-magenta focus:ring-2 focus:ring-electric-magenta/40 focus:shadow-magenta-glow transition-all"
-              autofocus 
+              class="w-full px-4 py-2.5 rounded-xl bg-void-black/70 border border-white/15 text-xs font-mono text-soft-white placeholder-muted-gray/50 focus:outline-none focus:border-electric-magenta"
             />
-            <svg class="w-6 h-6 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-            </svg>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div class="flex items-center gap-2 text-xs font-mono text-muted-gray">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Anti Double-Scan & Suara Beep Aktif</span>
+            </div>
+
+            <button 
+              type="submit" 
+              id="scanner-submit-btn" 
+              class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all hover:scale-105 active:scale-95 disabled:opacity-50"
+            >
+              VALIDASI TIKET (ENTER)
+            </button>
+          </div>
+        </form>
+
+        <!-- Scan Feedback Result Display Box -->
+        <div id="scan-result-box" class="hidden p-6 rounded-2xl border transition-all duration-300">
+          <div class="flex items-start gap-4">
+            <div id="scan-result-icon-disc" class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg"></div>
+            <div class="space-y-1 flex-1 min-w-0">
+              <span id="scan-result-status-tag" class="text-[11px] font-mono font-bold tracking-widest uppercase block"></span>
+              <h2 id="scan-result-title" class="font-display text-3xl text-soft-white"></h2>
+              <p id="scan-result-desc" class="text-xs sm:text-sm text-muted-gray"></p>
+              <div id="scan-result-meta" class="pt-2 flex flex-wrap gap-3 text-xs font-mono"></div>
+            </div>
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div class="flex items-center gap-2 text-xs font-mono text-muted-gray">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Scanner Siap Memindai Otomatis</span>
+        <!-- Local 10 Recent Scan Logs -->
+        <div class="pt-4 border-t border-white/10">
+          <h3 class="font-display text-xl text-soft-white mb-3">LOG SCAN SESI INI (TERAKHIR 10)</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="text-muted-gray border-b border-white/10 text-left">
+                  <th class="pb-2">WAKTU</th>
+                  <th class="pb-2">KODE TIKET</th>
+                  <th class="pb-2">STATUS</th>
+                  <th class="pb-2 text-right">CATATAN</th>
+                </tr>
+              </thead>
+              <tbody id="scan-history-tbody" class="divide-y divide-white/5">
+                <tr>
+                  <td colspan="4" class="py-4 text-center text-muted-gray">Belum ada aktivitas pemindaian di perangkat ini.</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
+        </div>
+      </div>
 
-          <button 
-            type="submit" 
-            id="scanner-submit-btn" 
-            class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all hover:scale-105 active:scale-95"
-          >
-            VALIDASI TIKET (ENTER)
+      <!-- Right: Live Gate Attendance Feed (5 cols) -->
+      <div class="lg:col-span-5 rounded-3xl bg-dark-plum/85 border border-white/15 p-6 space-y-5">
+        <div class="flex items-center justify-between border-b border-white/10 pb-4">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">MONITOR PINTU MASUK</span>
+            <h2 class="font-display text-2xl text-soft-white">ATTENDANCE REAL-TIME</h2>
+          </div>
+          <button id="refresh-attendance-btn" type="button" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-[11px] font-mono text-soft-white">
+            Refresh
           </button>
         </div>
-      </form>
 
-      <!-- Scan Feedback Result Display Box -->
-      <div id="scan-result-box" class="hidden p-6 sm:p-8 rounded-2xl border transition-all duration-300">
-        <div class="flex items-start gap-4">
-          <div id="scan-result-icon-disc" class="w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-lg">
-            <!-- Icon injected dynamically -->
-          </div>
-          <div class="space-y-1 flex-1">
-            <span id="scan-result-status-tag" class="text-xs font-mono font-bold tracking-widest uppercase block"></span>
-            <h2 id="scan-result-title" class="font-display text-3xl sm:text-4xl text-soft-white"></h2>
-            <p id="scan-result-desc" class="text-xs sm:text-sm text-muted-gray"></p>
-            <div id="scan-result-meta" class="pt-2 flex flex-wrap gap-4 text-xs font-mono"></div>
-          </div>
+        <div id="attendance-panel-content" class="space-y-4">
+          <p class="text-xs font-mono text-muted-gray">
+            Pilih Event ID di atas untuk melihat statistik kedatangan penonton (khusus Promotor / Admin).
+          </p>
         </div>
       </div>
-
-      <!-- Recent Scan Logs Table -->
-      <div class="pt-6 border-t border-white/10">
-        <div class="flex items-center justify-between mb-4">
-          <h3 class="font-display text-xl text-soft-white">RIWAYAT 10 SCAN TERAKHIR</h3>
-          <span class="text-xs font-mono text-muted-gray">Gate: VIP Gate 1</span>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs font-mono">
-            <thead>
-              <tr class="text-muted-gray border-b border-white/10 text-left">
-                <th class="pb-2">WAKTU</th>
-                <th class="pb-2">KODE TIKET</th>
-                <th class="pb-2">STATUS</th>
-                <th class="pb-2 text-right">CATATAN</th>
-              </tr>
-            </thead>
-            <tbody id="scan-history-tbody" class="divide-y divide-white/5">
-              <tr>
-                <td colspan="4" class="py-4 text-center text-muted-gray">Belum ada aktivitas pemindaian.</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
     </div>
 
   </div>
@@ -128,12 +238,66 @@ import Footer from '../../components/landing/Footer.astro';
 
 <script>
   import { api } from '../../lib/api';
-  import { isAuthenticated } from '../../lib/auth';
+  import { hasOrganizerAccess, isAuthenticated } from '../../lib/auth';
+  import { escapeHtml, formatDateIndo } from '../../lib/formatters';
+  import { isNativeQrDetectorSupported } from '../../lib/qr';
+
+  const SHIFT_STORAGE_KEY = 'afterglow_scanner_shift';
+
+  function playBeep(success: boolean) {
+    try {
+      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = success ? 'sine' : 'sawtooth';
+      osc.frequency.setValueAtTime(success ? 960 : 210, ctx.currentTime);
+      gain.gain.setValueAtTime(0.14, ctx.currentTime);
+      osc.start();
+      osc.stop(ctx.currentTime + (success ? 0.16 : 0.32));
+    } catch {}
+  }
+
+  function parseQrPayload(raw: string): { code: string; secret?: string } {
+    const trimmed = raw.trim();
+    if (trimmed.includes('|')) {
+      const [codePart, secretPart] = trimmed.split('|');
+      return {
+        code: (codePart || '').trim(),
+        secret: (secretPart || '').trim() || undefined,
+      };
+    }
+    return { code: trimmed };
+  }
 
   function initScannerPage() {
-    const form = document.getElementById('scanner-form') as HTMLFormElement;
-    const input = document.getElementById('scanner-ticket-input') as HTMLInputElement;
-    const submitBtn = document.getElementById('scanner-submit-btn') as HTMLButtonElement;
+    const authNotice = document.getElementById('scanner-auth-notice');
+    const loginBtn = document.getElementById('scanner-login-btn');
+
+    const orgPickerWrap = document.getElementById('organizer-event-picker-wrap');
+    const eventSelect = document.getElementById('scanner-event-select') as HTMLSelectElement | null;
+    const eventIdInput = document.getElementById('scanner-event-id-input') as HTMLInputElement | null;
+    const gateInput = document.getElementById('scanner-gate-input') as HTMLInputElement | null;
+    const pinInput = document.getElementById('scanner-pin-input') as HTMLInputElement | null;
+
+    const shiftEventBadge = document.getElementById('shift-event-badge');
+    const gateDisplay = document.getElementById('scanner-gate-display');
+    const pinDisplay = document.getElementById('scanner-pin-display');
+
+    const camHint = document.getElementById('camera-support-hint');
+    const camToggleBtn = document.getElementById('camera-toggle-btn') as HTMLButtonElement | null;
+    const camWrap = document.getElementById('camera-viewport-wrap');
+    const videoEl = document.getElementById('scanner-video') as HTMLVideoElement | null;
+    const qrImageInput = document.getElementById('qr-image-input') as HTMLInputElement | null;
+
+    const form = document.getElementById('scanner-form') as HTMLFormElement | null;
+    const codeInput = document.getElementById('scanner-ticket-input') as HTMLInputElement | null;
+    const secretInput = document.getElementById('scanner-secret-input') as HTMLInputElement | null;
+    const submitBtn = document.getElementById('scanner-submit-btn') as HTMLButtonElement | null;
+
     const resultBox = document.getElementById('scan-result-box');
     const resultIconDisc = document.getElementById('scan-result-icon-disc');
     const resultStatusTag = document.getElementById('scan-result-status-tag');
@@ -142,121 +306,434 @@ import Footer from '../../components/landing/Footer.astro';
     const resultMeta = document.getElementById('scan-result-meta');
     const historyTbody = document.getElementById('scan-history-tbody');
 
-    const historyItems: any[] = [];
-    const scannerPin = '888999';
-    const gateName = 'VIP Gate 1';
-    const eventId = 1; // Default demo event
+    const attendanceContent = document.getElementById('attendance-panel-content');
+    const refreshAttendanceBtn = document.getElementById('refresh-attendance-btn');
 
-    if (!form || !input) return;
+    if (!form || !codeInput) return () => {};
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const code = input.value.trim();
-      if (!code) return;
+    let isDisposed = false;
+    let camStream: MediaStream | null = null;
+    let camLoopId: number | null = null;
+    let isScanning = false;
+    let lastScannedCode = '';
+    let lastScannedAt = 0;
+    const historyItems: Array<{ time: string; code: string; status: 'VALID' | 'INVALID'; note: string }> = [];
 
-      submitBtn.disabled = true;
+    loginBtn?.addEventListener('click', () => {
+      if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+      else window.location.href = '/masuk';
+    });
+
+    function loadShiftFromStorage() {
+      const urlEventId = new URLSearchParams(window.location.search).get('event_id');
+      let saved: any = {};
+      try {
+        saved = JSON.parse(sessionStorage.getItem(SHIFT_STORAGE_KEY) || '{}');
+      } catch {}
+
+      if (eventIdInput) eventIdInput.value = urlEventId || String(saved.event_id || '');
+      if (gateInput) gateInput.value = saved.gate || 'Main Gate';
+      if (pinInput) pinInput.value = saved.pin || '';
+      syncShiftDisplay();
+    }
+
+    function saveShiftToStorage() {
+      sessionStorage.setItem(
+        SHIFT_STORAGE_KEY,
+        JSON.stringify({
+          event_id: eventIdInput?.value || '',
+          gate: gateInput?.value.trim() || 'Main Gate',
+          pin: pinInput?.value.trim() || '',
+        })
+      );
+      syncShiftDisplay();
+    }
+
+    function syncShiftDisplay() {
+      const evId = eventIdInput?.value.trim() || '-';
+      const gate = gateInput?.value.trim() || 'Main Gate';
+      const pin = pinInput?.value.trim() || '';
+      if (shiftEventBadge) shiftEventBadge.textContent = `#${evId}`;
+      if (gateDisplay) gateDisplay.textContent = gate;
+      if (pinDisplay) pinDisplay.textContent = pin ? 'TERISI' : 'KOSONG';
+    }
+
+    async function loadOrganizerEvents() {
+      if (!isAuthenticated() || !hasOrganizerAccess()) {
+        orgPickerWrap?.classList.add('hidden');
+        return;
+      }
+      orgPickerWrap?.classList.remove('hidden');
+      try {
+        const events = await api.get<any[]>('/events?scope=organizer');
+        if (isDisposed || !eventSelect) return;
+        const list = Array.isArray(events) ? events : [];
+        if (list.length === 0) {
+          eventSelect.innerHTML = `<option value="">Belum ada event promotor</option>`;
+          return;
+        }
+        eventSelect.innerHTML =
+          `<option value="">-- Pilih Konser --</option>` +
+          list
+            .map((ev) => `<option value="${ev.id}">#${ev.id} — ${escapeHtml(ev.nama_event)} (${escapeHtml(ev.status)})</option>`)
+            .join('');
+
+        if (eventIdInput?.value) {
+          eventSelect.value = eventIdInput.value;
+          fetchEventPinIfAvailable(Number(eventIdInput.value));
+        } else if (list[0]?.id) {
+          eventSelect.value = String(list[0].id);
+          if (eventIdInput) eventIdInput.value = String(list[0].id);
+          saveShiftToStorage();
+          fetchEventPinIfAvailable(Number(list[0].id));
+        }
+      } catch {}
+    }
+
+    async function fetchEventPinIfAvailable(evId: number) {
+      if (!evId || !hasOrganizerAccess()) return;
+      try {
+        const detail = await api.get<any>(`/events/${evId}`);
+        if (detail?.scanner_pin && pinInput && !pinInput.value) {
+          pinInput.value = detail.scanner_pin;
+          saveShiftToStorage();
+        }
+      } catch {}
+    }
+
+    async function loadAttendance() {
+      if (!attendanceContent) return;
+      const evId = Number(eventIdInput?.value || 0);
+      if (!evId) {
+        attendanceContent.innerHTML = `<p class="text-xs font-mono text-muted-gray">Masukkan atau pilih Event ID terlebih dahulu.</p>`;
+        return;
+      }
+      if (!isAuthenticated() || !hasOrganizerAccess()) {
+        attendanceContent.innerHTML = `<p class="text-xs font-mono text-muted-gray">Statistik kehadiran lengkap tersedia untuk akun Promotor & Admin. Kru gate dapat langsung memindai tiket di sebelah kiri.</p>`;
+        return;
+      }
+
+      try {
+        const data = await api.get<any>(`/organizer/events/${evId}/attendance`);
+        if (isDisposed) return;
+        const s = data.summary || {};
+        const gates = Array.isArray(data.gate_breakdown) ? data.gate_breakdown : [];
+        const checkins = Array.isArray(data.recent_checkins) ? data.recent_checkins : [];
+
+        attendanceContent.innerHTML = `
+          <div>
+            <p class="text-xs font-bold text-soft-white">${escapeHtml(data.nama_event || `Event #${evId}`)}</p>
+            <div class="grid grid-cols-3 gap-2.5 mt-3">
+              <div class="p-3 rounded-xl bg-void-black/70 border border-white/10">
+                <span class="text-[10px] font-mono text-muted-gray block">TERJUAL</span>
+                <strong class="font-display text-2xl text-soft-white">${Number(s.total_tickets || 0)}</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-void-black/70 border border-white/10">
+                <span class="text-[10px] font-mono text-muted-gray block">CHECK-IN</span>
+                <strong class="font-display text-2xl text-emerald-400">${Number(s.checked_in || 0)}</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-void-black/70 border border-white/10">
+                <span class="text-[10px] font-mono text-muted-gray block">RASIO</span>
+                <strong class="font-display text-2xl text-electric-magenta">${Number(s.checkin_percentage || 0)}%</strong>
+              </div>
+            </div>
+          </div>
+
+          ${gates.length > 0 ? `
+            <div>
+              <span class="text-[10px] font-mono uppercase text-muted-gray block mb-1.5">Breakdown Per Pintu</span>
+              <div class="flex flex-wrap gap-2">
+                ${gates.map((g: any) => `<span class="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] font-mono">${escapeHtml(g.gate || 'Main')}: <strong>${Number(g.count || 0)}</strong></span>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <div>
+            <span class="text-[10px] font-mono uppercase text-muted-gray block mb-2">Check-In Terbaru Dari Server</span>
+            <div class="space-y-2 max-h-64 overflow-y-auto pr-1">
+              ${checkins.length === 0
+                ? `<p class="text-xs font-mono text-muted-gray">Belum ada penonton yang masuk gerbang.</p>`
+                : checkins
+                    .slice(0, 12)
+                    .map(
+                      (c: any) => `
+                    <div class="p-2.5 rounded-xl bg-void-black/60 border border-white/5 text-[11px] font-mono flex items-center justify-between gap-2">
+                      <div class="min-w-0">
+                        <strong class="text-soft-white block truncate">${escapeHtml(c.ticket_code)} • ${escapeHtml(c.owner_name)}</strong>
+                        <span class="text-muted-gray truncate block">${escapeHtml(c.nama_kategori)} • ${escapeHtml(c.gate || 'Gate')}</span>
+                      </div>
+                      <span class="text-emerald-400 shrink-0">${escapeHtml(formatDateIndo(c.scanned_at).split('•')[1] || '')}</span>
+                    </div>
+                  `
+                    )
+                    .join('')}
+            </div>
+          </div>
+        `;
+      } catch (err: any) {
+        attendanceContent.innerHTML = `<p class="text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat attendance event.')}</p>`;
+      }
+    }
+
+    eventSelect?.addEventListener('change', () => {
+      if (eventIdInput && eventSelect.value) {
+        eventIdInput.value = eventSelect.value;
+        saveShiftToStorage();
+        fetchEventPinIfAvailable(Number(eventSelect.value));
+        loadAttendance();
+      }
+    });
+
+    [eventIdInput, gateInput, pinInput].forEach((el) => {
+      el?.addEventListener('change', () => {
+        saveShiftToStorage();
+        if (el === eventIdInput) {
+          if (eventSelect) eventSelect.value = eventIdInput.value;
+          loadAttendance();
+        }
+      });
+    });
+
+    refreshAttendanceBtn?.addEventListener('click', loadAttendance);
+
+    async function processScan(rawTicketInput: string) {
+      if (!isAuthenticated()) {
+        if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+        else window.location.href = '/masuk';
+        return;
+      }
+
+      const evId = Number(eventIdInput?.value || 0);
+      if (!evId) {
+        showScanResult(false, {
+          title: 'EVENT ID BELUM DIISI',
+          desc: 'Isi Event ID konser yang sedang dijaga pada panel Konfigurasi Shift di atas.',
+          code: '-',
+        });
+        return;
+      }
+
+      const parsed = parseQrPayload(rawTicketInput);
+      const ticketCode = parsed.code;
+      const qrSecret = parsed.secret || secretInput?.value.trim() || undefined;
+      if (!ticketCode) return;
+
+      if (submitBtn) submitBtn.disabled = true;
 
       try {
         const res = await api.post('/tickets/scan', {
-          event_id: eventId,
-          ticket_code: code,
-          scanner_pin: scannerPin,
-          gate: gateName,
-          device_info: navigator.userAgent
+          event_id: evId,
+          ticket_code: ticketCode,
+          ...(qrSecret ? { qr_secret: qrSecret } : {}),
+          ...(pinInput?.value.trim() ? { scanner_pin: pinInput.value.trim() } : {}),
+          gate: gateInput?.value.trim() || 'Main Gate',
+          device_info: navigator.userAgent,
         });
 
-        // 🟢 VALID TICKET
+        playBeep(true);
         showScanResult(true, {
           title: 'TIKET VALID // SILAKAN MASUK',
-          desc: `Pemegang tiket terverifikasi sah. Silakan beri gelang kategori ${res.category_name || 'VIP PANGGUNG'}.`,
+          desc: `Pemegang tiket sah terverifikasi. Berikan gelang kategori ${res.category_name || 'Konser'}.`,
           owner: res.owner_name || 'Penonton',
-          category: res.category_name || 'VIP PANGGUNG',
-          code: code
+          category: res.category_name || '-',
+          code: ticketCode,
         });
-
-        addHistory(code, 'VALID', res.category_name || 'VIP PANGGUNG');
+        addHistory(ticketCode, 'VALID', res.category_name || 'VALID');
+        loadAttendance();
       } catch (err: any) {
-        // 🔴 INVALID TICKET
-        const errMsg = err.message || 'Tiket tidak valid atau barcode salah.';
+        playBeep(false);
+        const errMsg = err?.message || 'Tiket tidak valid, sudah pernah dipakai, atau salah gate/event.';
         showScanResult(false, {
           title: 'TIKET TIDAK VALID // DITOLAK',
           desc: errMsg,
-          code: code
+          code: ticketCode,
         });
-
-        addHistory(code, 'INVALID', errMsg);
+        addHistory(ticketCode, 'INVALID', errMsg);
       } finally {
-        submitBtn.disabled = false;
-        input.value = '';
-        input.focus();
+        if (submitBtn) submitBtn.disabled = false;
+        codeInput.value = '';
+        if (secretInput && parsed.secret) secretInput.value = '';
+        codeInput.focus();
       }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await processScan(codeInput.value);
     });
 
     function showScanResult(isValid: boolean, data: any) {
       if (!resultBox || !resultIconDisc || !resultStatusTag || !resultTitle || !resultDesc || !resultMeta) return;
-
       resultBox.classList.remove('hidden');
 
       if (isValid) {
-        resultBox.className = 'p-6 sm:p-8 rounded-2xl border transition-all duration-300 bg-emerald-950/40 border-emerald-500/60 shadow-lg';
-        resultIconDisc.className = 'w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-emerald-500 text-white';
-        resultIconDisc.innerHTML = `
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
-        `;
-        resultStatusTag.textContent = 'STATUS: BERHASIL DIVERIFIKASI (200 OK)';
-        resultStatusTag.className = 'text-xs font-mono font-bold tracking-widest uppercase block text-emerald-400';
+        resultBox.className = 'p-6 rounded-2xl border transition-all duration-300 bg-emerald-950/40 border-emerald-500/60 shadow-lg';
+        resultIconDisc.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-emerald-500 text-white';
+        resultIconDisc.innerHTML = `<svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+        resultStatusTag.textContent = 'STATUS: BERHASIL DIVERIFIKASI (CHECK-IN OK)';
+        resultStatusTag.className = 'text-[11px] font-mono font-bold tracking-widest uppercase block text-emerald-400';
         resultTitle.textContent = data.title;
         resultDesc.textContent = data.desc;
         resultMeta.innerHTML = `
-          <span class="text-soft-white">Pemilik: <strong>${data.owner}</strong></span>
-          <span class="text-soft-white">Kategori: <strong>${data.category}</strong></span>
-          <span class="text-muted-gray">Kode: ${data.code}</span>
+          <span class="text-soft-white">Pemilik: <strong>${escapeHtml(data.owner)}</strong></span>
+          <span class="text-soft-white">Kategori: <strong>${escapeHtml(data.category)}</strong></span>
+          <span class="text-muted-gray">Kode: ${escapeHtml(data.code)}</span>
         `;
       } else {
-        resultBox.className = 'p-6 sm:p-8 rounded-2xl border transition-all duration-300 bg-red-950/40 border-red-500/60 shadow-lg';
-        resultIconDisc.className = 'w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-red-600 text-white';
-        resultIconDisc.innerHTML = `
-          <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        `;
+        resultBox.className = 'p-6 rounded-2xl border transition-all duration-300 bg-red-950/40 border-red-500/60 shadow-lg';
+        resultIconDisc.className = 'w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-lg bg-red-600 text-white';
+        resultIconDisc.innerHTML = `<svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`;
         resultStatusTag.textContent = 'STATUS: AKSES DITOLAK (REJECTED)';
-        resultStatusTag.className = 'text-xs font-mono font-bold tracking-widest uppercase block text-red-400';
+        resultStatusTag.className = 'text-[11px] font-mono font-bold tracking-widest uppercase block text-red-400';
         resultTitle.textContent = data.title;
         resultDesc.textContent = data.desc;
         resultMeta.innerHTML = `
-          <span class="text-red-300">Peringatan: Verifikasi identitas fisik penonton secara manual.</span>
+          <span class="text-red-300">Kode Diperiksa: ${escapeHtml(data.code)} • Cek keaslian kartu identitas penonton.</span>
         `;
       }
     }
 
     function addHistory(code: string, status: 'VALID' | 'INVALID', note: string) {
       if (!historyTbody) return;
-
       const now = new Date();
       const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
-
       historyItems.unshift({ time: timeStr, code, status, note });
       if (historyItems.length > 10) historyItems.pop();
 
-      historyTbody.innerHTML = historyItems.map((item) => `
-        <tr class="py-2.5">
-          <td class="py-2.5 text-muted-gray">${item.time}</td>
-          <td class="py-2.5 text-soft-white font-bold">${item.code}</td>
-          <td class="py-2.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
-              item.status === 'VALID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'
-            }">
-              ${item.status}
-            </span>
-          </td>
-          <td class="py-2.5 text-right text-muted-gray truncate max-w-[150px]">${item.note}</td>
-        </tr>
-      `).join('');
+      historyTbody.innerHTML = historyItems
+        .map(
+          (item) => `
+          <tr class="py-2.5">
+            <td class="py-2.5 text-muted-gray">${escapeHtml(item.time)}</td>
+            <td class="py-2.5 text-soft-white font-bold">${escapeHtml(item.code)}</td>
+            <td class="py-2.5">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.status === 'VALID' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-red-500/20 text-red-400'}">
+                ${escapeHtml(item.status)}
+              </span>
+            </td>
+            <td class="py-2.5 text-right text-muted-gray truncate max-w-[160px]">${escapeHtml(item.note)}</td>
+          </tr>
+        `
+        )
+        .join('');
     }
+
+    // Native BarcodeDetector Camera & Image Support
+    isNativeQrDetectorSupported().then((supported) => {
+      if (isDisposed || !camHint) return;
+      if (supported) {
+        camHint.textContent = 'Kamera QR native (BarcodeDetector) siap digunakan di browser ini.';
+      } else {
+        camHint.textContent = 'Browser ini tidak mendukung BarcodeDetector stream — gunakan USB Scanner atau ketik/paste kode QR.';
+        if (camToggleBtn) {
+          camToggleBtn.disabled = true;
+          camToggleBtn.classList.add('opacity-40', 'cursor-not-allowed');
+        }
+      }
+    });
+
+    function stopCamera() {
+      isScanning = false;
+      if (camLoopId) {
+        cancelAnimationFrame(camLoopId);
+        camLoopId = null;
+      }
+      if (camStream) {
+        camStream.getTracks().forEach((t) => t.stop());
+        camStream = null;
+      }
+      camWrap?.classList.add('hidden');
+      if (camToggleBtn) camToggleBtn.textContent = 'Aktifkan Kamera';
+    }
+
+    async function startCamera() {
+      if (!videoEl || !navigator.mediaDevices?.getUserMedia) return;
+      try {
+        camStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+        videoEl.srcObject = camStream;
+        await videoEl.play();
+        camWrap?.classList.remove('hidden');
+        if (camToggleBtn) camToggleBtn.textContent = 'Matikan Kamera';
+        isScanning = true;
+
+        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+        const detectFrame = async () => {
+          if (!isScanning || isDisposed || !videoEl) return;
+          try {
+            if (videoEl.readyState >= 2) {
+              const codes = await detector.detect(videoEl);
+              if (Array.isArray(codes) && codes.length > 0 && codes[0].rawValue) {
+                const rawVal = String(codes[0].rawValue).trim();
+                const now = Date.now();
+                if (rawVal && (rawVal !== lastScannedCode || now - lastScannedAt > 2500)) {
+                  lastScannedCode = rawVal;
+                  lastScannedAt = now;
+                  codeInput.value = rawVal;
+                  await processScan(rawVal);
+                }
+              }
+            }
+          } catch {}
+          camLoopId = requestAnimationFrame(detectFrame);
+        };
+        camLoopId = requestAnimationFrame(detectFrame);
+      } catch (err: any) {
+        if (camHint) camHint.textContent = err?.message || 'Izin kamera ditolak browser.';
+        stopCamera();
+      }
+    }
+
+    camToggleBtn?.addEventListener('click', () => {
+      if (isScanning) stopCamera();
+      else startCamera();
+    });
+
+    qrImageInput?.addEventListener('change', async () => {
+      const file = qrImageInput.files?.[0];
+      if (!file) return;
+      try {
+        if (!('BarcodeDetector' in window)) {
+          alert('Browser ini belum mendukung pembacaan QR dari gambar. Ketik kode tiket secara manual.');
+          return;
+        }
+        const detector = new (window as any).BarcodeDetector({ formats: ['qr_code'] });
+        const bitmap = await createImageBitmap(file);
+        const results = await detector.detect(bitmap);
+        if (results?.[0]?.rawValue) {
+          codeInput.value = results[0].rawValue;
+          await processScan(results[0].rawValue);
+        } else {
+          alert('Tidak ada QR Code yang terdeteksi pada gambar tersebut.');
+        }
+      } catch (err: any) {
+        alert(err?.message || 'Gagal memindai QR dari gambar.');
+      } finally {
+        qrImageInput.value = '';
+      }
+    });
+
+    function syncAuthView() {
+      const loggedIn = isAuthenticated();
+      authNotice?.classList.toggle('hidden', loggedIn);
+      loadOrganizerEvents();
+      loadAttendance();
+    }
+
+    const onAuthChanged = () => syncAuthView();
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+    loadShiftFromStorage();
+    syncAuthView();
+
+    return () => {
+      isDisposed = true;
+      stopCamera();
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
   }
 
-  document.addEventListener('astro:page-load', initScannerPage);
+  let scannerCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (scannerCleanup) scannerCleanup();
+    scannerCleanup = initScannerPage();
+  });
 </script>
