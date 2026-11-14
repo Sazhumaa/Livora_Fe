@@ -3,7 +3,20 @@
  * Built-in JWT interceptor, auto-refresh token, standardized error envelope.
  */
 
-const BASE_URL = (import.meta.env.PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
+export const API_BASE_URL = (import.meta.env.PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
+const BASE_URL = API_BASE_URL;
+
+export function resolveAssetUrl(
+  path?: string | null,
+  fallback = 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80'
+): string {
+  if (!path || !String(path).trim()) return fallback;
+  const trimmed = String(path).trim();
+  if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
+    return trimmed;
+  }
+  return `${BASE_URL}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
+}
 
 export class ApiError extends Error {
   constructor(
@@ -162,6 +175,13 @@ export const api = {
       ...options,
     }),
 
+  put: <T = any>(endpoint: string, body?: any, options?: RequestOptions) =>
+    request<T>(endpoint, {
+      method: 'PUT',
+      body: body instanceof FormData ? body : JSON.stringify(body),
+      ...options,
+    }),
+
   delete: <T = any>(endpoint: string, options?: RequestOptions) =>
     request<T>(endpoint, { method: 'DELETE', ...options }),
 
@@ -171,4 +191,54 @@ export const api = {
       body: formData,
       ...options,
     }),
+
+  /**
+   * Download authenticated binary/CSV file with auto-refresh token fallback
+   */
+  downloadBlob: async (endpoint: string, fallbackFilename = 'export.csv'): Promise<void> => {
+    const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    const execute = (tokenOverride?: string | null) => {
+      const headers = new Headers();
+      const token = tokenOverride || (typeof window !== 'undefined' ? localStorage.getItem('afterglow_access_token') : null);
+      if (token) headers.set('Authorization', `Bearer ${token}`);
+      return fetch(url, { method: 'GET', headers });
+    };
+
+    let res = await execute();
+    if (res.status === 401 && typeof window !== 'undefined') {
+      const refreshToken = localStorage.getItem('afterglow_refresh_token');
+      if (refreshToken) {
+        const rRes = await fetch(`${BASE_URL}/auth/refresh`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ refresh_token: refreshToken }),
+        });
+        const rJson: ApiResponse = await rRes.json().catch(() => ({ success: false } as any));
+        if (rRes.ok && rJson.success && rJson.data?.access_token) {
+          localStorage.setItem('afterglow_access_token', rJson.data.access_token);
+          if (rJson.data.refresh_token) localStorage.setItem('afterglow_refresh_token', rJson.data.refresh_token);
+          res = await execute(rJson.data.access_token);
+        }
+      }
+    }
+
+    if (!res.ok) {
+      const errJson = await res.json().catch(() => ({}));
+      throw new ApiError(res.status, errJson.error_code || `HTTP_${res.status}`, errJson.message || 'Gagal mengunduh file.');
+    }
+
+    const blob = await res.blob();
+    const disposition = res.headers.get('Content-Disposition') || '';
+    const match = disposition.match(/filename="?([^"]+)"?/i);
+    const filename = match?.[1] || fallbackFilename;
+
+    const objectUrl = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(objectUrl);
+  },
 };

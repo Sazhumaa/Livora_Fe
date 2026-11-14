@@ -3,8 +3,8 @@
  * Encapsulates backend queries with mock fallbacks.
  */
 
-import { api } from './api';
-import { MOCK_EVENTS, type EventItem } from '../data/mockEvents';
+import { api, resolveAssetUrl } from './api';
+import { MOCK_EVENTS } from '../data/mockEvents';
 
 export interface BackendEvent {
   id: number;
@@ -54,6 +54,8 @@ export interface BackendTicketCategory {
   kuota_tersedia: number;
   kuota_terjual: number;
   kuota_hold?: number;
+  kuota_komplimen?: number;
+  max_per_transaksi?: number;
   max_per_order?: number;
   deskripsi?: string;
 }
@@ -62,31 +64,86 @@ export interface EventQueryOptions {
   q?: string;
   city?: string;
   sort?: 'terdekat' | 'terbaru' | 'termurah';
+  status?: string;
+  scope?: string;
   limit?: number;
   offset?: number;
+  strict?: boolean;
+}
+
+export interface VoucherValidationResult {
+  voucher_id: number;
+  kode_voucher: string;
+  diskon_amount: number;
+  final_amount: number;
+}
+
+export const CATEGORY_SEARCH_MAP: Record<string, string> = {
+  'music-festival': 'Festival',
+  'pop-kpop': 'Pop',
+  'rock-alternative': 'Rock',
+  'electronic-edm': 'Electronic',
+  'jazz-soul': 'Jazz',
+  'indie-local': 'Indie',
+};
+
+/**
+ * Exact backend platform fee formula (orderRepositories.ts:308 -> 5%)
+ */
+export function calculatePlatformFee(subtotalAfterDiscount: number): number {
+  return Math.round(Math.max(0, subtotalAfterDiscount) * 0.05);
+}
+
+export function getCategoryMaxLimit(cat?: BackendTicketCategory | null): number {
+  if (!cat) return 4;
+  return Number(cat.max_per_transaksi ?? cat.max_per_order ?? 4);
+}
+
+function normalizeEvent(ev: BackendEvent): BackendEvent {
+  return {
+    ...ev,
+    poster_url: resolveAssetUrl(ev.poster_url),
+    min_price: Number(ev.min_price || 0),
+    total_quota: Number(ev.total_quota || 0),
+    available_quota: Number(ev.available_quota || 0),
+    occupancy_percent: Number(ev.occupancy_percent || 0),
+    categories: ev.categories?.map((c) => ({
+      ...c,
+      harga: Number(c.harga || 0),
+      kuota_total: Number(c.kuota_total || 0),
+      kuota_tersedia: Number(c.kuota_tersedia || 0),
+      kuota_terjual: Number(c.kuota_terjual || 0),
+      max_per_transaksi: Number(c.max_per_transaksi ?? c.max_per_order ?? 4),
+    })),
+  };
 }
 
 /**
- * Fetch all published concerts with search & filter
+ * Fetch concerts with search, city, sort, scope & role awareness
  */
 export async function fetchEvents(options: EventQueryOptions = {}): Promise<BackendEvent[]> {
   const params = new URLSearchParams();
   if (options.q) params.set('q', options.q);
   if (options.city) params.set('city', options.city);
   if (options.sort) params.set('sort', options.sort);
+  if (options.status) params.set('status', options.status);
+  if (options.scope) params.set('scope', options.scope);
   if (options.limit) params.set('limit', String(options.limit));
-  if (options.offset) params.set('offset', String(options.offset));
+  if (options.offset !== undefined) params.set('offset', String(options.offset));
 
   const queryStr = params.toString() ? `?${params.toString()}` : '';
 
   try {
     const events = await api.get<BackendEvent[]>(`/events${queryStr}`);
-    if (Array.isArray(events) && events.length > 0) {
-      return events;
+    if (Array.isArray(events)) {
+      if (events.length > 0 || options.strict || options.q || options.city || options.status) {
+        return events.map(normalizeEvent);
+      }
+      return mapMockEventsToBackend();
     }
-    // If backend returns empty array or we are offline, convert mock events
-    return mapMockEventsToBackend();
+    return options.strict ? [] : mapMockEventsToBackend();
   } catch (err) {
+    if (options.strict) throw err;
     console.warn('[Events API Fallback to Mock Data]:', err);
     return mapMockEventsToBackend();
   }
@@ -95,11 +152,12 @@ export async function fetchEvents(options: EventQueryOptions = {}): Promise<Back
 /**
  * Fetch single concert by ID
  */
-export async function fetchEventById(id: number | string): Promise<BackendEvent | null> {
+export async function fetchEventById(id: number | string, strict = false): Promise<BackendEvent | null> {
   try {
     const event = await api.get<BackendEvent>(`/events/${id}`);
-    return event;
+    return event ? normalizeEvent(event) : null;
   } catch (err) {
+    if (strict) throw err;
     console.warn(`[Event ID ${id} API Fallback]:`, err);
     const mock = mapMockEventsToBackend().find((e) => String(e.id) === String(id));
     return mock || null;
@@ -109,8 +167,25 @@ export async function fetchEventById(id: number | string): Promise<BackendEvent 
 /**
  * Toggle bookmark / wishlist on concert
  */
-export async function toggleBookmark(eventId: number): Promise<{ is_bookmarked: boolean }> {
-  return await api.post(`/events/${eventId}/bookmark`);
+export async function toggleBookmark(eventId: number): Promise<{ bookmarked: boolean; is_bookmarked: boolean }> {
+  const res = await api.post<{ bookmarked?: boolean; is_bookmarked?: boolean }>(`/events/${eventId}/bookmark`);
+  const active = Boolean(res.bookmarked ?? res.is_bookmarked);
+  return { bookmarked: active, is_bookmarked: active };
+}
+
+/**
+ * Preview & validate promo voucher code against event subtotal
+ */
+export async function validateVoucher(
+  kodeVoucher: string,
+  eventId: number,
+  subtotal: number
+): Promise<VoucherValidationResult> {
+  return await api.post<VoucherValidationResult>('/vouchers/validate', {
+    kode_voucher: kodeVoucher.trim().toUpperCase(),
+    event_id: eventId,
+    subtotal,
+  });
 }
 
 /**

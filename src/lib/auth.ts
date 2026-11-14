@@ -67,6 +67,21 @@ export function isAdmin(): boolean {
   return getStoredRole() === USER_ROLES.ADMIN;
 }
 
+export function hasOrganizerAccess(): boolean {
+  const role = getStoredRole();
+  return role === USER_ROLES.ORGANIZER || role === USER_ROLES.ADMIN;
+}
+
+export function canScanGate(): boolean {
+  const user = getStoredUser();
+  if (!user) return false;
+  return (
+    user.role_id === USER_ROLES.ADMIN ||
+    user.role_id === USER_ROLES.ORGANIZER ||
+    user.email.toLowerCase().includes('gatecrew')
+  );
+}
+
 /**
  * Step 1: Request Passwordless OTP
  */

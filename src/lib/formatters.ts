@@ -3,6 +3,16 @@
  * Zero external dependencies.
  */
 
+export function escapeHtml(input: unknown): string {
+  const str = String(input ?? '');
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /**
  * Format number to Indonesian Rupiah currency format
  * e.g. 1500000 -> "Rp 1.500.000"
