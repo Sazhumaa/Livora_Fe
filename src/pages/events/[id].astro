@@ -1,28 +1,25 @@
 ---
+export const prerender = false;
+
 import RootLayout from '../../layouts/RootLayout.astro';
 import Footer from '../../components/landing/Footer.astro';
-import { fetchEventById, type BackendEvent, type BackendTicketCategory } from '../../lib/events';
+import { fetchEventById, getCategoryMaxLimit } from '../../lib/events';
 import { formatRupiah, formatDateIndo, getGoogleMapsUrl, getGoogleCalendarUrl } from '../../lib/formatters';
 
-export async function getStaticPaths() {
-  // Pre-generate routes for IDs 1..20
-  return Array.from({ length: 20 }, (_, i) => ({
-    params: { id: String(i + 1) }
-  }));
-}
-
 const { id } = Astro.params;
-const event = await fetchEventById(id || 1);
+const event = await fetchEventById(id || '');
 
 if (!event) {
   return Astro.redirect('/events');
 }
 
 const categories = event.categories || [];
+const firstAvailableIdx = categories.findIndex((c) => Number(c.kuota_tersedia || 0) > 0);
 const mappedCategories = categories.map((cat, idx) => ({
   ...cat,
+  maxLimit: getCategoryMaxLimit(cat),
   isCatSoldOut: Boolean(!cat.kuota_tersedia || Number(cat.kuota_tersedia) === 0),
-  isDefaultSelected: idx === 0 && Number(cat.kuota_tersedia || 0) > 0,
+  isDefaultSelected: idx === firstAvailableIdx,
 }));
 
 const minPrice = categories.length > 0 
@@ -32,6 +29,8 @@ const minPrice = categories.length > 0
 const mapsUrl = getGoogleMapsUrl(event.alamat, event.lat, event.lng);
 const calendarUrl = getGoogleCalendarUrl(event);
 const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
+const occupancyPct = Math.min(100, Math.max(0, Number(event.occupancy_percent ?? 0)));
+const venueCapacity = Number(event.kapasitas_venue ?? event.total_quota ?? 0);
 ---
 
 <RootLayout 
@@ -40,10 +39,10 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
 >
   <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
     <!-- Breadcrumb -->
-    <nav class="flex items-center gap-2 text-xs font-mono text-muted-gray mb-8">
-      <a href="/" class="hover:text-soft-white transition-colors">HOME</a>
+    <nav class="flex items-center gap-2 text-xs font-mono text-neutral-500 dark:text-muted-gray mb-8">
+      <a href="/" class="hover:text-neutral-950 dark:hover:text-soft-white transition-colors">HOME</a>
       <span>/</span>
-      <a href="/events" class="hover:text-soft-white transition-colors">KONSER</a>
+      <a href="/events" class="hover:text-neutral-950 dark:hover:text-soft-white transition-colors">KONSER</a>
       <span>/</span>
       <span class="text-electric-magenta truncate max-w-[200px] sm:max-w-md">{event.nama_event}</span>
     </nav>
@@ -53,7 +52,7 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
       
       <!-- LEFT COLUMN: Concert Artwork & Quick Info (5 cols) -->
       <div class="lg:col-span-5 flex flex-col gap-6">
-        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-void-black border border-white/15 shadow-2xl group">
+        <div class="relative w-full aspect-[4/5] rounded-3xl overflow-hidden bg-void-black border border-neutral-200 dark:border-white/15 shadow-2xl group">
           <img 
             src={event.poster_url || 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1200&q=80'} 
             alt={event.nama_event}
@@ -68,7 +67,7 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
                 HABIS TERJUAL
               </span>
             ) : (
-              <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider uppercase bg-electric-magenta text-soft-white shadow-magenta-glow">
+              <span class="px-3.5 py-1.5 rounded-full text-xs font-mono font-bold tracking-wider uppercase bg-electric-magenta text-white shadow-magenta-glow">
                 TIKET TERSEDIA
               </span>
             )}
@@ -96,7 +95,7 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
             href={mapsUrl} 
             target="_blank" 
             rel="noopener noreferrer" 
-            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-dark-plum border border-white/10 text-xs font-semibold text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta transition-all"
+            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 text-xs font-semibold text-neutral-900 dark:text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta shadow-sm dark:shadow-none transition-all"
           >
             <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -109,7 +108,7 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
             href={calendarUrl} 
             target="_blank" 
             rel="noopener noreferrer" 
-            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-dark-plum border border-white/10 text-xs font-semibold text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta transition-all"
+            class="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 text-xs font-semibold text-neutral-900 dark:text-soft-white hover:border-electric-magenta/60 hover:text-electric-magenta shadow-sm dark:shadow-none transition-all"
           >
             <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -122,48 +121,64 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
       <!-- RIGHT COLUMN: Concert Info & Ticket Selection (7 cols) -->
       <div class="lg:col-span-7 flex flex-col gap-8">
         <div>
-          <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
-            KONSER MUSIK LIVE // RESMI
-          </span>
-          <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide leading-tight mb-4">
-            {event.nama_event}
-          </h1>
+          <div class="flex items-start justify-between gap-4 mb-2">
+            <div>
+              <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+                KONSER MUSIK LIVE // RESMI
+              </span>
+              <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide leading-tight">
+                {event.nama_event}
+              </h1>
+            </div>
+            <button
+              type="button"
+              id="detail-bookmark-btn"
+              data-event-id={event.id}
+              aria-label="Simpan ke Wishlist"
+              class="shrink-0 mt-1 inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 text-xs font-semibold text-neutral-900 dark:text-soft-white shadow-sm dark:shadow-none hover:border-electric-magenta hover:text-electric-magenta transition-all"
+            >
+              <svg class="w-4 h-4 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+              </svg>
+              <span id="detail-bookmark-label">Simpan</span>
+            </button>
+          </div>
 
           <!-- Date & Venue Highlights -->
-          <div class="flex flex-wrap items-center gap-4 text-sm text-muted-gray mb-6">
+          <div class="flex flex-wrap items-center gap-4 text-sm text-neutral-600 dark:text-muted-gray mt-4 mb-6">
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
-              <span class="text-soft-white font-medium">{formatDateIndo(event.tanggal_mulai)}</span>
+              <span class="text-neutral-900 dark:text-soft-white font-medium">{formatDateIndo(event.tanggal_mulai)}</span>
             </div>
             <span>•</span>
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               </svg>
-              <span class="text-soft-white font-medium">{event.alamat}</span>
+              <span class="text-neutral-900 dark:text-soft-white font-medium">{event.alamat}</span>
             </div>
           </div>
 
-          <p class="text-sm sm:text-base text-muted-gray leading-relaxed mb-6">
+          <p class="text-sm sm:text-base text-neutral-600 dark:text-muted-gray leading-relaxed mb-6">
             {event.deskripsi}
           </p>
 
           <!-- Venue Physical Occupancy Gauge -->
-          <div class="p-4 rounded-2xl bg-dark-plum/70 border border-white/10 mb-8">
+          <div class="p-4 rounded-2xl bg-white dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none mb-8">
             <div class="flex items-center justify-between text-xs font-mono mb-2">
-              <span class="text-muted-gray uppercase">Okupansi Venue & Kuota Panggung:</span>
-              <span class="text-electric-magenta font-bold">{event.occupancy_percent || 65}% Terisi</span>
+              <span class="text-neutral-500 dark:text-muted-gray uppercase">Okupansi Venue & Kuota Panggung:</span>
+              <span class="text-electric-magenta font-bold">{occupancyPct}% Terisi</span>
             </div>
-            <div class="w-full h-2 rounded-full bg-void-black overflow-hidden">
+            <div class="w-full h-2 rounded-full bg-neutral-200 dark:bg-void-black overflow-hidden">
               <div 
                 class="h-full bg-gradient-to-r from-electric-magenta to-deep-magenta rounded-full transition-all duration-1000"
-                style={`width: ${Math.min(100, event.occupancy_percent || 65)}%;`}
+                style={`width: ${occupancyPct}%;`}
               ></div>
             </div>
-            <div class="flex items-center justify-between text-[11px] text-muted-gray mt-2">
-              <span>Kapasitas Gedung: <strong>{event.kapasitas_venue || 5000} Penonton</strong></span>
+            <div class="flex items-center justify-between text-[11px] text-neutral-600 dark:text-muted-gray mt-2">
+              <span>Kapasitas Gedung: <strong>{venueCapacity.toLocaleString('id-ID')} Penonton</strong></span>
               <span>Sisa Kuota: <strong>{event.available_quota} Tiket</strong></span>
             </div>
           </div>
@@ -172,58 +187,58 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
         <!-- ============================================== -->
         <!-- WAR TIKET ARENA: INTERACTIVE CATEGORY SELECTOR -->
         <!-- ============================================== -->
-        <div class="rounded-3xl bg-dark-plum/90 border border-white/15 p-6 sm:p-8 backdrop-blur-xl shadow-xl">
-          <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/10">
+        <div class="rounded-3xl bg-white dark:bg-dark-plum/90 border border-neutral-200 dark:border-white/15 p-6 sm:p-8 backdrop-blur-xl shadow-xl">
+          <div class="flex items-center justify-between mb-6 pb-4 border-b border-neutral-200 dark:border-white/10">
             <div>
-              <h2 class="font-display text-2xl text-soft-white">PILIH KATEGORI TIKET</h2>
-              <p class="text-xs text-muted-gray">Pilih jenis gelang tiket & kuantitas pesananmu.</p>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">PILIH KATEGORI TIKET</h2>
+              <p class="text-xs text-neutral-600 dark:text-muted-gray">Pilih jenis gelang tiket & kuantitas pesananmu.</p>
             </div>
-            <span class="px-2.5 py-1 rounded bg-electric-magenta/15 border border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold">
-              ZERO HIDDEN FEES
+            <span class="px-2.5 py-1 rounded bg-electric-magenta/10 dark:bg-electric-magenta/15 border border-electric-magenta/30 dark:border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold">
+              BIAYA TRANSPARAN 5%
             </span>
           </div>
 
           <!-- Category Options List -->
           <div class="space-y-4 mb-6" id="ticket-categories-list">
-            {mappedCategories.map((cat, idx) => {
+            {mappedCategories.map((cat) => {
               return (
                 <div 
                   class={`category-card p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer ${
                     cat.isCatSoldOut 
-                      ? 'opacity-40 bg-void-black/40 border-white/5 pointer-events-none' 
+                      ? 'opacity-50 bg-neutral-100 dark:bg-void-black/40 border-neutral-200 dark:border-white/5 pointer-events-none' 
                       : cat.isDefaultSelected
-                      ? 'bg-void-black/80 border-electric-magenta shadow-magenta-glow is-selected' 
-                      : 'bg-void-black/50 border-white/10 hover:border-white/25'
+                      ? 'bg-electric-magenta/[0.06] dark:bg-void-black/80 border-electric-magenta shadow-magenta-glow is-selected' 
+                      : 'bg-neutral-50 dark:bg-void-black/50 border-neutral-200 dark:border-white/10 hover:border-neutral-400 dark:hover:border-white/25'
                   }`}
                   data-cat-id={cat.id}
                   data-cat-price={cat.harga}
                   data-cat-name={cat.nama_kategori}
-                  data-cat-max={cat.max_per_order || 4}
+                  data-cat-max={cat.maxLimit}
                   data-cat-available={cat.kuota_tersedia}
                 >
                   <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div class="flex-1">
                       <div class="flex items-center gap-2 mb-1">
                         <span class="w-2.5 h-2.5 rounded-full cat-indicator bg-electric-magenta"></span>
-                        <h3 class="font-bold text-base text-soft-white">{cat.nama_kategori}</h3>
+                        <h3 class="font-bold text-base text-neutral-950 dark:text-soft-white">{cat.nama_kategori}</h3>
                         {cat.isCatSoldOut ? (
-                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-black text-muted-gray border border-white/10">
+                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-neutral-200 dark:bg-black text-neutral-600 dark:text-muted-gray border border-neutral-300 dark:border-white/10">
                             HABIS
                           </span>
                         ) : (
-                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-electric-magenta/20 text-electric-magenta">
+                          <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-electric-magenta/10 dark:bg-electric-magenta/20 text-electric-magenta">
                             Sisa {cat.kuota_tersedia} Tiket
                           </span>
                         )}
                       </div>
-                      <p class="text-xs text-muted-gray">{cat.deskripsi || 'Akses resmi panggung konser konser AFTERGLOW.'}</p>
+                      <p class="text-xs text-neutral-600 dark:text-muted-gray">{cat.deskripsi || 'Akses resmi panggung konser konser AFTERGLOW.'}</p>
                     </div>
 
                     <div class="text-right shrink-0">
-                      <span class="font-display text-2xl text-soft-white block">
+                      <span class="font-display text-2xl text-neutral-950 dark:text-soft-white block">
                         {formatRupiah(cat.harga)}
                       </span>
-                      <span class="text-[10px] text-muted-gray font-mono">/ orang</span>
+                      <span class="text-[10px] text-neutral-500 dark:text-muted-gray font-mono">/ orang</span>
                     </div>
                   </div>
                 </div>
@@ -232,44 +247,111 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
           </div>
 
           <!-- Quantity Stepper & Calculation -->
-          <div class="p-4 rounded-2xl bg-void-black/60 border border-white/10 flex items-center justify-between mb-6">
+          <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 flex items-center justify-between mb-6">
             <div>
-              <span class="text-xs font-bold text-soft-white block">Jumlah Tiket</span>
-              <span class="text-[10px] text-muted-gray font-mono">Maksimal <span id="max-ticket-count">4</span> tiket per akun</span>
+              <span class="text-xs font-bold text-neutral-950 dark:text-soft-white block">Jumlah Tiket</span>
+              <span class="text-[10px] text-neutral-500 dark:text-muted-gray font-mono">Maksimal <span id="max-ticket-count">4</span> tiket per akun</span>
             </div>
 
             <div class="flex items-center gap-3">
               <button 
                 id="qty-minus-btn" 
                 type="button" 
-                class="w-9 h-9 rounded-xl bg-white/5 border border-white/15 text-soft-white font-bold flex items-center justify-center hover:bg-white/15 active:scale-95 transition-all"
+                class="w-9 h-9 rounded-xl bg-white dark:bg-white/5 border border-neutral-300 dark:border-white/15 text-neutral-900 dark:text-soft-white font-bold flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-white/15 active:scale-95 transition-all"
               >
                 -
               </button>
-              <span id="ticket-qty-display" class="font-display text-2xl text-soft-white w-8 text-center">1</span>
+              <span id="ticket-qty-display" class="font-display text-2xl text-neutral-950 dark:text-soft-white w-8 text-center">1</span>
               <button 
                 id="qty-plus-btn" 
                 type="button" 
-                class="w-9 h-9 rounded-xl bg-white/5 border border-white/15 text-soft-white font-bold flex items-center justify-center hover:bg-white/15 active:scale-95 transition-all"
+                class="w-9 h-9 rounded-xl bg-white dark:bg-white/5 border border-neutral-300 dark:border-white/15 text-neutral-900 dark:text-soft-white font-bold flex items-center justify-center hover:bg-neutral-100 dark:hover:bg-white/15 active:scale-95 transition-all"
               >
                 +
               </button>
             </div>
           </div>
 
-          <!-- Price Summary (Zero Hidden Fees Breakdown) -->
-          <div class="space-y-2 py-4 border-t border-b border-white/10 text-xs font-mono mb-6">
-            <div class="flex justify-between text-muted-gray">
+          <!-- Voucher Promo Preview Input -->
+          <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 mb-6">
+            <label for="detail-voucher-input" class="text-xs font-bold text-neutral-950 dark:text-soft-white block mb-2">
+              Punya Kode Voucher Konser?
+            </label>
+            <div class="flex gap-2">
+              <input
+                type="text"
+                id="detail-voucher-input"
+                placeholder="MASUKKAN KODE VOUCHER"
+                class="flex-1 px-4 py-2.5 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono uppercase text-neutral-950 dark:text-soft-white placeholder-neutral-400 dark:placeholder-muted-gray/60 focus:outline-none focus:border-electric-magenta"
+              />
+              <button
+                type="button"
+                id="detail-voucher-btn"
+                class="px-4 py-2.5 rounded-xl bg-neutral-900 hover:bg-electric-magenta dark:bg-white/10 dark:hover:bg-electric-magenta text-white dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+              >
+                Pakai
+              </button>
+              <button
+                type="button"
+                id="detail-voucher-clear"
+                class="hidden px-3 py-2.5 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/25 text-xs font-bold uppercase tracking-wider transition-all"
+              >
+                Hapus
+              </button>
+            </div>
+            <p id="detail-voucher-msg" class="hidden text-[11px] font-mono mt-2"></p>
+          </div>
+
+          <!-- Price Summary (Transparent 5% Fee Breakdown) -->
+          <div class="space-y-2 py-4 border-t border-b border-neutral-200 dark:border-white/10 text-xs font-mono mb-6">
+            <div class="flex justify-between text-neutral-600 dark:text-muted-gray">
               <span>Subtotal Tiket:</span>
-              <span id="summary-subtotal" class="text-soft-white">Rp 0</span>
+              <span id="summary-subtotal" class="text-neutral-950 dark:text-soft-white">Rp 0</span>
             </div>
-            <div class="flex justify-between text-muted-gray">
-              <span>Platform & Convenience Fee:</span>
-              <span class="text-soft-white">Rp 3.000</span>
+            <div id="summary-discount-row" class="hidden flex justify-between text-emerald-600 dark:text-emerald-400">
+              <span>Diskon Voucher (<span id="summary-discount-code"></span>):</span>
+              <span id="summary-discount">-Rp 0</span>
             </div>
-            <div class="flex justify-between text-sm font-bold pt-2 border-t border-white/10">
-              <span class="text-soft-white font-sans">Total Tagihan Lunas:</span>
+            <div class="flex justify-between text-neutral-600 dark:text-muted-gray">
+              <span>Platform & Convenience Fee (5%):</span>
+              <span id="summary-platform-fee" class="text-neutral-950 dark:text-soft-white">Rp 0</span>
+            </div>
+            <div class="flex justify-between text-sm font-bold pt-2 border-t border-neutral-200 dark:border-white/10">
+              <span class="text-neutral-950 dark:text-soft-white font-sans">Total Tagihan Lunas:</span>
               <span id="summary-grand-total" class="font-display text-2xl text-electric-magenta">Rp 0</span>
+            </div>
+          </div>
+
+          <!-- Inline Checkout Error & Pending Conflict Resolution -->
+          <div id="checkout-error-box" class="hidden mb-4 p-4 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs text-red-700 dark:text-red-300 font-mono"></div>
+
+          <div id="pending-order-conflict-box" class="hidden mb-5 p-5 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-300 dark:border-amber-500/35">
+            <div class="flex items-start justify-between gap-3 mb-3">
+              <div>
+                <span class="text-[10px] font-mono uppercase tracking-wider text-amber-700 dark:text-amber-300 font-bold block">
+                  Order Aktif Masih Berlangsung
+                </span>
+                <p id="conflict-order-text" class="text-xs text-neutral-800 dark:text-soft-white mt-1 leading-relaxed">
+                  Kamu masih memiliki order pending untuk konser ini. Selesaikan atau batalkan sebelum membuat order baru.
+                </p>
+              </div>
+              <span id="conflict-order-code" class="px-2.5 py-1 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 font-mono text-[10px] font-bold shrink-0"></span>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <a
+                id="conflict-continue-btn"
+                href="/orders"
+                class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-void-black text-xs font-bold uppercase tracking-wider transition-all"
+              >
+                Lanjutkan Pembayaran
+              </a>
+              <button
+                type="button"
+                id="conflict-cancel-btn"
+                class="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-500/25 text-xs font-bold uppercase tracking-wider transition-all"
+              >
+                Batalkan Order Sebelumnya
+              </button>
             </div>
           </div>
 
@@ -277,8 +359,8 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
           <button 
             id="checkout-trigger-btn" 
             type="button" 
-            class="w-full py-4 px-8 rounded-2xl bg-electric-magenta text-soft-white font-bold text-base tracking-wider uppercase flex items-center justify-center gap-3 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
-            disabled={isSoldOut}
+            class="w-full py-4 px-8 rounded-2xl bg-electric-magenta text-white font-bold text-base tracking-wider uppercase flex items-center justify-center gap-3 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+            disabled={isSoldOut || mappedCategories.length === 0}
           >
             <span class="btn-text">WAR TIKET SEKARANG // LANJUTKAN CHECKOUT</span>
             <svg class="w-5 h-5 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
@@ -300,21 +382,21 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
             <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
               SUSUNAN PENGISI ACARA
             </span>
-            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">LINEUP MUSISI PANGGUNG</h2>
+            <h2 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white">LINEUP MUSISI PANGGUNG</h2>
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {event.lineup.map((performer) => (
-              <div class="p-5 rounded-2xl bg-dark-plum border border-white/10 flex items-center gap-4 group hover:border-electric-magenta/60 transition-all">
-                <div class="w-14 h-14 rounded-full bg-void-black border border-white/15 flex items-center justify-center font-display text-xl text-electric-magenta shrink-0 group-hover:scale-110 transition-transform">
+              <div class="p-5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none flex items-center gap-4 group hover:border-electric-magenta/60 transition-all">
+                <div class="w-14 h-14 rounded-full bg-neutral-50 dark:bg-void-black border border-neutral-200 dark:border-white/15 flex items-center justify-center font-display text-xl text-electric-magenta shrink-0 group-hover:scale-110 transition-transform">
                   {performer.name.charAt(0)}
                 </div>
                 <div>
-                  <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-electric-magenta/20 text-electric-magenta uppercase">
+                  <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-electric-magenta/10 dark:bg-electric-magenta/20 text-electric-magenta uppercase">
                     {performer.role || 'Artist'}
                   </span>
-                  <h4 class="font-bold text-base text-soft-white mt-1">{performer.name}</h4>
-                  <p class="text-xs text-muted-gray">{performer.time || 'Waktu TBA'}</p>
+                  <h4 class="font-bold text-base text-neutral-950 dark:text-soft-white mt-1">{performer.name}</h4>
+                  <p class="text-xs text-neutral-600 dark:text-muted-gray">{performer.time || 'Waktu TBA'}</p>
                 </div>
               </div>
             ))}
@@ -329,18 +411,18 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
             <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
               JADWAL & WAKTU ACARA
             </span>
-            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">RUNDOWN PANGGUNG KONSER</h2>
+            <h2 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white">RUNDOWN PANGGUNG KONSER</h2>
           </div>
 
           <div class="space-y-4">
             {event.rundown.map((item, idx) => (
-              <div class="p-5 rounded-2xl bg-dark-plum/70 border border-white/10 flex items-start gap-5">
-                <div class="px-3 py-1.5 rounded-xl bg-void-black border border-electric-magenta/40 text-electric-magenta font-mono text-xs font-bold shrink-0">
+              <div class="p-5 rounded-2xl bg-white dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none flex items-start gap-5">
+                <div class="px-3 py-1.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-electric-magenta/40 text-electric-magenta font-mono text-xs font-bold shrink-0">
                   {item.time}
                 </div>
                 <div>
-                  <h4 class="font-bold text-sm text-soft-white">{item.title}</h4>
-                  <p class="text-xs text-muted-gray mt-0.5">{item.description}</p>
+                  <h4 class="font-bold text-sm text-neutral-950 dark:text-soft-white">{item.title}</h4>
+                  <p class="text-xs text-neutral-600 dark:text-muted-gray mt-0.5">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -355,12 +437,12 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
             <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-1">
               KENYAMANAN PENONTON
             </span>
-            <h2 class="font-display text-3xl sm:text-4xl text-soft-white">FASILITAS VENUE GEDUNG</h2>
+            <h2 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white">FASILITAS VENUE GEDUNG</h2>
           </div>
 
           <div class="flex flex-wrap gap-3">
             {event.facilities.map((fac) => (
-              <span class="px-4 py-2.5 rounded-xl bg-dark-plum border border-white/10 text-xs font-medium text-soft-white flex items-center gap-2">
+              <span class="px-4 py-2.5 rounded-xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none text-xs font-medium text-neutral-900 dark:text-soft-white flex items-center gap-2">
                 <span class="w-2 h-2 rounded-full bg-electric-magenta"></span>
                 <span>{fac}</span>
               </span>
@@ -371,9 +453,9 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
 
       <!-- Terms and Conditions Rules -->
       {event.rules && event.rules.length > 0 && (
-        <section class="p-8 rounded-3xl bg-dark-plum/50 border border-white/10">
-          <h3 class="font-display text-2xl text-soft-white mb-4">SYARAT & KETENTUAN MASUK VENUE</h3>
-          <ul class="space-y-2.5 text-xs text-muted-gray list-disc pl-5">
+        <section class="p-8 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
+          <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-4">SYARAT & KETENTUAN MASUK VENUE</h3>
+          <ul class="space-y-2.5 text-xs text-neutral-600 dark:text-muted-gray list-disc pl-5">
             {event.rules.map((rule) => (
               <li>{rule}</li>
             ))}
@@ -388,8 +470,9 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
 </RootLayout>
 
 <script>
-  import { api } from '../../lib/api';
+  import { api, ApiError } from '../../lib/api';
   import { isAuthenticated } from '../../lib/auth';
+  import { calculatePlatformFee, toggleBookmark, validateVoucher } from '../../lib/events';
   import { formatRupiah } from '../../lib/formatters';
 
   function initWarArena() {
@@ -398,27 +481,168 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
     const qtyPlusBtn = document.getElementById('qty-plus-btn');
     const qtyDisplay = document.getElementById('ticket-qty-display');
     const subtotalDisplay = document.getElementById('summary-subtotal');
+    const discountRow = document.getElementById('summary-discount-row');
+    const discountCodeSpan = document.getElementById('summary-discount-code');
+    const discountDisplay = document.getElementById('summary-discount');
+    const feeDisplay = document.getElementById('summary-platform-fee');
     const grandTotalDisplay = document.getElementById('summary-grand-total');
-    const checkoutBtn = document.getElementById('checkout-trigger-btn') as HTMLButtonElement;
+    const checkoutBtn = document.getElementById('checkout-trigger-btn') as HTMLButtonElement | null;
     const maxCountSpan = document.getElementById('max-ticket-count');
+
+    const voucherInput = document.getElementById('detail-voucher-input') as HTMLInputElement | null;
+    const voucherBtn = document.getElementById('detail-voucher-btn') as HTMLButtonElement | null;
+    const voucherClearBtn = document.getElementById('detail-voucher-clear') as HTMLButtonElement | null;
+    const voucherMsg = document.getElementById('detail-voucher-msg');
+
+    const errorBox = document.getElementById('checkout-error-box');
+    const conflictBox = document.getElementById('pending-order-conflict-box');
+    const conflictCodeBadge = document.getElementById('conflict-order-code');
+    const conflictText = document.getElementById('conflict-order-text');
+    const conflictContinueBtn = document.getElementById('conflict-continue-btn') as HTMLAnchorElement | null;
+    const conflictCancelBtn = document.getElementById('conflict-cancel-btn') as HTMLButtonElement | null;
+
+    const bookmarkBtn = document.getElementById('detail-bookmark-btn') as HTMLButtonElement | null;
+    const bookmarkLabel = document.getElementById('detail-bookmark-label');
+
+    const eventId = Number(window.location.pathname.split('/').filter(Boolean).pop() || 0);
 
     let selectedCategoryId = 0;
     let selectedPrice = 0;
     let maxQty = 4;
+    let availableQuota = 0;
     let currentQty = 1;
 
-    // Pick first available category
+    let appliedVoucherCode = '';
+    let appliedDiscountAmount = 0;
+
+    let cartSignature = '';
+    let idempotencyKey = crypto.randomUUID();
+    let conflictOrderCode = '';
+
+    function refreshIdempotencyKey() {
+      const nextSig = `${eventId}:${selectedCategoryId}:${currentQty}:${appliedVoucherCode}`;
+      if (nextSig !== cartSignature) {
+        cartSignature = nextSig;
+        idempotencyKey = crypto.randomUUID();
+      }
+    }
+
+    function setVoucherFeedback(text: string, type: 'success' | 'error' | 'hidden') {
+      if (!voucherMsg) return;
+      if (type === 'hidden') {
+        voucherMsg.className = 'hidden text-[11px] font-mono mt-2';
+        voucherMsg.textContent = '';
+        return;
+      }
+      voucherMsg.textContent = text;
+      voucherMsg.className = `text-[11px] font-mono mt-2 ${
+        type === 'success' ? 'text-emerald-400' : 'text-red-400'
+      }`;
+    }
+
+    function clearErrorAndConflict() {
+      errorBox?.classList.add('hidden');
+      if (errorBox) errorBox.textContent = '';
+      conflictBox?.classList.add('hidden');
+    }
+
+    function setBookmarkUi(saved: boolean) {
+      if (!bookmarkBtn) return;
+      const svg = bookmarkBtn.querySelector('svg');
+      if (saved) {
+        bookmarkBtn.classList.add('border-electric-magenta', 'text-electric-magenta');
+        svg?.setAttribute('fill', 'currentColor');
+        if (bookmarkLabel) bookmarkLabel.textContent = 'Tersimpan';
+      } else {
+        bookmarkBtn.classList.remove('border-electric-magenta', 'text-electric-magenta');
+        svg?.setAttribute('fill', 'none');
+        if (bookmarkLabel) bookmarkLabel.textContent = 'Simpan';
+      }
+    }
+
+    async function syncBookmarkStatus() {
+      if (!isAuthenticated() || !eventId) {
+        setBookmarkUi(false);
+        return;
+      }
+      try {
+        const rows = await api.get<Array<{ id: number }>>('/users/bookmarks');
+        const saved = Array.isArray(rows) && rows.some((r) => Number(r.id) === eventId);
+        setBookmarkUi(saved);
+      } catch {}
+    }
+
+    bookmarkBtn?.addEventListener('click', async () => {
+      if (!isAuthenticated()) {
+        if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+        else window.location.href = '/masuk';
+        return;
+      }
+      if (!eventId) return;
+      try {
+        const res = await toggleBookmark(eventId);
+        setBookmarkUi(Boolean(res.bookmarked ?? res.is_bookmarked));
+      } catch (err: any) {
+        console.error('[Bookmark Error]:', err);
+      }
+    });
+
     const initialCard = document.querySelector<HTMLElement>('.category-card.is-selected');
     if (initialCard) {
       selectedCategoryId = Number(initialCard.dataset.catId);
       selectedPrice = Number(initialCard.dataset.catPrice);
-      maxQty = Number(initialCard.dataset.catMax || 4);
-      if (maxCountSpan) maxCountSpan.textContent = String(maxQty);
+      availableQuota = Number(initialCard.dataset.catAvailable || 0);
+      maxQty = Math.max(1, Math.min(Number(initialCard.dataset.catMax || 4), availableQuota || 4));
+      if (maxCountSpan) maxCountSpan.textContent = String(Number(initialCard.dataset.catMax || 4));
     }
 
-    // Category click handler
+    async function revalidateAppliedVoucherIfNeeded() {
+      if (!appliedVoucherCode) return;
+      const subtotal = selectedPrice * currentQty;
+      if (subtotal <= 0) {
+        appliedDiscountAmount = 0;
+        return;
+      }
+      try {
+        const res = await validateVoucher(appliedVoucherCode, eventId, subtotal);
+        appliedDiscountAmount = Number(res.diskon_amount || 0);
+        setVoucherFeedback(
+          `Voucher ${res.kode_voucher} aktif — Hemat ${formatRupiah(appliedDiscountAmount)}`,
+          'success'
+        );
+      } catch (err: any) {
+        appliedVoucherCode = '';
+        appliedDiscountAmount = 0;
+        voucherClearBtn?.classList.add('hidden');
+        setVoucherFeedback(err?.message || 'Voucher tidak lagi memenuhi syarat subtotal baru.', 'error');
+      }
+    }
+
+    function updateTotals() {
+      if (qtyDisplay) qtyDisplay.textContent = String(currentQty);
+      const subtotal = selectedPrice * currentQty;
+      const safeDiscount = Math.min(subtotal, Math.max(0, appliedDiscountAmount));
+      const netSubtotal = Math.max(0, subtotal - safeDiscount);
+      const platformFee = selectedCategoryId ? calculatePlatformFee(netSubtotal) : 0;
+      const grandTotal = netSubtotal + platformFee;
+
+      if (subtotalDisplay) subtotalDisplay.textContent = formatRupiah(subtotal);
+      if (discountRow && discountDisplay && discountCodeSpan) {
+        if (appliedVoucherCode && safeDiscount > 0) {
+          discountRow.classList.remove('hidden');
+          discountCodeSpan.textContent = appliedVoucherCode;
+          discountDisplay.textContent = `-${formatRupiah(safeDiscount)}`;
+        } else {
+          discountRow.classList.add('hidden');
+        }
+      }
+      if (feeDisplay) feeDisplay.textContent = formatRupiah(platformFee);
+      if (grandTotalDisplay) grandTotalDisplay.textContent = formatRupiah(grandTotal);
+      refreshIdempotencyKey();
+    }
+
     categoryCards.forEach((card) => {
-      card.addEventListener('click', () => {
+      card.addEventListener('click', async () => {
         categoryCards.forEach((c) => {
           c.classList.remove('bg-void-black/80', 'border-electric-magenta', 'shadow-magenta-glow', 'is-selected');
           c.classList.add('bg-void-black/50', 'border-white/10');
@@ -428,51 +652,130 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
 
         selectedCategoryId = Number(card.dataset.catId);
         selectedPrice = Number(card.dataset.catPrice);
-        maxQty = Number(card.dataset.catMax || 4);
-        if (maxCountSpan) maxCountSpan.textContent = String(maxQty);
+        availableQuota = Number(card.dataset.catAvailable || 0);
+        const catMax = Number(card.dataset.catMax || 4);
+        maxQty = Math.max(1, Math.min(catMax, availableQuota || catMax));
+        if (maxCountSpan) maxCountSpan.textContent = String(catMax);
 
         if (currentQty > maxQty) currentQty = maxQty;
+        await revalidateAppliedVoucherIfNeeded();
         updateTotals();
       });
     });
 
-    // Quantity steppers
-    qtyMinusBtn?.addEventListener('click', () => {
+    qtyMinusBtn?.addEventListener('click', async () => {
       if (currentQty > 1) {
         currentQty--;
+        await revalidateAppliedVoucherIfNeeded();
         updateTotals();
       }
     });
 
-    qtyPlusBtn?.addEventListener('click', () => {
+    qtyPlusBtn?.addEventListener('click', async () => {
       if (currentQty < maxQty) {
         currentQty++;
+        await revalidateAppliedVoucherIfNeeded();
         updateTotals();
       }
     });
 
-    function updateTotals() {
-      if (qtyDisplay) qtyDisplay.textContent = String(currentQty);
-      const subtotal = selectedPrice * currentQty;
-      const grandTotal = subtotal + 3000;
-
-      if (subtotalDisplay) subtotalDisplay.textContent = formatRupiah(subtotal);
-      if (grandTotalDisplay) grandTotalDisplay.textContent = formatRupiah(grandTotal);
-    }
-
-    updateTotals();
-
-    // Checkout submission
-    checkoutBtn?.addEventListener('click', async () => {
+    voucherBtn?.addEventListener('click', async () => {
       if (!isAuthenticated()) {
-        if (typeof window.openAuthModal === 'function') {
-          window.openAuthModal();
-        }
+        if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+        else window.location.href = '/masuk';
+        return;
+      }
+      const code = voucherInput?.value.trim().toUpperCase() || '';
+      if (!code) {
+        setVoucherFeedback('Masukkan kode voucher terlebih dahulu.', 'error');
+        return;
+      }
+      if (!selectedCategoryId) {
+        setVoucherFeedback('Pilih kategori tiket sebelum menerapkan voucher.', 'error');
         return;
       }
 
+      const subtotal = selectedPrice * currentQty;
+      voucherBtn.disabled = true;
+      voucherBtn.textContent = '...';
+      try {
+        const res = await validateVoucher(code, eventId, subtotal);
+        appliedVoucherCode = res.kode_voucher;
+        appliedDiscountAmount = Number(res.diskon_amount || 0);
+        if (voucherInput) voucherInput.value = appliedVoucherCode;
+        voucherClearBtn?.classList.remove('hidden');
+        setVoucherFeedback(
+          `Voucher ${appliedVoucherCode} valid — Diskon ${formatRupiah(appliedDiscountAmount)}`,
+          'success'
+        );
+        updateTotals();
+      } catch (err: any) {
+        appliedVoucherCode = '';
+        appliedDiscountAmount = 0;
+        voucherClearBtn?.classList.add('hidden');
+        setVoucherFeedback(err?.message || 'Kode voucher tidak valid atau kuota habis.', 'error');
+        updateTotals();
+      } finally {
+        voucherBtn.disabled = false;
+        voucherBtn.textContent = 'Pakai';
+      }
+    });
+
+    voucherClearBtn?.addEventListener('click', () => {
+      appliedVoucherCode = '';
+      appliedDiscountAmount = 0;
+      if (voucherInput) voucherInput.value = '';
+      voucherClearBtn.classList.add('hidden');
+      setVoucherFeedback('', 'hidden');
+      updateTotals();
+    });
+
+    conflictCancelBtn?.addEventListener('click', async () => {
+      if (!conflictOrderCode) return;
+      conflictCancelBtn.disabled = true;
+      conflictCancelBtn.textContent = 'Membatalkan...';
+      try {
+        await api.post(`/orders/${conflictOrderCode}/cancel`, {});
+        conflictBox?.classList.add('hidden');
+        conflictOrderCode = '';
+        idempotencyKey = crypto.randomUUID();
+        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        if (errorBox) {
+          errorBox.className = 'mb-4 p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-xs text-emerald-300 font-mono';
+          errorBox.textContent = 'Order sebelumnya berhasil dibatalkan. Klik tombol War Tiket sekarang untuk membuat pesanan baru.';
+          errorBox.classList.remove('hidden');
+        }
+      } catch (err: any) {
+        if (errorBox) {
+          errorBox.className = 'mb-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 font-mono';
+          errorBox.textContent = err?.message || 'Gagal membatalkan order aktif.';
+          errorBox.classList.remove('hidden');
+        }
+      } finally {
+        conflictCancelBtn.disabled = false;
+        conflictCancelBtn.textContent = 'Batalkan Order Sebelumnya';
+      }
+    });
+
+    updateTotals();
+    syncBookmarkStatus();
+    const onAuthChanged = () => { syncBookmarkStatus(); };
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+
+    checkoutBtn?.addEventListener('click', async () => {
+      if (!isAuthenticated()) {
+        if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+        else window.location.href = '/masuk';
+        return;
+      }
+
+      clearErrorAndConflict();
+
       if (!selectedCategoryId) {
-        alert('Silakan pilih salah satu kategori tiket terlebih dahulu.');
+        if (errorBox) {
+          errorBox.textContent = 'Silakan pilih salah satu kategori tiket terlebih dahulu.';
+          errorBox.classList.remove('hidden');
+        }
         return;
       }
 
@@ -482,30 +785,60 @@ const isSoldOut = event.is_sold_out || Number(event.available_quota) <= 0;
       text?.classList.add('opacity-50');
       spinner?.classList.remove('hidden');
 
-      const idempotencyKey = crypto.randomUUID();
-      const eventId = Number(window.location.pathname.split('/').filter(Boolean).pop());
-
       try {
         const res = await api.post('/orders/checkout', {
-          event_id: eventId || 1,
-          items: [
-            { category_id: selectedCategoryId, qty: currentQty }
-          ],
-          idempotency_key: idempotencyKey
+          event_id: eventId,
+          items: [{ category_id: selectedCategoryId, qty: currentQty }],
+          ...(appliedVoucherCode ? { voucher_code: appliedVoucherCode } : {}),
+          idempotency_key: idempotencyKey,
         }, {
-          idempotencyKey
+          idempotencyKey,
         });
 
-        // Navigate to pending order countdown screen
+        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
         window.location.href = `/orders/${res.order_code}`;
       } catch (err: any) {
-        alert(err.message || 'Gagal memproses pemesanan tiket. Coba beberapa saat lagi.');
+        const msg = String(err?.message || 'Gagal memproses pemesanan tiket.');
+        const isConflict = (err instanceof ApiError && err.status === 409) || msg.toLowerCase().includes('order') && msg.toLowerCase().includes('pending') || /ORD-[A-Z0-9-]+/i.test(msg);
+
+        if (isConflict) {
+          let activeCode = msg.match(/ORD-[A-Z0-9-]+/i)?.[0] || '';
+          try {
+            const active = await api.get<{ order_code?: string; nama_event?: string } | null>('/users/active-order');
+            if (active?.order_code) activeCode = active.order_code;
+          } catch {}
+
+          if (activeCode && conflictBox) {
+            conflictOrderCode = activeCode;
+            if (conflictCodeBadge) conflictCodeBadge.textContent = activeCode;
+            if (conflictText) conflictText.textContent = msg;
+            if (conflictContinueBtn) conflictContinueBtn.href = `/orders/${activeCode}`;
+            conflictBox.classList.remove('hidden');
+          } else if (errorBox) {
+            errorBox.className = 'mb-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 font-mono';
+            errorBox.textContent = msg;
+            errorBox.classList.remove('hidden');
+          }
+        } else if (errorBox) {
+          errorBox.className = 'mb-4 p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs text-red-300 font-mono';
+          errorBox.textContent = msg;
+          errorBox.classList.remove('hidden');
+        }
+
         checkoutBtn.disabled = false;
         text?.classList.remove('opacity-50');
         spinner?.classList.add('hidden');
       }
     });
+
+    return () => {
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
   }
 
-  document.addEventListener('astro:page-load', initWarArena);
+  let warArenaCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (warArenaCleanup) warArenaCleanup();
+    warArenaCleanup = initWarArena();
+  });
 </script>
