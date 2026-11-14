@@ -13,48 +13,51 @@ import Footer from '../../../components/landing/Footer.astro';
 
     <!-- Loading Skeleton -->
     <div id="receipt-loading" class="animate-pulse space-y-6">
-      <div class="h-28 rounded-3xl bg-dark-plum/70 border border-white/10"></div>
-      <div class="h-80 rounded-3xl bg-dark-plum/70 border border-white/10"></div>
+      <div class="h-28 rounded-3xl bg-neutral-200/70 dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10"></div>
+      <div class="h-80 rounded-3xl bg-neutral-200/70 dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10"></div>
     </div>
 
     <!-- Error / Unauthorized State -->
     <div id="receipt-error-state" class="hidden text-center py-20">
-      <div class="w-20 h-20 rounded-full bg-dark-plum border border-white/15 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
+      <div class="w-20 h-20 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none flex items-center justify-center mx-auto mb-4 text-electric-magenta">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
         </svg>
       </div>
-      <h2 id="receipt-error-title" class="font-display text-4xl text-soft-white mb-2">KUITANSI TIDAK TERSEDIA</h2>
-      <p id="receipt-error-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6"></p>
+      <h2 id="receipt-error-title" class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">KUITANSI TIDAK TERSEDIA</h2>
+      <p id="receipt-error-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6"></p>
       <div class="flex flex-wrap justify-center gap-3">
-        <button id="receipt-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        <a id="receipt-pay-link" href="#" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          Selesaikan Pembayaran
+        </a>
+        <button id="receipt-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
           Masuk Ke Akun
         </button>
-        <a href="/account?tab=orders" class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+        <a href="/account?tab=orders" class="px-6 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 text-neutral-900 dark:text-soft-white border border-neutral-200 dark:border-transparent font-bold text-xs uppercase tracking-wider transition-all">
           Lihat Riwayat Order
         </a>
       </div>
     </div>
     
     <!-- Printable Invoice Container -->
-    <div id="receipt-container" class="hidden rounded-3xl bg-dark-plum/90 border border-white/15 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-soft-white print:bg-white print:text-black print:border-none print:shadow-none">
+    <div id="receipt-container" class="hidden rounded-3xl bg-white dark:bg-dark-plum/90 border border-neutral-200 dark:border-white/15 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-neutral-950 dark:text-soft-white print:bg-white print:text-black print:border-none print:shadow-none">
       
       <!-- Top Receipt Header: Brand & PAID Stamp -->
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-white/10 print:border-black/20">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-neutral-200 dark:border-white/10 print:border-black/20">
         <div>
-          <span class="font-display text-4xl text-soft-white print:text-black tracking-wider block">
+          <span class="font-display text-4xl text-neutral-950 dark:text-soft-white print:text-black tracking-wider block">
             AFTERGLOW
           </span>
-          <span class="text-xs font-mono text-muted-gray print:text-neutral-600 block mt-0.5">
+          <span class="text-xs font-mono text-neutral-600 dark:text-muted-gray print:text-neutral-600 block mt-0.5">
             PLATFORM TIKET KONSER RESMI BERLISENSI
           </span>
-          <p class="text-[11px] text-muted-gray print:text-neutral-500 font-mono mt-1">
+          <p class="text-[11px] text-neutral-500 dark:text-muted-gray print:text-neutral-500 font-mono mt-1">
             NPWP: 01.345.678.9-012.000 • soundtix.id
           </p>
         </div>
 
         <!-- Official Status Stamp -->
-        <div id="receipt-status-badge" class="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg">
+        <div id="receipt-status-badge" class="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-sm dark:shadow-lg">
           <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
@@ -66,84 +69,84 @@ import Footer from '../../../components/landing/Footer.astro';
       </div>
 
       <!-- Transaction Meta Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 py-8 border-b border-white/10 print:border-black/20 text-xs font-mono">
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 py-8 border-b border-neutral-200 dark:border-white/10 print:border-black/20 text-xs font-mono">
         <div>
-          <span class="text-muted-gray print:text-neutral-500 block">KODE ORDER:</span>
-          <strong id="receipt-order-code" class="text-soft-white print:text-black text-sm block mt-0.5">ORD-XXXX</strong>
+          <span class="text-neutral-500 dark:text-muted-gray print:text-neutral-500 block">KODE ORDER:</span>
+          <strong id="receipt-order-code" class="text-neutral-950 dark:text-soft-white print:text-black text-sm block mt-0.5">ORD-XXXX</strong>
         </div>
         <div>
-          <span class="text-muted-gray print:text-neutral-500 block">TANGGAL LUNAS:</span>
-          <strong id="receipt-paid-at" class="text-soft-white print:text-black text-sm block mt-0.5">-</strong>
+          <span class="text-neutral-500 dark:text-muted-gray print:text-neutral-500 block">TANGGAL LUNAS:</span>
+          <strong id="receipt-paid-at" class="text-neutral-950 dark:text-soft-white print:text-black text-sm block mt-0.5">-</strong>
         </div>
         <div>
-          <span class="text-muted-gray print:text-neutral-500 block">METODE BAYAR:</span>
-          <strong id="receipt-channel" class="text-soft-white print:text-black text-sm block mt-0.5">MOCK PAY</strong>
+          <span class="text-neutral-500 dark:text-muted-gray print:text-neutral-500 block">METODE BAYAR:</span>
+          <strong id="receipt-channel" class="text-neutral-950 dark:text-soft-white print:text-black text-sm block mt-0.5">MOCK PAY</strong>
         </div>
         <div>
-          <span class="text-muted-gray print:text-neutral-500 block">PEMBELI:</span>
-          <strong id="receipt-buyer-email" class="text-soft-white print:text-black text-sm block mt-0.5 truncate">-</strong>
+          <span class="text-neutral-500 dark:text-muted-gray print:text-neutral-500 block">PEMBELI:</span>
+          <strong id="receipt-buyer-email" class="text-neutral-950 dark:text-soft-white print:text-black text-sm block mt-0.5 truncate">-</strong>
         </div>
       </div>
 
       <!-- Concert Info Banner -->
-      <div class="py-6 border-b border-white/10 print:border-black/20">
+      <div class="py-6 border-b border-neutral-200 dark:border-white/10 print:border-black/20">
         <span class="text-[10px] font-mono font-bold tracking-widest text-electric-magenta print:text-pink-700 uppercase block mb-1">
           DETAIL EVENT KONSER
         </span>
-        <h2 id="receipt-event-title" class="font-display text-3xl text-soft-white print:text-black">
+        <h2 id="receipt-event-title" class="font-display text-3xl text-neutral-950 dark:text-soft-white print:text-black">
           AFTERGLOW LIVE CONCERT
         </h2>
-        <p id="receipt-event-venue" class="text-xs text-muted-gray print:text-neutral-600 mt-1">-</p>
+        <p id="receipt-event-venue" class="text-xs text-neutral-600 dark:text-muted-gray print:text-neutral-600 mt-1">-</p>
         <p id="receipt-event-date" class="text-xs text-electric-magenta print:text-pink-700 font-mono font-semibold mt-1">-</p>
       </div>
 
       <!-- Ticket Items Table -->
-      <div class="py-6 border-b border-white/10 print:border-black/20">
+      <div class="py-6 border-b border-neutral-200 dark:border-white/10 print:border-black/20">
         <table class="w-full text-xs">
           <thead>
-            <tr class="text-muted-gray print:text-neutral-500 font-mono border-b border-white/10 print:border-black/20 pb-2">
+            <tr class="text-neutral-500 dark:text-muted-gray print:text-neutral-500 font-mono border-b border-neutral-200 dark:border-white/10 print:border-black/20 pb-2">
               <th class="text-left font-semibold pb-2">KATEGORI TIKET</th>
               <th class="text-center font-semibold pb-2">QTY</th>
               <th class="text-right font-semibold pb-2">HARGA SATUAN</th>
               <th class="text-right font-semibold pb-2">SUBTOTAL</th>
             </tr>
           </thead>
-          <tbody id="receipt-items-tbody" class="divide-y divide-white/5 print:divide-black/10">
+          <tbody id="receipt-items-tbody" class="divide-y divide-neutral-200 dark:divide-white/5 print:divide-black/10">
             <!-- Dynamically injected item rows -->
           </tbody>
         </table>
       </div>
 
       <!-- Financial Totals -->
-      <div class="py-6 border-b border-white/10 print:border-black/20 space-y-2 text-xs font-mono">
-        <div class="flex justify-between text-muted-gray print:text-neutral-600">
+      <div class="py-6 border-b border-neutral-200 dark:border-white/10 print:border-black/20 space-y-2 text-xs font-mono">
+        <div class="flex justify-between text-neutral-600 dark:text-muted-gray print:text-neutral-600">
           <span>Subtotal Tiket:</span>
-          <span id="receipt-subtotal" class="text-soft-white print:text-black font-semibold">Rp 0</span>
+          <span id="receipt-subtotal" class="text-neutral-950 dark:text-soft-white print:text-black font-semibold">Rp 0</span>
         </div>
-        <div id="receipt-discount-row" class="hidden flex justify-between text-emerald-400 print:text-emerald-700">
+        <div id="receipt-discount-row" class="hidden flex justify-between text-emerald-600 dark:text-emerald-400 print:text-emerald-700">
           <span>Diskon Voucher (<span id="receipt-voucher-code"></span>):</span>
           <span id="receipt-discount" class="font-semibold">-Rp 0</span>
         </div>
-        <div class="flex justify-between text-muted-gray print:text-neutral-600">
+        <div class="flex justify-between text-neutral-600 dark:text-muted-gray print:text-neutral-600">
           <span>Platform & Escrow Convenience Fee (5%):</span>
-          <span id="receipt-platform-fee" class="text-soft-white print:text-black font-semibold">Rp 0</span>
+          <span id="receipt-platform-fee" class="text-neutral-950 dark:text-soft-white print:text-black font-semibold">Rp 0</span>
         </div>
-        <div class="flex justify-between text-sm font-bold pt-3 border-t border-white/10 print:border-black/20">
-          <span class="text-soft-white print:text-black font-sans">TOTAL TELAH DIBAYAR:</span>
+        <div class="flex justify-between text-sm font-bold pt-3 border-t border-neutral-200 dark:border-white/10 print:border-black/20">
+          <span class="text-neutral-950 dark:text-soft-white print:text-black font-sans">TOTAL TELAH DIBAYAR:</span>
           <span id="receipt-total-paid" class="font-display text-3xl text-electric-magenta print:text-pink-700">Rp 0</span>
         </div>
       </div>
 
       <!-- Issued Ticket Codes Summary -->
-      <div id="receipt-tickets-box" class="hidden py-5 border-b border-white/10 print:border-black/20">
-        <span class="text-[10px] font-mono uppercase tracking-wider text-muted-gray print:text-neutral-600 block mb-2">
+      <div id="receipt-tickets-box" class="hidden py-5 border-b border-neutral-200 dark:border-white/10 print:border-black/20">
+        <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-muted-gray print:text-neutral-600 block mb-2">
           E-TIKET DITERBITKAN:
         </span>
         <div id="receipt-ticket-codes" class="flex flex-wrap gap-2"></div>
       </div>
 
       <!-- Escrow Guarantee & Legal Disclaimer -->
-      <div class="pt-6 text-[11px] text-muted-gray print:text-neutral-500 space-y-2">
+      <div class="pt-6 text-[11px] text-neutral-500 dark:text-muted-gray print:text-neutral-500 space-y-2">
         <p>
           🛡️ <strong>Garansi Perlindungan Escrow AFTERGLOW</strong>: Dana pembayaran Anda disimpan aman dalam rekening bersama penampungan platform dan baru akan dicairkan ke promotor setelah konser berhasil digelar.
         </p>
@@ -158,7 +161,7 @@ import Footer from '../../../components/landing/Footer.astro';
           <button 
             id="print-receipt-btn" 
             type="button" 
-            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -171,7 +174,7 @@ import Footer from '../../../components/landing/Footer.astro';
             href="#" 
             target="_blank" 
             rel="noopener noreferrer" 
-            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+            class="flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
           >
             <svg class="w-4 h-4 text-electric-magenta" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -182,7 +185,7 @@ import Footer from '../../../components/landing/Footer.astro';
 
         <a 
           href="/tickets" 
-          class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider text-center hover:shadow-magenta-glow transition-all hover:scale-105 active:scale-95"
+          class="w-full sm:w-auto px-8 py-3.5 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider text-center hover:shadow-magenta-glow transition-all hover:scale-105 active:scale-95"
         >
           BUKA E-TIKET SAYA (QR SCAN) →
         </a>
@@ -209,6 +212,7 @@ import Footer from '../../../components/landing/Footer.astro';
     const errorEl = document.getElementById('receipt-error-state');
     const errorTitle = document.getElementById('receipt-error-title');
     const errorDesc = document.getElementById('receipt-error-desc');
+    const payLinkBtn = document.getElementById('receipt-pay-link') as HTMLAnchorElement | null;
     const loginBtn = document.getElementById('receipt-login-btn');
 
     const statusBadge = document.getElementById('receipt-status-badge');
@@ -240,7 +244,7 @@ import Footer from '../../../components/landing/Footer.astro';
       else window.location.href = '/masuk';
     });
 
-    function showError(title: string, desc: string, needsAuth = false) {
+    function showError(title: string, desc: string, needsAuth = false, showPayLink = false) {
       loadingEl?.classList.add('hidden');
       containerEl?.classList.add('hidden');
       errorEl?.classList.remove('hidden');
@@ -248,6 +252,12 @@ import Footer from '../../../components/landing/Footer.astro';
       if (errorDesc) errorDesc.textContent = desc;
       if (needsAuth) loginBtn?.classList.remove('hidden');
       else loginBtn?.classList.add('hidden');
+      if (payLinkBtn && orderCode && showPayLink) {
+        payLinkBtn.href = `/orders/${orderCode}`;
+        payLinkBtn.classList.remove('hidden');
+      } else {
+        payLinkBtn?.classList.add('hidden');
+      }
     }
 
     if (!orderCode) return () => {};
@@ -286,14 +296,31 @@ import Footer from '../../../components/landing/Footer.astro';
         if (isDisposed) return;
         const status = err instanceof ApiError ? err.status : 0;
         if (status === 401 || status === 403) {
-          showError('AKSES KUITANSI DITOLAK', err.message || 'Akun ini bukan pemilik order.', true);
+          showError('AKSES KUITANSI DITOLAK', err.message || 'Akun ini bukan pemilik order.', true, false);
+        } else if (status === 400 || status === 409) {
+          showError(
+            'PEMBAYARAN BELUM LUNAS',
+            err?.message || `Order ${orderCode} belum dibayar lunas sehingga kuitansi resmi belum dapat diterbitkan.`,
+            false,
+            true
+          );
         } else {
-          showError('KUITANSI TIDAK DITEMUKAN', err?.message || `Kuitansi untuk order ${orderCode} belum tersedia atau belum lunas.`);
+          showError('KUITANSI TIDAK DITEMUKAN', err?.message || `Kuitansi untuk order ${orderCode} belum tersedia atau belum lunas.`, false, false);
         }
       }
     }
 
     function renderReceipt(data: any) {
+      if (data.status !== 'paid' && data.status !== 'refunded') {
+        showError(
+          'PEMBAYARAN BELUM LUNAS',
+          `Order ${data.order_code || orderCode} berstatus ${String(data.status || 'pending').toUpperCase()}. Selesaikan pembayaran terlebih dahulu untuk mencetak kuitansi resmi.`,
+          false,
+          data.status === 'pending'
+        );
+        return;
+      }
+
       loadingEl?.classList.add('hidden');
       errorEl?.classList.add('hidden');
       containerEl?.classList.remove('hidden');
@@ -307,10 +334,10 @@ import Footer from '../../../components/landing/Footer.astro';
 
       if (statusBadge && statusText) {
         if (data.status === 'refunded') {
-          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-300 print:text-amber-700 print:border-amber-600 shadow-lg';
+          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-500/40 text-amber-700 dark:text-amber-300 print:text-amber-700 print:border-amber-600 shadow-sm dark:shadow-lg';
           statusText.textContent = 'REFUNDED';
         } else {
-          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg';
+          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-sm dark:shadow-lg';
           statusText.textContent = 'LUNAS // PAID';
         }
       }
@@ -340,10 +367,10 @@ import Footer from '../../../components/landing/Footer.astro';
             const catName = item.nama_kategori || item.category_name || 'Tiket Konser';
             return `
               <tr class="py-2.5">
-                <td class="py-2.5 text-soft-white print:text-black font-semibold">${escapeHtml(catName)}</td>
-                <td class="py-2.5 text-center text-muted-gray print:text-neutral-600">${qty}</td>
-                <td class="py-2.5 text-right font-mono text-muted-gray print:text-neutral-600">${escapeHtml(formatRupiah(unitPrice))}</td>
-                <td class="py-2.5 text-right font-mono text-soft-white print:text-black font-bold">${escapeHtml(formatRupiah(sub))}</td>
+                <td class="py-2.5 text-neutral-950 dark:text-soft-white print:text-black font-semibold">${escapeHtml(catName)}</td>
+                <td class="py-2.5 text-center text-neutral-600 dark:text-muted-gray print:text-neutral-600">${qty}</td>
+                <td class="py-2.5 text-right font-mono text-neutral-600 dark:text-muted-gray print:text-neutral-600">${escapeHtml(formatRupiah(unitPrice))}</td>
+                <td class="py-2.5 text-right font-mono text-neutral-950 dark:text-soft-white print:text-black font-bold">${escapeHtml(formatRupiah(sub))}</td>
               </tr>
             `;
           })
@@ -374,7 +401,7 @@ import Footer from '../../../components/landing/Footer.astro';
           ticketCodesEl.innerHTML = tickets
             .map(
               (t: any) => `
-              <span class="px-3 py-1.5 rounded-lg bg-void-black/80 border border-white/15 print:border-black/30 print:bg-neutral-100 font-mono text-[11px] font-bold">
+              <span class="px-3 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black/80 border border-neutral-200 dark:border-white/15 print:border-black/30 print:bg-neutral-100 text-neutral-900 dark:text-soft-white font-mono text-[11px] font-bold">
                 ${escapeHtml(t.ticket_code)} (${escapeHtml(String(t.status || 'active').toUpperCase())})
               </span>
             `

@@ -13,15 +13,15 @@ import Footer from '../../components/landing/Footer.astro';
     
     <!-- Loading Skeleton Placeholder -->
     <div id="order-loading-skeleton" class="animate-pulse space-y-6">
-      <div class="h-8 bg-white/5 rounded-xl w-1/3"></div>
-      <div class="h-64 bg-dark-plum/70 rounded-3xl border border-white/10"></div>
+      <div class="h-8 bg-neutral-200 dark:bg-white/5 rounded-xl w-1/3"></div>
+      <div class="h-64 bg-neutral-200/70 dark:bg-dark-plum/70 rounded-3xl border border-neutral-200 dark:border-white/10"></div>
     </div>
 
     <!-- Main Order Container (Hidden until client loads order) -->
     <div id="order-content" class="hidden space-y-8">
       
       <!-- Top Status Banner with 15-Minute Countdown -->
-      <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum border border-electric-magenta/40 shadow-magenta-glow backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+      <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum border border-electric-magenta/40 shadow-magenta-glow backdrop-blur-xl relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div class="space-y-1">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta animate-ping"></span>
@@ -29,33 +29,33 @@ import Footer from '../../components/landing/Footer.astro';
               RESERVASI KUOTA AKTIF
             </span>
           </div>
-          <h1 class="font-display text-3xl sm:text-4xl text-soft-white tracking-wide">
+          <h1 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white tracking-wide">
             SELESAIKAN PEMBAYARAN TIKET
           </h1>
-          <p class="text-xs text-muted-gray">
-            Kode Transaksi: <strong id="order-code-display" class="font-mono text-soft-white tracking-wider">ORD-XXXX</strong>
+          <p class="text-xs text-neutral-600 dark:text-muted-gray">
+            Kode Transaksi: <strong id="order-code-display" class="font-mono text-neutral-950 dark:text-soft-white tracking-wider">ORD-XXXX</strong>
           </p>
         </div>
 
         <!-- 15-Minute Countdown Clock Disc -->
-        <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-void-black/80 border border-white/15 min-w-[140px] text-center shadow-lg">
-          <span class="text-[10px] font-mono text-muted-gray uppercase tracking-wider mb-1">SISA WAKTU BAYAR</span>
+        <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-200 dark:border-white/15 min-w-[140px] text-center shadow-sm dark:shadow-lg">
+          <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray uppercase tracking-wider mb-1">SISA WAKTU BAYAR</span>
           <span id="order-countdown-timer" class="font-display text-4xl text-electric-magenta tracking-widest animate-pulse">
             15:00
           </span>
-          <span class="text-[9px] text-muted-gray mt-1 font-mono">Sebelum Kuota Dilepas</span>
+          <span class="text-[9px] text-neutral-500 dark:text-muted-gray mt-1 font-mono">Sebelum Kuota Dilepas</span>
         </div>
       </div>
 
       <!-- Order Summary Card -->
-      <div class="p-7 sm:p-9 rounded-3xl bg-dark-plum/80 border border-white/15 backdrop-blur-xl space-y-6">
-        <h2 class="font-display text-2xl text-soft-white border-b border-white/10 pb-4">
+      <div class="p-7 sm:p-9 rounded-3xl bg-white dark:bg-dark-plum/80 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none backdrop-blur-xl space-y-6">
+        <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white border-b border-neutral-200 dark:border-white/10 pb-4">
           RINCIAN TIKET YANG DIPESAN
         </h2>
 
         <!-- Event Basic Info -->
         <div class="flex items-start gap-4">
-          <div class="w-16 h-16 rounded-2xl bg-void-black border border-white/10 overflow-hidden shrink-0">
+          <div class="w-16 h-16 rounded-2xl bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 overflow-hidden shrink-0">
             <img 
               id="order-event-poster" 
               src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&q=80" 
@@ -64,8 +64,8 @@ import Footer from '../../components/landing/Footer.astro';
             />
           </div>
           <div>
-            <h3 id="order-event-title" class="font-bold text-lg text-soft-white">Nama Konser Musik</h3>
-            <p id="order-event-venue" class="text-xs text-muted-gray mt-0.5">Gelora Bung Karno Stadium, Jakarta</p>
+            <h3 id="order-event-title" class="font-bold text-lg text-neutral-950 dark:text-soft-white">Nama Konser Musik</h3>
+            <p id="order-event-venue" class="text-xs text-neutral-600 dark:text-muted-gray mt-0.5">Gelora Bung Karno Stadium, Jakarta</p>
             <p id="order-event-date" class="text-xs text-electric-magenta font-mono font-semibold mt-1">Sabtu, 14 Nov 2026 • 19:00 WIB</p>
           </div>
         </div>
@@ -76,36 +76,36 @@ import Footer from '../../components/landing/Footer.astro';
         </div>
 
         <!-- Applied Promo Badge (Shown when voucher was attached at checkout) -->
-        <div id="order-voucher-badge" class="hidden p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+        <div id="order-voucher-badge" class="hidden p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-between">
           <div>
-            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-300 block">Kode Promo Diterapkan</span>
-            <strong id="order-voucher-code" class="font-mono text-sm text-soft-white"></strong>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-700 dark:text-emerald-300 block">Kode Promo Diterapkan</span>
+            <strong id="order-voucher-code" class="font-mono text-sm text-neutral-950 dark:text-soft-white"></strong>
           </div>
-          <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">ACTIVE</span>
+          <span class="px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-bold">ACTIVE</span>
         </div>
 
         <!-- Transparent Price Breakdown (5% Platform Fee) -->
-        <div class="space-y-2 py-4 border-t border-b border-white/10 text-xs font-mono">
-          <div class="flex justify-between text-muted-gray">
+        <div class="space-y-2 py-4 border-t border-b border-neutral-200 dark:border-white/10 text-xs font-mono">
+          <div class="flex justify-between text-neutral-600 dark:text-muted-gray">
             <span>Subtotal Tiket:</span>
-            <span id="order-subtotal" class="text-soft-white">Rp 0</span>
+            <span id="order-subtotal" class="text-neutral-950 dark:text-soft-white">Rp 0</span>
           </div>
-          <div id="order-discount-row" class="hidden flex justify-between text-emerald-400">
+          <div id="order-discount-row" class="hidden flex justify-between text-emerald-600 dark:text-emerald-400">
             <span>Potongan Diskon Voucher:</span>
             <span id="order-discount-amount">- Rp 0</span>
           </div>
-          <div class="flex justify-between text-muted-gray">
+          <div class="flex justify-between text-neutral-600 dark:text-muted-gray">
             <span>Platform & Escrow Fee (5%):</span>
-            <span id="order-platform-fee" class="text-soft-white">Rp 0</span>
+            <span id="order-platform-fee" class="text-neutral-950 dark:text-soft-white">Rp 0</span>
           </div>
-          <div class="flex justify-between text-base font-bold pt-3 border-t border-white/10">
-            <span class="text-soft-white font-sans">Total Pembayaran Lunas:</span>
+          <div class="flex justify-between text-base font-bold pt-3 border-t border-neutral-200 dark:border-white/10">
+            <span class="text-neutral-950 dark:text-soft-white font-sans">Total Pembayaran Lunas:</span>
             <span id="order-final-amount" class="font-display text-3xl text-electric-magenta">Rp 0</span>
           </div>
         </div>
 
         <!-- Payment Action Feedback -->
-        <div id="order-action-msg" class="hidden p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-muted-gray"></div>
+        <div id="order-action-msg" class="hidden p-3.5 rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray"></div>
 
         <!-- Payment Actions (Xendit Invoice OR Mock Payment + Cancel) -->
         <div class="space-y-3 pt-2">
@@ -116,7 +116,7 @@ import Footer from '../../components/landing/Footer.astro';
               href="#"
               target="_blank"
               rel="noopener noreferrer"
-              class="w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01]"
+              class="w-full py-4 px-6 rounded-2xl bg-electric-magenta text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01]"
             >
               <span>LANJUTKAN BAYAR VIA XENDIT INVOICE (QRIS / VA / E-WALLET)</span>
               <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -126,7 +126,7 @@ import Footer from '../../components/landing/Footer.astro';
             <button
               id="check-status-btn"
               type="button"
-              class="w-full py-3 px-6 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25 text-xs font-bold tracking-wider uppercase transition-all"
+              class="w-full py-3 px-6 rounded-2xl bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/25 text-xs font-bold tracking-wider uppercase transition-all"
             >
               Saya Sudah Bayar — Cek Status Transaksi Sekarang
             </button>
@@ -136,7 +136,7 @@ import Footer from '../../components/landing/Footer.astro';
           <button 
             id="mock-pay-btn" 
             type="button" 
-            class="hidden w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+            class="hidden w-full py-4 px-6 rounded-2xl bg-electric-magenta text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
           >
             <span class="btn-text">⚡ SIMULASIKAN PEMBAYARAN INSTAN (MOCK PAY)</span>
             <svg class="w-4 h-4 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
@@ -149,7 +149,7 @@ import Footer from '../../components/landing/Footer.astro';
           <button 
             id="cancel-order-btn" 
             type="button" 
-            class="w-full py-3 px-6 rounded-2xl bg-white/5 border border-white/10 text-muted-gray hover:text-red-400 hover:border-red-500/40 text-xs font-semibold tracking-wider uppercase transition-colors"
+            class="w-full py-3 px-6 rounded-2xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-500/40 text-xs font-semibold tracking-wider uppercase transition-colors"
           >
             Batalkan Pesanan Ini (Kembalikan Kuota)
           </button>
@@ -158,35 +158,55 @@ import Footer from '../../components/landing/Footer.astro';
     </div>
 
     <!-- Expired / Cancelled / Refunded State -->
-    <div id="order-expired-state" class="hidden text-center py-20">
-      <div class="w-20 h-20 rounded-full bg-red-950/40 border border-red-500/40 flex items-center justify-center mx-auto mb-4 text-red-400">
+    <div id="order-expired-state" class="hidden text-center py-20 max-w-xl mx-auto">
+      <div class="w-20 h-20 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-500/40 flex items-center justify-center mx-auto mb-4 text-red-600 dark:text-red-400">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 id="order-closed-title" class="font-display text-4xl text-soft-white mb-2">SESI RESERVASI TELAH BERAKHIR</h2>
-      <p id="order-closed-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+      <h2 id="order-closed-title" class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">SESI RESERVASI TELAH BERAKHIR</h2>
+      <p id="order-closed-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
         Batas waktu pembayaran 15 menit telah habis dan kuota tiket telah dikembalikan ke katalog publik secara otomatis.
       </p>
-      <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
-        CARI TIKET LAIN
-      </a>
+
+      <div id="order-late-payment-box" class="hidden mb-6 p-5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-500/40 text-left space-y-2">
+        <div class="flex items-center justify-between gap-2">
+          <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-800 dark:text-amber-300">
+            Perlindungan Dana Pembeli (Path B)
+          </span>
+          <span id="order-late-refund-status" class="px-2.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 border border-amber-300 dark:border-amber-500/40 text-amber-800 dark:text-amber-200 text-[10px] font-mono font-bold uppercase">
+            PENDING
+          </span>
+        </div>
+        <p id="order-late-refund-reason" class="text-xs text-amber-900 dark:text-amber-100/90 leading-relaxed">
+          Pembayaran masuk setelah batas reservasi berakhir. Dana otomatis dimasukkan ke antrean pengembalian dana platform.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a id="order-refund-track-link" href="/account?tab=refunds" class="hidden px-6 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 border border-neutral-200 dark:border-white/15 text-neutral-900 dark:text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+          Pantau Status Refund →
+        </a>
+        <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          CARI TIKET LAIN
+        </a>
+      </div>
     </div>
 
     <!-- Order Not Found / Error / Unauthorized State -->
     <div id="order-error-state" class="hidden text-center py-20">
-      <div class="w-20 h-20 rounded-full bg-dark-plum border border-white/15 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
+      <div class="w-20 h-20 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none flex items-center justify-center mx-auto mb-4 text-electric-magenta">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
         </svg>
       </div>
-      <h2 id="order-error-title" class="font-display text-4xl text-soft-white mb-2">ORDER TIDAK DAPAT DIMUAT</h2>
-      <p id="order-error-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6"></p>
+      <h2 id="order-error-title" class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">ORDER TIDAK DAPAT DIMUAT</h2>
+      <p id="order-error-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6"></p>
       <div class="flex flex-wrap justify-center gap-3">
-        <button id="order-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        <button id="order-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
           Masuk Ke Akun
         </button>
-        <a href="/events" class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+        <a href="/events" class="px-6 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 text-neutral-900 dark:text-soft-white border border-neutral-200 dark:border-transparent font-bold text-xs uppercase tracking-wider transition-all">
           Kembali ke Katalog
         </a>
       </div>
@@ -212,6 +232,10 @@ import Footer from '../../components/landing/Footer.astro';
     const expiredState = document.getElementById('order-expired-state');
     const closedTitle = document.getElementById('order-closed-title');
     const closedDesc = document.getElementById('order-closed-desc');
+    const latePaymentBox = document.getElementById('order-late-payment-box');
+    const lateRefundStatus = document.getElementById('order-late-refund-status');
+    const lateRefundReason = document.getElementById('order-late-refund-reason');
+    const refundTrackLink = document.getElementById('order-refund-track-link');
     const errorState = document.getElementById('order-error-state');
     const errorTitle = document.getElementById('order-error-title');
     const errorDesc = document.getElementById('order-error-desc');
@@ -259,8 +283,8 @@ import Footer from '../../components/landing/Footer.astro';
       actionMsg.textContent = text;
       actionMsg.className = `p-3.5 rounded-xl border text-xs font-mono ${
         isErr
-          ? 'bg-red-500/10 border-red-500/30 text-red-300'
-          : 'bg-white/5 border-white/10 text-muted-gray'
+          ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300'
+          : 'bg-neutral-100 dark:bg-white/5 border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray'
       }`;
       actionMsg.classList.remove('hidden');
     }
@@ -306,9 +330,20 @@ import Footer from '../../components/landing/Footer.astro';
         return;
       }
 
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlPaymentStatus = urlParams.get('status');
+      let hasTriggeredInitialSync = false;
+
       try {
         const order = await api.get(`/orders/${orderCode}`);
-        if (!isDisposed) renderOrder(order);
+        if (isDisposed) return;
+        renderOrder(order);
+
+        if (order.status === 'pending' && urlPaymentStatus === 'success' && !hasTriggeredInitialSync) {
+          hasTriggeredInitialSync = true;
+          showFeedback('Memverifikasi status pembayaran langsung ke gateway Xendit...');
+          await checkOrderStatusOnce(false, true);
+        }
       } catch (err: any) {
         if (isDisposed) return;
         const status = err instanceof ApiError ? err.status : 0;
@@ -320,15 +355,37 @@ import Footer from '../../components/landing/Footer.astro';
       }
     }
 
-    function renderClosedState(status: string) {
+    function renderClosedState(status: string, order?: any) {
       content?.classList.add('hidden');
       expiredState?.classList.remove('hidden');
+
+      const hasLatePayment = Boolean(order?.is_late_payment) || (status === 'refunded' && Boolean(order?.refund_id));
+
+      if (hasLatePayment) {
+        latePaymentBox?.classList.remove('hidden');
+        refundTrackLink?.classList.remove('hidden');
+        if (lateRefundStatus) {
+          lateRefundStatus.textContent = String(order?.refund_status || 'pending').toUpperCase();
+        }
+        if (lateRefundReason) {
+          lateRefundReason.textContent =
+            order?.refund_reason ||
+            'Pembayaran masuk setelah batas reservasi 15 menit berakhir. Dana Anda otomatis masuk antrean pengembalian dana platform.';
+        }
+      } else {
+        latePaymentBox?.classList.add('hidden');
+        refundTrackLink?.classList.add('hidden');
+      }
+
       if (status === 'cancelled') {
         if (closedTitle) closedTitle.textContent = 'PESANAN TELAH DIBATALKAN';
         if (closedDesc) closedDesc.textContent = 'Pesanan ini telah dibatalkan dan kuota tiketnya sudah dilepas kembali ke publik.';
       } else if (status === 'refunded') {
         if (closedTitle) closedTitle.textContent = 'TRANSAKSI TELAH DI-REFUND';
         if (closedDesc) closedDesc.textContent = 'Dana pembelian tiket telah masuk dalam proses pengembalian dana.';
+      } else if (hasLatePayment) {
+        if (closedTitle) closedTitle.textContent = 'PEMBAYARAN TERLAMBAT // ANTREAN REFUND';
+        if (closedDesc) closedDesc.textContent = 'Waktu reservasi sudah habis saat pembayaran tiba di Xendit. Kuota dilepas dan dana otomatis dijadwalkan untuk refund.';
       } else {
         if (closedTitle) closedTitle.textContent = 'SESI RESERVASI TELAH BERAKHIR';
         if (closedDesc) closedDesc.textContent = 'Batas waktu pembayaran 15 menit telah habis dan kuota tiket telah dikembalikan secara otomatis.';
@@ -345,8 +402,13 @@ import Footer from '../../components/landing/Footer.astro';
       }
 
       if (order.status === 'expired' || order.status === 'cancelled' || order.status === 'refunded') {
-        renderClosedState(order.status);
+        renderClosedState(order.status, order);
         return;
+      }
+
+      const urlPaymentStatus = new URLSearchParams(window.location.search).get('status');
+      if (urlPaymentStatus === 'failed') {
+        showFeedback('Pembayaran di Xendit dibatalkan atau gagal. Silakan coba lagi sebelum waktu reservasi berakhir.', true);
       }
 
       content?.classList.remove('hidden');
@@ -365,12 +427,12 @@ import Footer from '../../components/landing/Footer.astro';
             const sub = Number(item.subtotal ?? unitPrice * qty);
             const catName = item.nama_kategori || item.category_name || 'Tiket Konser';
             return `
-              <div class="flex items-center justify-between p-3.5 rounded-xl bg-void-black/70 border border-white/5 text-xs">
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/5 text-xs">
                 <div>
-                  <span class="font-bold text-soft-white block">${escapeHtml(catName)}</span>
-                  <span class="text-muted-gray">${qty} tiket × ${escapeHtml(formatRupiah(unitPrice))}</span>
+                  <span class="font-bold text-neutral-950 dark:text-soft-white block">${escapeHtml(catName)}</span>
+                  <span class="text-neutral-600 dark:text-muted-gray">${qty} tiket × ${escapeHtml(formatRupiah(unitPrice))}</span>
                 </div>
-                <span class="font-mono font-bold text-soft-white">${escapeHtml(formatRupiah(sub))}</span>
+                <span class="font-mono font-bold text-neutral-950 dark:text-soft-white">${escapeHtml(formatRupiah(sub))}</span>
               </div>
             `;
           })
@@ -417,7 +479,7 @@ import Footer from '../../components/landing/Footer.astro';
       }
 
       if (order.payment_expires_at) {
-        startCountdown(order.payment_expires_at);
+        startCountdown(order.payment_expires_at, order);
       }
 
       if (orderCode !== 'demo') {
@@ -425,9 +487,10 @@ import Footer from '../../components/landing/Footer.astro';
       }
     }
 
-    function startCountdown(expiresAtStr: string) {
+    function startCountdown(expiresAtStr: string, orderSnapshot?: any) {
       clearInterval(timerInterval);
       const expiresAt = new Date(expiresAtStr).getTime();
+      let expirySynced = false;
 
       function tick() {
         const remaining = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
@@ -437,7 +500,12 @@ import Footer from '../../components/landing/Footer.astro';
         if (remaining <= 0) {
           clearInterval(timerInterval);
           clearInterval(pollingInterval);
-          renderClosedState('expired');
+          if (orderCode !== 'demo' && !expirySynced) {
+            expirySynced = true;
+            void checkOrderStatusOnce(false, orderSnapshot?.payment_mode === 'xendit', true);
+          } else {
+            renderClosedState('expired', orderSnapshot);
+          }
         }
       }
 
@@ -445,30 +513,50 @@ import Footer from '../../components/landing/Footer.astro';
       timerInterval = setInterval(tick, 1000);
     }
 
-    async function checkOrderStatusOnce(manual = false) {
+    async function checkOrderStatusOnce(manual = false, forceSync = false, closeOnPendingExpired = false) {
       if (orderCode === 'demo') return;
       try {
-        const check = await api.get(`/orders/${orderCode}`);
-        if (isDisposed) return;
-        if (check.status === 'paid') {
+        let check: any;
+        let invoiceStatus: string | undefined;
+
+        if (manual || forceSync) {
+          const syncRes = await api.post<any>(`/orders/${orderCode}/sync-payment`);
+          if (isDisposed) return;
+          invoiceStatus = syncRes?.invoice_status;
+          check = syncRes?.order ?? syncRes;
+        } else {
+          check = await api.get<any>(`/orders/${orderCode}`);
+          if (isDisposed) return;
+        }
+
+        if (check?.status === 'paid') {
           clearInterval(pollingInterval);
           clearInterval(timerInterval);
           window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
           window.location.href = `/orders/${orderCode}/receipt`;
           return;
         }
-        if (check.status === 'expired' || check.status === 'cancelled' || check.status === 'refunded') {
+        if (check?.status === 'expired' || check?.status === 'cancelled' || check?.status === 'refunded') {
           clearInterval(pollingInterval);
           clearInterval(timerInterval);
           window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
-          renderClosedState(check.status);
+          renderClosedState(check.status, check);
           return;
         }
-        if (manual) {
-          showFeedback('Status order masih PENDING menunggu konfirmasi pembayaran. Selesaikan invoice lalu cek lagi.');
+        if (closeOnPendingExpired) {
+          renderClosedState('expired', check);
+          return;
+        }
+        if (manual || forceSync) {
+          const gwInfo = invoiceStatus ? ` (Gateway: ${invoiceStatus})` : '';
+          showFeedback(`Status order masih PENDING${gwInfo} menunggu konfirmasi pembayaran. Selesaikan invoice lalu cek lagi.`);
         }
       } catch (err: any) {
-        if (manual) showFeedback(err?.message || 'Gagal mengecek status pembayaran.', true);
+        if (closeOnPendingExpired) {
+          renderClosedState('expired');
+          return;
+        }
+        if (manual || forceSync) showFeedback(err?.message || 'Gagal menyinkronkan status pembayaran.', true);
       }
     }
 
@@ -487,13 +575,19 @@ import Footer from '../../components/landing/Footer.astro';
       }, 3000);
     }
 
+    let checkStatusCooldown = false;
     checkStatusBtn?.addEventListener('click', async () => {
-      if (!checkStatusBtn) return;
+      if (!checkStatusBtn || checkStatusCooldown) return;
+      checkStatusCooldown = true;
       checkStatusBtn.disabled = true;
-      checkStatusBtn.textContent = 'Memeriksa Status...';
-      await checkOrderStatusOnce(true);
-      checkStatusBtn.disabled = false;
+      checkStatusBtn.textContent = 'Menyinkronkan ke Gateway...';
+      await checkOrderStatusOnce(true, true);
+      if (isDisposed) return;
       checkStatusBtn.textContent = 'Saya Sudah Bayar — Cek Status Transaksi Sekarang';
+      setTimeout(() => {
+        checkStatusCooldown = false;
+        if (checkStatusBtn && !isDisposed) checkStatusBtn.disabled = false;
+      }, 2500);
     });
 
     mockPayBtn?.addEventListener('click', async () => {

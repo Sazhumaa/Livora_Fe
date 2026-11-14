@@ -15,23 +15,23 @@ import Footer from '../../components/landing/Footer.astro';
         <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
           DOMPET DIGITAL // PASS RESMI
         </span>
-        <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+        <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
           TIKET KONSER SAYA
         </h1>
-        <p class="text-sm text-muted-gray mt-1 max-w-xl">
+        <p class="text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-xl">
           Buka Boarding Pass QR resmi dan tunjukkan ke kru pemindai di pintu gerbang venue konser.
         </p>
       </div>
 
       <!-- Filter Tabs -->
-      <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-dark-plum border border-white/10 shrink-0 text-xs font-mono font-semibold" id="ticket-status-tabs">
-        <button data-tab="active" class="ticket-tab-btn px-4 py-2 rounded-xl bg-electric-magenta text-soft-white shadow-magenta-glow">
+      <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none shrink-0 text-xs font-mono font-semibold" id="ticket-status-tabs">
+        <button data-tab="active" class="ticket-tab-btn px-4 py-2 rounded-xl bg-electric-magenta text-white shadow-magenta-glow">
           Siap Masuk
         </button>
-        <button data-tab="used" class="ticket-tab-btn px-4 py-2 rounded-xl text-muted-gray hover:text-soft-white">
+        <button data-tab="used" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
           Sudah Dipindai
         </button>
-        <button data-tab="cancelled" class="ticket-tab-btn px-4 py-2 rounded-xl text-muted-gray hover:text-soft-white">
+        <button data-tab="cancelled" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
           Dibatalkan
         </button>
       </div>
@@ -39,47 +39,47 @@ import Footer from '../../components/landing/Footer.astro';
 
     <!-- Loading Skeleton Placeholder -->
     <div id="tickets-loading" class="animate-pulse space-y-6">
-      <div class="h-56 bg-dark-plum/60 rounded-3xl border border-white/10"></div>
-      <div class="h-56 bg-dark-plum/60 rounded-3xl border border-white/10"></div>
+      <div class="h-56 bg-neutral-200/70 dark:bg-dark-plum/60 rounded-3xl border border-neutral-200 dark:border-white/10"></div>
+      <div class="h-56 bg-neutral-200/70 dark:bg-dark-plum/60 rounded-3xl border border-neutral-200 dark:border-white/10"></div>
     </div>
 
     <!-- Unauthenticated State -->
-    <div id="tickets-auth-state" class="hidden text-center py-24 rounded-3xl bg-dark-plum/40 border border-white/10">
-      <div class="w-20 h-20 rounded-full bg-void-black border border-white/10 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
+    <div id="tickets-auth-state" class="hidden text-center py-24 rounded-3xl bg-white dark:bg-dark-plum/40 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
+      <div class="w-20 h-20 rounded-full bg-neutral-50 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
         </svg>
       </div>
-      <h2 class="font-display text-3xl text-soft-white mb-2">MASUK UNTUK MELIHAT E-TIKET</h2>
-      <p class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+      <h2 class="font-display text-3xl text-neutral-950 dark:text-soft-white mb-2">MASUK UNTUK MELIHAT E-TIKET</h2>
+      <p class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
         E-tiket dan QR secret gate bersifat pribadi dan hanya tersedia saat kamu masuk menggunakan akun pembeli.
       </p>
-      <button id="tickets-login-btn" type="button" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+      <button id="tickets-login-btn" type="button" class="px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         Masuk Ke Akun Saya
       </button>
     </div>
 
     <!-- Error State -->
-    <div id="tickets-error-state" class="hidden text-center py-20 rounded-3xl bg-red-500/5 border border-red-500/20">
-      <h2 class="font-display text-3xl text-soft-white mb-2">GAGAL MEMUAT E-TIKET</h2>
-      <p id="tickets-error-msg" class="text-xs font-mono text-red-300 max-w-md mx-auto mb-6"></p>
-      <button id="tickets-retry-btn" type="button" class="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
+    <div id="tickets-error-state" class="hidden text-center py-20 rounded-3xl bg-red-50 dark:bg-red-500/5 border border-red-200 dark:border-red-500/20">
+      <h2 class="font-display text-3xl text-neutral-950 dark:text-soft-white mb-2">GAGAL MEMUAT E-TIKET</h2>
+      <p id="tickets-error-msg" class="text-xs font-mono text-red-700 dark:text-red-300 max-w-md mx-auto mb-6"></p>
+      <button id="tickets-retry-btn" type="button" class="px-6 py-2.5 rounded-full bg-white hover:bg-neutral-100 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
         Coba Muat Ulang
       </button>
     </div>
 
     <!-- Empty State -->
-    <div id="tickets-empty-state" class="hidden text-center py-24 rounded-3xl bg-dark-plum/40 border border-white/10">
-      <div class="w-20 h-20 rounded-full bg-void-black border border-white/10 flex items-center justify-center mx-auto mb-4 text-muted-gray">
+    <div id="tickets-empty-state" class="hidden text-center py-24 rounded-3xl bg-white dark:bg-dark-plum/40 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
+      <div class="w-20 h-20 rounded-full bg-neutral-50 dark:bg-void-black border border-neutral-200 dark:border-white/10 flex items-center justify-center mx-auto mb-4 text-neutral-500 dark:text-muted-gray">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
         </svg>
       </div>
-      <h2 id="empty-state-title" class="font-display text-3xl text-soft-white mb-2">BELUM ADA TIKET KONSER</h2>
-      <p id="empty-state-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+      <h2 id="empty-state-title" class="font-display text-3xl text-neutral-950 dark:text-soft-white mb-2">BELUM ADA TIKET KONSER</h2>
+      <p id="empty-state-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
         Kamu belum memiliki tiket pada kategori ini. Jelajahi jadwal konser dan amankan tiket resmimu!
       </p>
-      <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+      <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         JELAJAHI JADWAL KONSER
       </a>
     </div>
@@ -89,14 +89,14 @@ import Footer from '../../components/landing/Footer.astro';
   </div>
 
   <!-- BOARDING PASS QR MODAL (Printable!) -->
-  <div id="boarding-pass-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md print:static print:block print:bg-white print:p-0">
-    <div id="boarding-pass-card" class="relative w-full max-w-lg rounded-3xl bg-dark-plum border border-electric-magenta/50 shadow-magenta-glow overflow-hidden text-soft-white print:max-w-none print:bg-white print:text-black print:border print:border-black/20 print:shadow-none">
+  <div id="boarding-pass-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md print:static print:block print:bg-white print:p-0">
+    <div id="boarding-pass-card" class="relative w-full max-w-lg rounded-3xl bg-white dark:bg-dark-plum border border-electric-magenta/50 shadow-magenta-glow overflow-hidden text-neutral-950 dark:text-soft-white print:max-w-none print:bg-white print:text-black print:border print:border-black/20 print:shadow-none">
       <!-- Top Controls -->
-      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 print:border-black/15">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-white/10 print:border-black/15">
         <span class="font-mono text-[11px] font-bold tracking-widest uppercase text-electric-magenta print:text-pink-700">
           E-BOARDING PASS // CSPRNG GATE QR
         </span>
-        <button id="close-pass-modal-btn" type="button" class="print:hidden w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-soft-white">
+        <button id="close-pass-modal-btn" type="button" class="print:hidden w-8 h-8 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 flex items-center justify-center text-neutral-700 dark:text-soft-white">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
@@ -104,7 +104,7 @@ import Footer from '../../components/landing/Footer.astro';
       </div>
 
       <!-- Loading -->
-      <div id="pass-modal-loading" class="p-10 text-center text-xs font-mono text-muted-gray">
+      <div id="pass-modal-loading" class="p-10 text-center text-xs font-mono text-neutral-500 dark:text-muted-gray">
         Mengambil QR Secret terenkripsi dari server...
       </div>
 
@@ -113,12 +113,12 @@ import Footer from '../../components/landing/Footer.astro';
         <div>
           <div class="flex items-center justify-between gap-2 mb-2">
             <span id="pass-status-pill" class="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase"></span>
-            <span id="pass-order-code" class="text-[11px] font-mono text-muted-gray print:text-neutral-600"></span>
+            <span id="pass-order-code" class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray print:text-neutral-600"></span>
           </div>
-          <h2 id="pass-event-title" class="font-display text-3xl text-soft-white print:text-black leading-tight"></h2>
+          <h2 id="pass-event-title" class="font-display text-3xl text-neutral-950 dark:text-soft-white print:text-black leading-tight"></h2>
           <p id="pass-category-name" class="text-xs font-mono font-bold text-electric-magenta print:text-pink-700 mt-1"></p>
-          <p id="pass-event-date" class="text-xs text-muted-gray print:text-neutral-600 mt-2"></p>
-          <p id="pass-event-addr" class="text-xs text-muted-gray print:text-neutral-600 mt-0.5"></p>
+          <p id="pass-event-date" class="text-xs text-neutral-600 dark:text-muted-gray print:text-neutral-600 mt-2"></p>
+          <p id="pass-event-addr" class="text-xs text-neutral-600 dark:text-muted-gray print:text-neutral-600 mt-0.5"></p>
         </div>
 
         <!-- Scannable Real QR Box -->
@@ -132,17 +132,17 @@ import Footer from '../../components/landing/Footer.astro';
         </div>
 
         <!-- Holder Meta -->
-        <div class="p-4 rounded-2xl bg-void-black/60 print:bg-neutral-100 border border-white/10 print:border-black/15 flex items-center justify-between text-xs font-mono">
+        <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 print:bg-neutral-100 border border-neutral-200 dark:border-white/10 print:border-black/15 flex items-center justify-between text-xs font-mono">
           <div>
-            <span class="text-muted-gray print:text-neutral-600 block text-[10px] uppercase">Pemegang Tiket Sah</span>
-            <strong id="pass-owner-name" class="text-soft-white print:text-black text-sm"></strong>
+            <span class="text-neutral-500 dark:text-muted-gray print:text-neutral-600 block text-[10px] uppercase">Pemegang Tiket Sah</span>
+            <strong id="pass-owner-name" class="text-neutral-950 dark:text-soft-white print:text-black text-sm"></strong>
           </div>
           <span id="pass-price-val" class="font-bold text-electric-magenta print:text-pink-700"></span>
         </div>
 
         <!-- Scan History -->
         <div id="pass-scans-section" class="space-y-2">
-          <span class="text-[10px] font-mono uppercase tracking-wider text-muted-gray print:text-neutral-600 block">
+          <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-muted-gray print:text-neutral-600 block">
             Log Pemindaian Pintu Gerbang (Gate Scan)
           </span>
           <div id="pass-scans-list" class="space-y-2 text-xs font-mono"></div>
@@ -150,10 +150,10 @@ import Footer from '../../components/landing/Footer.astro';
 
         <!-- Actions -->
         <div class="grid grid-cols-2 gap-3 pt-2 print:hidden">
-          <button id="print-pass-btn" type="button" class="py-3 px-4 rounded-xl bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          <button id="print-pass-btn" type="button" class="py-3 px-4 rounded-xl bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             Cetak / Save PDF
           </button>
-          <a id="pass-receipt-link" href="/orders" class="py-3 px-4 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider text-center transition-all">
+          <a id="pass-receipt-link" href="/orders" class="py-3 px-4 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white font-bold text-xs uppercase tracking-wider text-center transition-all">
             Lihat Kuitansi
           </a>
         </div>
@@ -162,33 +162,33 @@ import Footer from '../../components/landing/Footer.astro';
   </div>
 
   <!-- OWNER NAME RENAME MODAL -->
-  <div id="rename-owner-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md print:hidden">
-    <div class="w-full max-w-md rounded-3xl bg-dark-plum border border-white/15 p-6 sm:p-7 space-y-5 shadow-2xl">
+  <div id="rename-owner-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md print:hidden">
+    <div class="w-full max-w-md rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 p-6 sm:p-7 space-y-5 shadow-2xl">
       <div>
         <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Identitas Gelang Konser</span>
-        <h3 class="font-display text-2xl text-soft-white mt-1">UBAH NAMA PEMEGANG TIKET</h3>
-        <p class="text-xs text-muted-gray mt-1">Nama harus sesuai dengan kartu identitas (KTP/SIM) saat verifikasi di gerbang.</p>
+        <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">UBAH NAMA PEMEGANG TIKET</h3>
+        <p class="text-xs text-neutral-600 dark:text-muted-gray mt-1">Nama harus sesuai dengan kartu identitas (KTP/SIM) saat verifikasi di gerbang.</p>
       </div>
       <form id="rename-owner-form" class="space-y-4">
         <input type="hidden" id="rename-ticket-code" />
         <div>
-          <label for="rename-owner-input" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Lengkap Baru</label>
+          <label for="rename-owner-input" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Lengkap Baru</label>
           <input
             id="rename-owner-input"
             type="text"
             minlength="2"
             maxlength="100"
             required
-            class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta"
+            class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta"
             placeholder="Sesuai KTP/Identitas"
           />
         </div>
-        <p id="rename-owner-err" class="hidden text-xs font-mono text-red-400"></p>
+        <p id="rename-owner-err" class="hidden text-xs font-mono text-red-600 dark:text-red-400"></p>
         <div class="flex gap-3">
-          <button type="button" id="cancel-rename-btn" class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase text-muted-gray hover:text-soft-white">
+          <button type="button" id="cancel-rename-btn" class="flex-1 py-2.5 rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold uppercase text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
             Batal
           </button>
-          <button type="submit" id="save-rename-btn" class="flex-1 py-2.5 rounded-xl bg-electric-magenta text-xs font-bold uppercase text-soft-white hover:shadow-magenta-glow">
+          <button type="submit" id="save-rename-btn" class="flex-1 py-2.5 rounded-xl bg-electric-magenta text-xs font-bold uppercase text-white hover:shadow-magenta-glow">
             Simpan Nama
           </button>
         </div>
@@ -264,11 +264,11 @@ import Footer from '../../components/landing/Footer.astro';
     tabBtns.forEach((btn) => {
       btn.addEventListener('click', () => {
         tabBtns.forEach((b) => {
-          b.classList.remove('bg-electric-magenta', 'text-soft-white', 'shadow-magenta-glow');
-          b.classList.add('text-muted-gray');
+          b.classList.remove('bg-electric-magenta', 'text-white', 'shadow-magenta-glow');
+          b.classList.add('text-neutral-600', 'dark:text-muted-gray', 'hover:text-neutral-950', 'dark:hover:text-soft-white');
         });
-        btn.classList.remove('text-muted-gray');
-        btn.classList.add('bg-electric-magenta', 'text-soft-white', 'shadow-magenta-glow');
+        btn.classList.remove('text-neutral-600', 'dark:text-muted-gray', 'hover:text-neutral-950', 'dark:hover:text-soft-white');
+        btn.classList.add('bg-electric-magenta', 'text-white', 'shadow-magenta-glow');
         currentFilter = btn.dataset.tab || 'active';
         renderFilteredTickets();
       });
@@ -346,13 +346,13 @@ import Footer from '../../components/landing/Footer.astro';
 
         if (passStatusPill) {
           if (detail.status === 'active') {
-            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 print:text-emerald-700 print:border-emerald-600';
+            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40 print:text-emerald-700 print:border-emerald-600';
             passStatusPill.textContent = 'AKTIF // SIAP GATE';
           } else if (detail.status === 'used') {
-            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-white/10 text-muted-gray border border-white/15 print:text-neutral-700 print:border-neutral-400';
+            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray border border-neutral-200 dark:border-white/15 print:text-neutral-700 print:border-neutral-400';
             passStatusPill.textContent = 'CHECKED IN // TERPAKAI';
           } else {
-            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-red-500/15 text-red-300 border border-red-500/30';
+            passStatusPill.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30';
             passStatusPill.textContent = 'DIBATALKAN';
           }
         }
@@ -380,15 +380,15 @@ import Footer from '../../components/landing/Footer.astro';
         if (passScansList) {
           const scans = Array.isArray(detail.scans) ? detail.scans : [];
           if (scans.length === 0) {
-            passScansList.innerHTML = `<p class="text-muted-gray/80 print:text-neutral-500">Belum ada riwayat pemindaian di gerbang masuk.</p>`;
+            passScansList.innerHTML = `<p class="text-neutral-500 dark:text-muted-gray/80 print:text-neutral-500">Belum ada riwayat pemindaian di gerbang masuk.</p>`;
           } else {
             passScansList.innerHTML = scans
               .map(
                 (s: any) => `
-                <div class="p-3 rounded-xl bg-void-black/60 print:bg-neutral-100 border border-white/10 flex items-center justify-between gap-2">
+                <div class="p-3 rounded-xl bg-neutral-50 dark:bg-void-black/60 print:bg-neutral-100 border border-neutral-200 dark:border-white/10 flex items-center justify-between gap-2">
                   <div>
-                    <strong class="text-soft-white print:text-black block">Gate: ${escapeHtml(s.gate || 'Main Gate')}</strong>
-                    <span class="text-[11px] text-muted-gray print:text-neutral-600">Petugas: ${escapeHtml(s.scanned_by_name || 'Gate Crew')}</span>
+                    <strong class="text-neutral-950 dark:text-soft-white print:text-black block">Gate: ${escapeHtml(s.gate || 'Main Gate')}</strong>
+                    <span class="text-[11px] text-neutral-600 dark:text-muted-gray print:text-neutral-600">Petugas: ${escapeHtml(s.scanned_by_name || 'Gate Crew')}</span>
                   </div>
                   <span class="text-[11px] text-electric-magenta print:text-pink-700">${escapeHtml(formatDateIndo(s.scanned_at))}</span>
                 </div>
@@ -408,17 +408,24 @@ import Footer from '../../components/landing/Footer.astro';
     }
 
     async function loadTickets() {
-      loading?.classList.remove('hidden');
-      authState?.classList.add('hidden');
-      errorState?.classList.add('hidden');
-      emptyState?.classList.add('hidden');
-      ticketsGrid?.classList.add('hidden');
-
       if (!isAuthenticated()) {
+        allTickets = [];
         loading?.classList.add('hidden');
+        errorState?.classList.add('hidden');
+        emptyState?.classList.add('hidden');
+        ticketsGrid?.classList.add('hidden');
         authState?.classList.remove('hidden');
         return;
       }
+
+      const hasRenderedTickets = allTickets.length > 0 && !ticketsGrid?.classList.contains('hidden');
+      if (!hasRenderedTickets) {
+        loading?.classList.remove('hidden');
+        ticketsGrid?.classList.add('hidden');
+      }
+      authState?.classList.add('hidden');
+      errorState?.classList.add('hidden');
+      emptyState?.classList.add('hidden');
 
       try {
         const res = await api.get('/tickets');
@@ -429,6 +436,7 @@ import Footer from '../../components/landing/Footer.astro';
       } catch (err: any) {
         if (isDisposed) return;
         loading?.classList.add('hidden');
+        if (hasRenderedTickets) return;
         if (errorMsg) errorMsg.textContent = err?.message || 'Terjadi gangguan koneksi ke server tiket.';
         errorState?.classList.remove('hidden');
       }
@@ -470,10 +478,10 @@ import Footer from '../../components/landing/Footer.astro';
           const isUsed = ticket.status === 'used';
 
           const statusBadge = isActive
-            ? `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-emerald-500/20 text-emerald-300 border border-emerald-500/40">TIKET AKTIF // SIAP MASUK</span>`
+            ? `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40">TIKET AKTIF // SIAP MASUK</span>`
             : isUsed
-            ? `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-white/10 text-muted-gray border border-white/15">SUDAH DIGUNAKAN</span>`
-            : `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-red-500/15 text-red-300 border border-red-500/30">DIBATALKAN</span>`;
+            ? `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray border border-neutral-200 dark:border-white/15">SUDAH DIGUNAKAN</span>`
+            : `<span class="px-3 py-1 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300 border border-red-200 dark:border-red-500/30">DIBATALKAN</span>`;
 
           const mapsUrl = getGoogleMapsUrl(ticket.alamat || '', ticket.lat, ticket.lng);
           const calUrl = ticket.tanggal_mulai
@@ -489,12 +497,12 @@ import Footer from '../../components/landing/Footer.astro';
             : '#';
 
           return `
-            <div class="rounded-3xl bg-dark-plum/90 border ${isActive ? 'border-electric-magenta/40 shadow-magenta-glow' : 'border-white/10 opacity-80'} overflow-hidden relative backdrop-blur-xl">
+            <div class="rounded-3xl bg-white dark:bg-dark-plum/90 border ${isActive ? 'border-electric-magenta/40 shadow-magenta-glow' : 'border-neutral-200 dark:border-white/10 opacity-85'} shadow-sm dark:shadow-none overflow-hidden relative backdrop-blur-xl">
               <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-electric-magenta/10 blur-3xl pointer-events-none"></div>
 
-              <div class="p-6 sm:p-8 flex flex-col lg:flex-row justify-between gap-6 items-stretch lg:items-center border-b border-white/10 border-dashed">
+              <div class="p-6 sm:p-8 flex flex-col lg:flex-row justify-between gap-6 items-stretch lg:items-center border-b border-neutral-200 dark:border-white/10 border-dashed">
                 <div class="flex flex-col sm:flex-row gap-5 flex-1">
-                  <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-void-black border border-white/10 shrink-0">
+                  <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 shrink-0">
                     <img
                       src="${escapeHtml(resolveAssetUrl(ticket.poster_url))}"
                       alt="${escapeHtml(ticket.nama_event)}"
@@ -505,10 +513,10 @@ import Footer from '../../components/landing/Footer.astro';
                   <div class="space-y-2.5 flex-1">
                     <div class="flex flex-wrap items-center gap-2">
                       ${statusBadge}
-                      ${ticket.order_code ? `<span class="px-2.5 py-0.5 rounded bg-white/5 border border-white/10 font-mono text-[10px] text-muted-gray">${escapeHtml(ticket.order_code)}</span>` : ''}
+                      ${ticket.order_code ? `<span class="px-2.5 py-0.5 rounded bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 font-mono text-[10px] text-neutral-600 dark:text-muted-gray">${escapeHtml(ticket.order_code)}</span>` : ''}
                     </div>
 
-                    <h2 class="font-display text-3xl text-soft-white leading-tight">
+                    <h2 class="font-display text-3xl text-neutral-950 dark:text-soft-white leading-tight">
                       ${escapeHtml(ticket.nama_event || 'AFTERGLOW Concert')}
                     </h2>
 
@@ -516,13 +524,13 @@ import Footer from '../../components/landing/Footer.astro';
                       ${escapeHtml(ticket.nama_kategori || 'Tiket Resmi')} • ${escapeHtml(formatRupiah(ticket.harga || 0))}
                     </p>
 
-                    <div class="text-xs text-muted-gray space-y-1 font-mono">
+                    <div class="text-xs text-neutral-600 dark:text-muted-gray space-y-1 font-mono">
                       <p>Jadwal: ${escapeHtml(formatDateIndo(ticket.tanggal_mulai))}</p>
                       <p>Venue: ${escapeHtml(ticket.alamat || '-')}</p>
                     </div>
 
-                    <div class="pt-1 flex flex-wrap items-center gap-3 text-xs font-mono">
-                      <span>Pemegang: <strong class="text-soft-white">${escapeHtml(ticket.owner_name || '-')}</strong></span>
+                    <div class="pt-1 flex flex-wrap items-center gap-3 text-xs font-mono text-neutral-600 dark:text-muted-gray">
+                      <span>Pemegang: <strong class="text-neutral-950 dark:text-soft-white">${escapeHtml(ticket.owner_name || '-')}</strong></span>
                       ${isActive ? `
                         <button
                           type="button"
@@ -538,15 +546,15 @@ import Footer from '../../components/landing/Footer.astro';
                 </div>
 
                 <!-- Pass Stub & Trigger -->
-                <div class="flex flex-col items-stretch sm:items-center justify-center p-5 rounded-2xl bg-void-black/80 border border-white/15 shrink-0 min-w-[210px] gap-3">
+                <div class="flex flex-col items-stretch sm:items-center justify-center p-5 rounded-2xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-200 dark:border-white/15 shrink-0 min-w-[210px] gap-3">
                   <div class="text-center">
-                    <span class="text-[10px] font-mono text-muted-gray uppercase block">KODE E-TIKET</span>
-                    <strong class="font-mono text-sm tracking-widest text-soft-white">${escapeHtml(ticket.ticket_code)}</strong>
+                    <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray uppercase block">KODE E-TIKET</span>
+                    <strong class="font-mono text-sm tracking-widest text-neutral-950 dark:text-soft-white">${escapeHtml(ticket.ticket_code)}</strong>
                   </div>
                   <button
                     type="button"
                     data-open-pass="${escapeHtml(ticket.ticket_code)}"
-                    class="w-full py-2.5 px-4 rounded-xl bg-electric-magenta hover:shadow-magenta-glow text-soft-white text-xs font-bold uppercase tracking-wider transition-all"
+                    class="w-full py-2.5 px-4 rounded-xl bg-electric-magenta hover:shadow-magenta-glow text-white text-xs font-bold uppercase tracking-wider transition-all"
                   >
                     Buka QR Pass
                   </button>
@@ -554,8 +562,8 @@ import Footer from '../../components/landing/Footer.astro';
               </div>
 
               <!-- Quick Action Footer -->
-              <div class="px-6 py-4 bg-void-black/70 flex flex-wrap items-center justify-between gap-3 text-xs">
-                <div class="flex flex-wrap items-center gap-4 font-mono text-muted-gray">
+              <div class="px-6 py-4 bg-neutral-50 dark:bg-void-black/70 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div class="flex flex-wrap items-center gap-4 font-mono text-neutral-600 dark:text-muted-gray">
                   <a href="${escapeHtml(mapsUrl)}" target="_blank" rel="noopener noreferrer" class="hover:text-electric-magenta transition-colors">
                     Rute Venue →
                   </a>
