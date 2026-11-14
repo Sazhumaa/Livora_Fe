@@ -1,13 +1,8 @@
 ---
+export const prerender = false;
+
 import RootLayout from '../../../layouts/RootLayout.astro';
 import Footer from '../../../components/landing/Footer.astro';
-
-export async function getStaticPaths() {
-  return [
-    { params: { order_code: 'demo' } },
-    { params: { order_code: 'ORD-UKK-DEMO-2026' } },
-  ];
-}
 ---
 
 <RootLayout 
@@ -15,9 +10,34 @@ export async function getStaticPaths() {
   description="Bukti pembayaran sah berstempel lunas untuk tiket konser musik resmi AFTERGLOW."
 >
   <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-3xl mx-auto w-full">
+
+    <!-- Loading Skeleton -->
+    <div id="receipt-loading" class="animate-pulse space-y-6">
+      <div class="h-28 rounded-3xl bg-dark-plum/70 border border-white/10"></div>
+      <div class="h-80 rounded-3xl bg-dark-plum/70 border border-white/10"></div>
+    </div>
+
+    <!-- Error / Unauthorized State -->
+    <div id="receipt-error-state" class="hidden text-center py-20">
+      <div class="w-20 h-20 rounded-full bg-dark-plum border border-white/15 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      </div>
+      <h2 id="receipt-error-title" class="font-display text-4xl text-soft-white mb-2">KUITANSI TIDAK TERSEDIA</h2>
+      <p id="receipt-error-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6"></p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button id="receipt-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          Masuk Ke Akun
+        </button>
+        <a href="/account?tab=orders" class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+          Lihat Riwayat Order
+        </a>
+      </div>
+    </div>
     
     <!-- Printable Invoice Container -->
-    <div id="receipt-container" class="rounded-3xl bg-dark-plum/90 border border-white/15 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-soft-white print:bg-white print:text-black print:border-none print:shadow-none">
+    <div id="receipt-container" class="hidden rounded-3xl bg-dark-plum/90 border border-white/15 p-8 sm:p-12 shadow-2xl backdrop-blur-2xl text-soft-white print:bg-white print:text-black print:border-none print:shadow-none">
       
       <!-- Top Receipt Header: Brand & PAID Stamp -->
       <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 pb-8 border-b border-white/10 print:border-black/20">
@@ -33,14 +53,14 @@ export async function getStaticPaths() {
           </p>
         </div>
 
-        <!-- Official Green Paid Stamp -->
-        <div class="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg">
+        <!-- Official Status Stamp -->
+        <div id="receipt-status-badge" class="flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg">
           <svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div class="leading-tight">
             <span class="text-[10px] font-mono tracking-widest uppercase block">STATUS TRANSAKSI</span>
-            <span class="font-display text-2xl tracking-wider">LUNAS // PAID</span>
+            <span id="receipt-status-text" class="font-display text-2xl tracking-wider">LUNAS // PAID</span>
           </div>
         </div>
       </div>
@@ -61,7 +81,7 @@ export async function getStaticPaths() {
         </div>
         <div>
           <span class="text-muted-gray print:text-neutral-500 block">PEMBELI:</span>
-          <strong id="receipt-buyer-email" class="text-soft-white print:text-black text-sm block mt-0.5 truncate">buyer@soundtix.id</strong>
+          <strong id="receipt-buyer-email" class="text-soft-white print:text-black text-sm block mt-0.5 truncate">-</strong>
         </div>
       </div>
 
@@ -71,11 +91,10 @@ export async function getStaticPaths() {
           DETAIL EVENT KONSER
         </span>
         <h2 id="receipt-event-title" class="font-display text-3xl text-soft-white print:text-black">
-          AFTERGLOW FESTIVAL 2026: VOID INCEPTION
+          AFTERGLOW LIVE CONCERT
         </h2>
-        <p id="receipt-event-venue" class="text-xs text-muted-gray print:text-neutral-600 mt-1">
-          Gelora Bung Karno Stadium, Jakarta
-        </p>
+        <p id="receipt-event-venue" class="text-xs text-muted-gray print:text-neutral-600 mt-1">-</p>
+        <p id="receipt-event-date" class="text-xs text-electric-magenta print:text-pink-700 font-mono font-semibold mt-1">-</p>
       </div>
 
       <!-- Ticket Items Table -->
@@ -101,14 +120,26 @@ export async function getStaticPaths() {
           <span>Subtotal Tiket:</span>
           <span id="receipt-subtotal" class="text-soft-white print:text-black font-semibold">Rp 0</span>
         </div>
+        <div id="receipt-discount-row" class="hidden flex justify-between text-emerald-400 print:text-emerald-700">
+          <span>Diskon Voucher (<span id="receipt-voucher-code"></span>):</span>
+          <span id="receipt-discount" class="font-semibold">-Rp 0</span>
+        </div>
         <div class="flex justify-between text-muted-gray print:text-neutral-600">
-          <span>Platform & Escrow Convenience Fee:</span>
-          <span class="text-soft-white print:text-black font-semibold">Rp 3.000</span>
+          <span>Platform & Escrow Convenience Fee (5%):</span>
+          <span id="receipt-platform-fee" class="text-soft-white print:text-black font-semibold">Rp 0</span>
         </div>
         <div class="flex justify-between text-sm font-bold pt-3 border-t border-white/10 print:border-black/20">
           <span class="text-soft-white print:text-black font-sans">TOTAL TELAH DIBAYAR:</span>
           <span id="receipt-total-paid" class="font-display text-3xl text-electric-magenta print:text-pink-700">Rp 0</span>
         </div>
+      </div>
+
+      <!-- Issued Ticket Codes Summary -->
+      <div id="receipt-tickets-box" class="hidden py-5 border-b border-white/10 print:border-black/20">
+        <span class="text-[10px] font-mono uppercase tracking-wider text-muted-gray print:text-neutral-600 block mb-2">
+          E-TIKET DITERBITKAN:
+        </span>
+        <div id="receipt-ticket-codes" class="flex flex-wrap gap-2"></div>
       </div>
 
       <!-- Escrow Guarantee & Legal Disclaimer -->
@@ -164,91 +195,219 @@ export async function getStaticPaths() {
 </RootLayout>
 
 <script>
-  import { api } from '../../../lib/api';
-  import { formatRupiah, formatDateIndo, getGoogleCalendarUrl } from '../../../lib/formatters';
+  import { api, ApiError } from '../../../lib/api';
+  import { isAuthenticated } from '../../../lib/auth';
+  import { calculatePlatformFee } from '../../../lib/events';
+  import { escapeHtml, formatRupiah, formatDateIndo, getGoogleCalendarUrl } from '../../../lib/formatters';
 
   function initReceipt() {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
-    const orderCode = pathParts[pathParts.length - 2]; // e.g. /orders/[order_code]/receipt
+    const orderCode = pathParts[pathParts.length - 2];
 
+    const loadingEl = document.getElementById('receipt-loading');
+    const containerEl = document.getElementById('receipt-container');
+    const errorEl = document.getElementById('receipt-error-state');
+    const errorTitle = document.getElementById('receipt-error-title');
+    const errorDesc = document.getElementById('receipt-error-desc');
+    const loginBtn = document.getElementById('receipt-login-btn');
+
+    const statusBadge = document.getElementById('receipt-status-badge');
+    const statusText = document.getElementById('receipt-status-text');
     const codeSpan = document.getElementById('receipt-order-code');
     const paidAtSpan = document.getElementById('receipt-paid-at');
     const channelSpan = document.getElementById('receipt-channel');
     const buyerEmailSpan = document.getElementById('receipt-buyer-email');
     const eventTitle = document.getElementById('receipt-event-title');
     const eventVenue = document.getElementById('receipt-event-venue');
+    const eventDate = document.getElementById('receipt-event-date');
     const itemsTbody = document.getElementById('receipt-items-tbody');
     const subtotalSpan = document.getElementById('receipt-subtotal');
+    const discountRow = document.getElementById('receipt-discount-row');
+    const voucherCodeSpan = document.getElementById('receipt-voucher-code');
+    const discountSpan = document.getElementById('receipt-discount');
+    const feeSpan = document.getElementById('receipt-platform-fee');
     const totalPaidSpan = document.getElementById('receipt-total-paid');
-    const calendarBtn = document.getElementById('receipt-calendar-btn') as HTMLAnchorElement;
+    const ticketsBox = document.getElementById('receipt-tickets-box');
+    const ticketCodesEl = document.getElementById('receipt-ticket-codes');
+    const calendarBtn = document.getElementById('receipt-calendar-btn') as HTMLAnchorElement | null;
     const printBtn = document.getElementById('print-receipt-btn');
 
+    let isDisposed = false;
+
     printBtn?.addEventListener('click', () => window.print());
+    loginBtn?.addEventListener('click', () => {
+      if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+      else window.location.href = '/masuk';
+    });
 
-    if (!orderCode) return;
+    function showError(title: string, desc: string, needsAuth = false) {
+      loadingEl?.classList.add('hidden');
+      containerEl?.classList.add('hidden');
+      errorEl?.classList.remove('hidden');
+      if (errorTitle) errorTitle.textContent = title;
+      if (errorDesc) errorDesc.textContent = desc;
+      if (needsAuth) loginBtn?.classList.remove('hidden');
+      else loginBtn?.classList.add('hidden');
+    }
 
-    loadReceiptData();
+    if (!orderCode) return () => {};
 
     async function loadReceiptData() {
+      if (orderCode === 'demo') {
+        const fee = calculatePlatformFee(1500000);
+        renderReceipt({
+          order_code: 'ORD-UKK-DEMO-2026',
+          status: 'paid',
+          created_at: new Date().toISOString(),
+          event: {
+            id: 1,
+            nama_event: 'AFTERGLOW FESTIVAL 2026: VOID INCEPTION',
+            tanggal_mulai: new Date(Date.now() + 7 * 86400000).toISOString(),
+            alamat: 'Gelora Bung Karno Stadium, Jakarta',
+          },
+          user: { id: 1, username: 'Buyer Demo', email: 'buyer@soundtix.id' },
+          items: [{ category_id: 1, nama_kategori: 'VIP PANGGUNG', qty: 1, harga_per_tiket: 1500000, subtotal: 1500000 }],
+          pricing: { total_amount: 1500000, diskon_amount: 0, platform_fee: fee, final_amount: 1500000 + fee, kode_voucher: null },
+          payment: { payment_method: 'mock', channel: 'INTERNAL_MOCK', payment_status: 'paid', amount: 1500000 + fee, paid_at: new Date().toISOString() },
+          tickets: [{ ticket_code: 'TKT-DEMO-001', status: 'active', owner_name: 'Buyer Demo' }],
+        });
+        return;
+      }
+
+      if (!isAuthenticated()) {
+        showError('AUTENTIKASI DIPERLUKAN', 'Masuk ke akun pemilik pesanan untuk membuka kuitansi resmi.', true);
+        return;
+      }
+
       try {
         const receipt = await api.get(`/orders/${orderCode}/receipt`);
-        renderReceipt(receipt);
+        if (!isDisposed) renderReceipt(receipt);
       } catch (err: any) {
-        // Fallback demo receipt
-        const mockReceipt = {
-          order_code: orderCode,
-          nama_event: 'AFTERGLOW FESTIVAL 2026: VOID INCEPTION',
-          alamat: 'Gelora Bung Karno Stadium, Jakarta',
-          tanggal_mulai: '2026-11-14T19:00:00Z',
-          tanggal_selesai: '2026-11-14T23:30:00Z',
-          paid_at: new Date().toISOString(),
-          payment_channel: 'INTERNAL_MOCK',
-          buyer_email: 'buyer@soundtix.id',
-          total_amount: 1500000,
-          platform_fee: 3000,
-          final_amount: 1503000,
-          items: [
-            { category_name: 'VIP PANGGUNG', qty: 1, price: 1500000, subtotal: 1500000 }
-          ]
-        };
-        renderReceipt(mockReceipt);
+        if (isDisposed) return;
+        const status = err instanceof ApiError ? err.status : 0;
+        if (status === 401 || status === 403) {
+          showError('AKSES KUITANSI DITOLAK', err.message || 'Akun ini bukan pemilik order.', true);
+        } else {
+          showError('KUITANSI TIDAK DITEMUKAN', err?.message || `Kuitansi untuk order ${orderCode} belum tersedia atau belum lunas.`);
+        }
       }
     }
 
     function renderReceipt(data: any) {
-      if (codeSpan) codeSpan.textContent = data.order_code;
-      if (paidAtSpan) paidAtSpan.textContent = formatDateIndo(data.paid_at || new Date());
-      if (channelSpan) channelSpan.textContent = data.payment_channel || 'MOCK PAY';
-      if (buyerEmailSpan) buyerEmailSpan.textContent = data.buyer_email || 'buyer@soundtix.id';
+      loadingEl?.classList.add('hidden');
+      errorEl?.classList.add('hidden');
+      containerEl?.classList.remove('hidden');
 
-      if (eventTitle) eventTitle.textContent = data.nama_event;
-      if (eventVenue) eventVenue.textContent = data.alamat;
+      const ev = data.event || {};
+      const user = data.user || {};
+      const pricing = data.pricing || {};
+      const payment = data.payment || {};
+      const items = Array.isArray(data.items) ? data.items : [];
+      const tickets = Array.isArray(data.tickets) ? data.tickets : [];
 
-      if (itemsTbody && data.items) {
-        itemsTbody.innerHTML = data.items.map((item: any) => `
-          <tr class="py-2.5">
-            <td class="py-2.5 text-soft-white print:text-black font-semibold">${item.category_name || item.nama_kategori}</td>
-            <td class="py-2.5 text-center text-muted-gray print:text-neutral-600">${item.qty}</td>
-            <td class="py-2.5 text-right font-mono text-muted-gray print:text-neutral-600">${formatRupiah(item.price || item.harga || 0)}</td>
-            <td class="py-2.5 text-right font-mono text-soft-white print:text-black font-bold">${formatRupiah(item.subtotal || ((item.price || 0) * (item.qty || 1)))}</td>
-          </tr>
-        `).join('');
+      if (statusBadge && statusText) {
+        if (data.status === 'refunded') {
+          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-amber-300 print:text-amber-700 print:border-amber-600 shadow-lg';
+          statusText.textContent = 'REFUNDED';
+        } else {
+          statusBadge.className = 'flex items-center gap-3 px-5 py-2.5 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 print:text-emerald-700 print:border-emerald-600 shadow-lg';
+          statusText.textContent = 'LUNAS // PAID';
+        }
       }
 
-      if (subtotalSpan) subtotalSpan.textContent = formatRupiah(data.total_amount);
-      if (totalPaidSpan) totalPaidSpan.textContent = formatRupiah(data.final_amount);
+      if (codeSpan) codeSpan.textContent = data.order_code || orderCode;
+      if (paidAtSpan) paidAtSpan.textContent = formatDateIndo(payment.paid_at || data.created_at || new Date());
+      if (channelSpan) {
+        const channelLabel = payment.channel || payment.payment_method || 'ONLINE PAYMENT';
+        channelSpan.textContent = String(channelLabel).toUpperCase();
+      }
+      if (buyerEmailSpan) buyerEmailSpan.textContent = user.email || user.username || '-';
 
-      if (calendarBtn) {
+      const eventName = ev.nama_event || data.nama_event || 'AFTERGLOW Concert';
+      const eventAddr = ev.alamat || data.alamat || '-';
+      const eventStart = ev.tanggal_mulai || data.tanggal_mulai;
+
+      if (eventTitle) eventTitle.textContent = eventName;
+      if (eventVenue) eventVenue.textContent = eventAddr;
+      if (eventDate) eventDate.textContent = formatDateIndo(eventStart);
+
+      if (itemsTbody) {
+        itemsTbody.innerHTML = items
+          .map((item: any) => {
+            const unitPrice = Number(item.harga_per_tiket ?? item.price ?? item.harga ?? 0);
+            const qty = Number(item.qty || 1);
+            const sub = Number(item.subtotal ?? unitPrice * qty);
+            const catName = item.nama_kategori || item.category_name || 'Tiket Konser';
+            return `
+              <tr class="py-2.5">
+                <td class="py-2.5 text-soft-white print:text-black font-semibold">${escapeHtml(catName)}</td>
+                <td class="py-2.5 text-center text-muted-gray print:text-neutral-600">${qty}</td>
+                <td class="py-2.5 text-right font-mono text-muted-gray print:text-neutral-600">${escapeHtml(formatRupiah(unitPrice))}</td>
+                <td class="py-2.5 text-right font-mono text-soft-white print:text-black font-bold">${escapeHtml(formatRupiah(sub))}</td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
+
+      const subtotalVal = Number(pricing.total_amount ?? data.total_amount ?? 0);
+      const discountVal = Number(pricing.diskon_amount ?? data.diskon_amount ?? 0);
+      const feeVal = Number(pricing.platform_fee ?? data.platform_fee ?? 0);
+      const finalVal = Number(pricing.final_amount ?? data.final_amount ?? 0);
+
+      if (subtotalSpan) subtotalSpan.textContent = formatRupiah(subtotalVal);
+      if (discountRow && discountSpan && voucherCodeSpan) {
+        if (discountVal > 0) {
+          discountRow.classList.remove('hidden');
+          voucherCodeSpan.textContent = pricing.kode_voucher || 'PROMO';
+          discountSpan.textContent = `-${formatRupiah(discountVal)}`;
+        } else {
+          discountRow.classList.add('hidden');
+        }
+      }
+      if (feeSpan) feeSpan.textContent = formatRupiah(feeVal);
+      if (totalPaidSpan) totalPaidSpan.textContent = formatRupiah(finalVal);
+
+      if (ticketsBox && ticketCodesEl) {
+        if (tickets.length > 0) {
+          ticketsBox.classList.remove('hidden');
+          ticketCodesEl.innerHTML = tickets
+            .map(
+              (t: any) => `
+              <span class="px-3 py-1.5 rounded-lg bg-void-black/80 border border-white/15 print:border-black/30 print:bg-neutral-100 font-mono text-[11px] font-bold">
+                ${escapeHtml(t.ticket_code)} (${escapeHtml(String(t.status || 'active').toUpperCase())})
+              </span>
+            `
+            )
+            .join('');
+        } else {
+          ticketsBox.classList.add('hidden');
+        }
+      }
+
+      if (calendarBtn && eventStart) {
         calendarBtn.href = getGoogleCalendarUrl({
-          nama_event: data.nama_event,
-          tanggal_mulai: data.tanggal_mulai || new Date(),
-          tanggal_selesai: data.tanggal_selesai,
-          alamat: data.alamat,
+          nama_event: eventName,
+          tanggal_mulai: eventStart,
+          alamat: eventAddr,
           organization_name: 'AFTERGLOW Live',
         });
       }
     }
+
+    const onAuthChanged = () => loadReceiptData();
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+    loadReceiptData();
+
+    return () => {
+      isDisposed = true;
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
   }
 
-  document.addEventListener('astro:page-load', initReceipt);
+  let receiptCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (receiptCleanup) receiptCleanup();
+    receiptCleanup = initReceipt();
+  });
 </script>

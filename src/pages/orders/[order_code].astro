@@ -1,13 +1,8 @@
 ---
+export const prerender = false;
+
 import RootLayout from '../../layouts/RootLayout.astro';
 import Footer from '../../components/landing/Footer.astro';
-
-export async function getStaticPaths() {
-  return [
-    { params: { order_code: 'demo' } },
-    { params: { order_code: 'ORD-UKK-DEMO-2026' } },
-  ];
-}
 ---
 
 <RootLayout 
@@ -80,30 +75,16 @@ export async function getStaticPaths() {
           <!-- Dynamically injected item rows -->
         </div>
 
-        <!-- Promo Voucher Section -->
-        <div class="p-4 rounded-2xl bg-void-black/60 border border-white/10">
-          <span class="text-xs font-semibold text-muted-gray block mb-2 font-mono uppercase">
-            Punya Kode Promo / Voucher Konser?
-          </span>
-          <div class="flex gap-2">
-            <input 
-              type="text" 
-              id="voucher-input" 
-              placeholder="Contoh: SOUNDTIXUKK" 
-              class="flex-1 px-4 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white uppercase font-mono tracking-wider focus:outline-none focus:border-electric-magenta"
-            />
-            <button 
-              id="apply-voucher-btn" 
-              type="button" 
-              class="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider transition-all"
-            >
-              Gunakan
-            </button>
+        <!-- Applied Promo Badge (Shown when voucher was attached at checkout) -->
+        <div id="order-voucher-badge" class="hidden p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-between">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-emerald-300 block">Kode Promo Diterapkan</span>
+            <strong id="order-voucher-code" class="font-mono text-sm text-soft-white"></strong>
           </div>
-          <p id="voucher-status-msg" class="text-[11px] mt-1.5 hidden"></p>
+          <span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 font-mono text-[10px] font-bold">ACTIVE</span>
         </div>
 
-        <!-- Transparent Price Breakdown (Zero Hidden Fees) -->
+        <!-- Transparent Price Breakdown (5% Platform Fee) -->
         <div class="space-y-2 py-4 border-t border-b border-white/10 text-xs font-mono">
           <div class="flex justify-between text-muted-gray">
             <span>Subtotal Tiket:</span>
@@ -114,8 +95,8 @@ export async function getStaticPaths() {
             <span id="order-discount-amount">- Rp 0</span>
           </div>
           <div class="flex justify-between text-muted-gray">
-            <span>Platform Fee (Sistem & Escrow):</span>
-            <span id="order-platform-fee" class="text-soft-white">Rp 3.000</span>
+            <span>Platform & Escrow Fee (5%):</span>
+            <span id="order-platform-fee" class="text-soft-white">Rp 0</span>
           </div>
           <div class="flex justify-between text-base font-bold pt-3 border-t border-white/10">
             <span class="text-soft-white font-sans">Total Pembayaran Lunas:</span>
@@ -123,13 +104,39 @@ export async function getStaticPaths() {
           </div>
         </div>
 
-        <!-- Payment Actions (Mock Payment Simulation & Cancel) -->
+        <!-- Payment Action Feedback -->
+        <div id="order-action-msg" class="hidden p-3.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-muted-gray"></div>
+
+        <!-- Payment Actions (Xendit Invoice OR Mock Payment + Cancel) -->
         <div class="space-y-3 pt-2">
+          <!-- XENDIT LIVE INVOICE CONTAINER -->
+          <div id="xendit-payment-box" class="hidden space-y-3">
+            <a
+              id="xendit-pay-link"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01]"
+            >
+              <span>LANJUTKAN BAYAR VIA XENDIT INVOICE (QRIS / VA / E-WALLET)</span>
+              <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+            <button
+              id="check-status-btn"
+              type="button"
+              class="w-full py-3 px-6 rounded-2xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/25 text-xs font-bold tracking-wider uppercase transition-all"
+            >
+              Saya Sudah Bayar — Cek Status Transaksi Sekarang
+            </button>
+          </div>
+
           <!-- DEV MOCK PAY BUTTON -->
           <button 
             id="mock-pay-btn" 
             type="button" 
-            class="w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
+            class="hidden w-full py-4 px-6 rounded-2xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50"
           >
             <span class="btn-text">⚡ SIMULASIKAN PEMBAYARAN INSTAN (MOCK PAY)</span>
             <svg class="w-4 h-4 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
@@ -150,20 +157,39 @@ export async function getStaticPaths() {
       </div>
     </div>
 
-    <!-- Expired Order State -->
+    <!-- Expired / Cancelled / Refunded State -->
     <div id="order-expired-state" class="hidden text-center py-20">
       <div class="w-20 h-20 rounded-full bg-red-950/40 border border-red-500/40 flex items-center justify-center mx-auto mb-4 text-red-400">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       </div>
-      <h2 class="font-display text-4xl text-soft-white mb-2">SESI RESERVASI TELAH BERAKHIR</h2>
-      <p class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+      <h2 id="order-closed-title" class="font-display text-4xl text-soft-white mb-2">SESI RESERVASI TELAH BERAKHIR</h2>
+      <p id="order-closed-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6">
         Batas waktu pembayaran 15 menit telah habis dan kuota tiket telah dikembalikan ke katalog publik secara otomatis.
       </p>
       <a href="/events" class="px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         CARI TIKET LAIN
       </a>
+    </div>
+
+    <!-- Order Not Found / Error / Unauthorized State -->
+    <div id="order-error-state" class="hidden text-center py-20">
+      <div class="w-20 h-20 rounded-full bg-dark-plum border border-white/15 flex items-center justify-center mx-auto mb-4 text-electric-magenta">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+        </svg>
+      </div>
+      <h2 id="order-error-title" class="font-display text-4xl text-soft-white mb-2">ORDER TIDAK DAPAT DIMUAT</h2>
+      <p id="order-error-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6"></p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button id="order-login-btn" type="button" class="hidden px-6 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          Masuk Ke Akun
+        </button>
+        <a href="/events" class="px-6 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+          Kembali ke Katalog
+        </a>
+      </div>
     </div>
 
   </div>
@@ -172,8 +198,10 @@ export async function getStaticPaths() {
 </RootLayout>
 
 <script>
-  import { api } from '../../lib/api';
-  import { formatRupiah, formatCountdown } from '../../lib/formatters';
+  import { api, ApiError, resolveAssetUrl } from '../../lib/api';
+  import { isAuthenticated } from '../../lib/auth';
+  import { calculatePlatformFee } from '../../lib/events';
+  import { escapeHtml, formatCountdown, formatDateIndo, formatRupiah } from '../../lib/formatters';
 
   function initOrderCheckout() {
     const pathParts = window.location.pathname.split('/').filter(Boolean);
@@ -182,110 +210,219 @@ export async function getStaticPaths() {
     const skeleton = document.getElementById('order-loading-skeleton');
     const content = document.getElementById('order-content');
     const expiredState = document.getElementById('order-expired-state');
+    const closedTitle = document.getElementById('order-closed-title');
+    const closedDesc = document.getElementById('order-closed-desc');
+    const errorState = document.getElementById('order-error-state');
+    const errorTitle = document.getElementById('order-error-title');
+    const errorDesc = document.getElementById('order-error-desc');
+    const loginBtn = document.getElementById('order-login-btn');
 
     const codeDisplay = document.getElementById('order-code-display');
     const countdownTimer = document.getElementById('order-countdown-timer');
-    const eventPoster = document.getElementById('order-event-poster') as HTMLImageElement;
+    const eventPoster = document.getElementById('order-event-poster') as HTMLImageElement | null;
     const eventTitle = document.getElementById('order-event-title');
     const eventVenue = document.getElementById('order-event-venue');
     const eventDate = document.getElementById('order-event-date');
     const itemsList = document.getElementById('order-items-list');
+
+    const voucherBadge = document.getElementById('order-voucher-badge');
+    const voucherCodeEl = document.getElementById('order-voucher-code');
 
     const subtotalDisplay = document.getElementById('order-subtotal');
     const discountRow = document.getElementById('order-discount-row');
     const discountAmount = document.getElementById('order-discount-amount');
     const platformFeeDisplay = document.getElementById('order-platform-fee');
     const finalAmountDisplay = document.getElementById('order-final-amount');
+    const actionMsg = document.getElementById('order-action-msg');
 
-    const mockPayBtn = document.getElementById('mock-pay-btn') as HTMLButtonElement;
-    const cancelBtn = document.getElementById('cancel-order-btn') as HTMLButtonElement;
+    const xenditBox = document.getElementById('xendit-payment-box');
+    const xenditLink = document.getElementById('xendit-pay-link') as HTMLAnchorElement | null;
+    const checkStatusBtn = document.getElementById('check-status-btn') as HTMLButtonElement | null;
+    const mockPayBtn = document.getElementById('mock-pay-btn') as HTMLButtonElement | null;
+    const cancelBtn = document.getElementById('cancel-order-btn') as HTMLButtonElement | null;
 
-    const voucherInput = document.getElementById('voucher-input') as HTMLInputElement;
-    const applyVoucherBtn = document.getElementById('apply-voucher-btn');
-    const voucherMsg = document.getElementById('voucher-status-msg');
-
-    let currentOrder: any = null;
     let timerInterval: any = null;
     let pollingInterval: any = null;
+    let pollCount = 0;
+    const MAX_POLLS = 40; // 40 x 3s = 2 minutes
+    let isDisposed = false;
 
-    if (!orderCode) return;
+    if (!orderCode) return () => {};
 
-    loadOrderDetail();
+    loginBtn?.addEventListener('click', () => {
+      if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+      else window.location.href = '/masuk';
+    });
+
+    function showFeedback(text: string, isErr = false) {
+      if (!actionMsg) return;
+      actionMsg.textContent = text;
+      actionMsg.className = `p-3.5 rounded-xl border text-xs font-mono ${
+        isErr
+          ? 'bg-red-500/10 border-red-500/30 text-red-300'
+          : 'bg-white/5 border-white/10 text-muted-gray'
+      }`;
+      actionMsg.classList.remove('hidden');
+    }
+
+    function showErrorState(title: string, desc: string, needsAuth = false) {
+      skeleton?.classList.add('hidden');
+      content?.classList.add('hidden');
+      expiredState?.classList.add('hidden');
+      errorState?.classList.remove('hidden');
+      if (errorTitle) errorTitle.textContent = title;
+      if (errorDesc) errorDesc.textContent = desc;
+      if (needsAuth) loginBtn?.classList.remove('hidden');
+      else loginBtn?.classList.add('hidden');
+    }
 
     async function loadOrderDetail() {
-      try {
-        const order = await api.get(`/orders/${orderCode}`);
-        currentOrder = order;
-        renderOrder(order);
-      } catch (err: any) {
-        // Fallback demo mock if offline
-        const mockOrder = {
-          order_code: orderCode,
+      if (orderCode === 'demo') {
+        renderOrder({
+          order_code: 'ORD-UKK-DEMO-2026',
           event_id: 1,
           nama_event: 'AFTERGLOW FESTIVAL 2026: VOID INCEPTION',
-          poster_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=300&q=80',
+          poster_url: '',
           alamat: 'Gelora Bung Karno Stadium, Jakarta',
-          tanggal_mulai: '2026-11-14T19:00:00Z',
+          tanggal_mulai: new Date(Date.now() + 7 * 86400000).toISOString(),
           status: 'pending',
+          payment_mode: 'mock',
           total_amount: 1500000,
           diskon_amount: 0,
-          platform_fee: 3000,
-          final_amount: 1503000,
+          platform_fee: calculatePlatformFee(1500000),
+          final_amount: 1500000 + calculatePlatformFee(1500000),
           payment_expires_at: new Date(Date.now() + 14 * 60 * 1000).toISOString(),
-          items: [
-            { category_name: 'VIP PANGGUNG', qty: 1, price: 1500000, subtotal: 1500000 }
-          ]
-        };
-        currentOrder = mockOrder;
-        renderOrder(mockOrder);
+          items: [{ nama_kategori: 'VIP PANGGUNG', qty: 1, harga_per_tiket: 1500000, subtotal: 1500000 }],
+        });
+        return;
+      }
+
+      if (!isAuthenticated()) {
+        showErrorState(
+          'AUTENTIKASI DIPERLUKAN',
+          'Masuk ke akun yang melakukan checkout untuk melihat detail pembayaran dan QR e-tiket order ini.',
+          true
+        );
+        return;
+      }
+
+      try {
+        const order = await api.get(`/orders/${orderCode}`);
+        if (!isDisposed) renderOrder(order);
+      } catch (err: any) {
+        if (isDisposed) return;
+        const status = err instanceof ApiError ? err.status : 0;
+        if (status === 401 || status === 403) {
+          showErrorState('AKSES ORDER DITOLAK', err.message || 'Silakan login dengan akun pemilik order ini.', true);
+        } else {
+          showErrorState('ORDER TIDAK DITEMUKAN', err?.message || `Kode order ${orderCode} tidak tersedia.`);
+        }
+      }
+    }
+
+    function renderClosedState(status: string) {
+      content?.classList.add('hidden');
+      expiredState?.classList.remove('hidden');
+      if (status === 'cancelled') {
+        if (closedTitle) closedTitle.textContent = 'PESANAN TELAH DIBATALKAN';
+        if (closedDesc) closedDesc.textContent = 'Pesanan ini telah dibatalkan dan kuota tiketnya sudah dilepas kembali ke publik.';
+      } else if (status === 'refunded') {
+        if (closedTitle) closedTitle.textContent = 'TRANSAKSI TELAH DI-REFUND';
+        if (closedDesc) closedDesc.textContent = 'Dana pembelian tiket telah masuk dalam proses pengembalian dana.';
+      } else {
+        if (closedTitle) closedTitle.textContent = 'SESI RESERVASI TELAH BERAKHIR';
+        if (closedDesc) closedDesc.textContent = 'Batas waktu pembayaran 15 menit telah habis dan kuota tiket telah dikembalikan secara otomatis.';
       }
     }
 
     function renderOrder(order: any) {
       skeleton?.classList.add('hidden');
+      errorState?.classList.add('hidden');
 
-      if (order.status === 'expired' || order.status === 'cancelled') {
-        expiredState?.classList.remove('hidden');
-        content?.classList.add('hidden');
+      if (order.status === 'paid') {
+        window.location.href = `/orders/${orderCode}/receipt`;
         return;
       }
 
-      if (order.status === 'paid') {
-        // Redirect immediately to receipt
-        window.location.href = `/orders/${orderCode}/receipt`;
+      if (order.status === 'expired' || order.status === 'cancelled' || order.status === 'refunded') {
+        renderClosedState(order.status);
         return;
       }
 
       content?.classList.remove('hidden');
 
       if (codeDisplay) codeDisplay.textContent = order.order_code;
-      if (eventPoster && order.poster_url) eventPoster.src = order.poster_url;
+      if (eventPoster) eventPoster.src = resolveAssetUrl(order.poster_url);
       if (eventTitle) eventTitle.textContent = order.nama_event || 'AFTERGLOW Live Concert';
-      if (eventVenue) eventVenue.textContent = order.alamat || 'Stadion Utama Gelora Bung Karno';
+      if (eventVenue) eventVenue.textContent = order.alamat || '-';
+      if (eventDate) eventDate.textContent = formatDateIndo(order.tanggal_mulai);
 
-      // Render Items
-      if (itemsList && order.items) {
-        itemsList.innerHTML = order.items.map((item: any) => `
-          <div class="flex items-center justify-between p-3.5 rounded-xl bg-void-black/70 border border-white/5 text-xs">
-            <div>
-              <span class="font-bold text-soft-white block">${item.category_name || item.nama_kategori || 'Tiket Konser'}</span>
-              <span class="text-muted-gray">${item.qty} tiket × ${formatRupiah(item.price || item.harga || 0)}</span>
-            </div>
-            <span class="font-mono font-bold text-soft-white">${formatRupiah(item.subtotal || ((item.price || 0) * (item.qty || 1)))}</span>
-          </div>
-        `).join('');
+      if (itemsList && Array.isArray(order.items)) {
+        itemsList.innerHTML = order.items
+          .map((item: any) => {
+            const unitPrice = Number(item.harga_per_tiket ?? item.price ?? item.harga ?? 0);
+            const qty = Number(item.qty || 1);
+            const sub = Number(item.subtotal ?? unitPrice * qty);
+            const catName = item.nama_kategori || item.category_name || 'Tiket Konser';
+            return `
+              <div class="flex items-center justify-between p-3.5 rounded-xl bg-void-black/70 border border-white/5 text-xs">
+                <div>
+                  <span class="font-bold text-soft-white block">${escapeHtml(catName)}</span>
+                  <span class="text-muted-gray">${qty} tiket × ${escapeHtml(formatRupiah(unitPrice))}</span>
+                </div>
+                <span class="font-mono font-bold text-soft-white">${escapeHtml(formatRupiah(sub))}</span>
+              </div>
+            `;
+          })
+          .join('');
       }
 
-      // Amounts
+      const discountVal = Number(order.diskon_amount || 0);
+      if (order.kode_voucher && voucherBadge && voucherCodeEl) {
+        voucherBadge.classList.remove('hidden');
+        voucherCodeEl.textContent = String(order.kode_voucher);
+      } else {
+        voucherBadge?.classList.add('hidden');
+      }
+
+      if (discountRow && discountAmount) {
+        if (discountVal > 0) {
+          discountRow.classList.remove('hidden');
+          discountAmount.textContent = `- ${formatRupiah(discountVal)}`;
+        } else {
+          discountRow.classList.add('hidden');
+        }
+      }
+
       if (subtotalDisplay) subtotalDisplay.textContent = formatRupiah(order.total_amount);
-      if (platformFeeDisplay) platformFeeDisplay.textContent = formatRupiah(order.platform_fee || 3000);
+      if (platformFeeDisplay) platformFeeDisplay.textContent = formatRupiah(order.platform_fee ?? 0);
       if (finalAmountDisplay) finalAmountDisplay.textContent = formatRupiah(order.final_amount);
 
-      // Start Countdown
-      startCountdown(order.payment_expires_at);
+      // Dual payment routing: Xendit live invoice vs Mock instant simulation
+      if (order.payment_mode === 'xendit') {
+        mockPayBtn?.classList.add('hidden');
+        xenditBox?.classList.remove('hidden');
+        if (xenditLink) {
+          if (order.payment_url) {
+            xenditLink.href = order.payment_url;
+            xenditLink.classList.remove('hidden');
+          } else {
+            xenditLink.classList.add('hidden');
+            showFeedback('Link invoice Xendit tidak tersedia untuk order ini. Klik Cek Status untuk memuat ulang.');
+          }
+        }
+      } else {
+        xenditBox?.classList.add('hidden');
+        mockPayBtn?.classList.remove('hidden');
+      }
 
-      // Start Polling every 3s
-      startPolling();
+      if (order.payment_expires_at) {
+        startCountdown(order.payment_expires_at);
+      }
+
+      if (orderCode !== 'demo') {
+        startPolling();
+      }
     }
 
     function startCountdown(expiresAtStr: string) {
@@ -295,14 +432,12 @@ export async function getStaticPaths() {
       function tick() {
         const remaining = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
         const { formatted } = formatCountdown(remaining);
-
         if (countdownTimer) countdownTimer.textContent = formatted;
 
         if (remaining <= 0) {
           clearInterval(timerInterval);
           clearInterval(pollingInterval);
-          content?.classList.add('hidden');
-          expiredState?.classList.remove('hidden');
+          renderClosedState('expired');
         }
       }
 
@@ -310,22 +445,62 @@ export async function getStaticPaths() {
       timerInterval = setInterval(tick, 1000);
     }
 
+    async function checkOrderStatusOnce(manual = false) {
+      if (orderCode === 'demo') return;
+      try {
+        const check = await api.get(`/orders/${orderCode}`);
+        if (isDisposed) return;
+        if (check.status === 'paid') {
+          clearInterval(pollingInterval);
+          clearInterval(timerInterval);
+          window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+          window.location.href = `/orders/${orderCode}/receipt`;
+          return;
+        }
+        if (check.status === 'expired' || check.status === 'cancelled' || check.status === 'refunded') {
+          clearInterval(pollingInterval);
+          clearInterval(timerInterval);
+          window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+          renderClosedState(check.status);
+          return;
+        }
+        if (manual) {
+          showFeedback('Status order masih PENDING menunggu konfirmasi pembayaran. Selesaikan invoice lalu cek lagi.');
+        }
+      } catch (err: any) {
+        if (manual) showFeedback(err?.message || 'Gagal mengecek status pembayaran.', true);
+      }
+    }
+
     function startPolling() {
       clearInterval(pollingInterval);
+      pollCount = 0;
       pollingInterval = setInterval(async () => {
-        try {
-          const check = await api.get(`/orders/${orderCode}`);
-          if (check.status === 'paid') {
-            clearInterval(pollingInterval);
-            clearInterval(timerInterval);
-            window.location.href = `/orders/${orderCode}/receipt`;
-          }
-        } catch {}
+        if (document.hidden) return;
+        pollCount++;
+        if (pollCount > MAX_POLLS) {
+          clearInterval(pollingInterval);
+          showFeedback('Pengecekan otomatis dijeda sementara (2 menit). Klik "Saya Sudah Bayar" setelah transfer selesai.');
+          return;
+        }
+        await checkOrderStatusOnce(false);
       }, 3000);
     }
 
-    // Mock Pay Handler
+    checkStatusBtn?.addEventListener('click', async () => {
+      if (!checkStatusBtn) return;
+      checkStatusBtn.disabled = true;
+      checkStatusBtn.textContent = 'Memeriksa Status...';
+      await checkOrderStatusOnce(true);
+      checkStatusBtn.disabled = false;
+      checkStatusBtn.textContent = 'Saya Sudah Bayar — Cek Status Transaksi Sekarang';
+    });
+
     mockPayBtn?.addEventListener('click', async () => {
+      if (orderCode === 'demo') {
+        window.location.href = `/orders/demo/receipt`;
+        return;
+      }
       mockPayBtn.disabled = true;
       const text = mockPayBtn.querySelector('.btn-text');
       const spinner = mockPayBtn.querySelector('.btn-spinner');
@@ -334,32 +509,56 @@ export async function getStaticPaths() {
 
       try {
         await api.post(`/payments/mock-pay/${orderCode}`);
-        // Successful payment -> redirect to official receipt
+        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
         window.location.href = `/orders/${orderCode}/receipt`;
       } catch (err: any) {
-        alert(err.message || 'Gagal memproses mock payment.');
+        showFeedback(err?.message || 'Gagal memproses mock payment.', true);
         mockPayBtn.disabled = false;
         text?.classList.remove('opacity-50');
         spinner?.classList.add('hidden');
       }
     });
 
-    // Cancel Order Handler
     cancelBtn?.addEventListener('click', async () => {
-      const confirmCancel = confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Kuota akan langsung dilepas.');
+      const confirmCancel = confirm('Apakah Anda yakin ingin membatalkan pesanan ini? Kuota tiket akan langsung dilepas.');
       if (!confirmCancel) return;
+
+      if (orderCode === 'demo') {
+        window.location.href = '/events';
+        return;
+      }
 
       cancelBtn.disabled = true;
       try {
         await api.post(`/orders/${orderCode}/cancel`);
-        alert('Pesanan berhasil dibatalkan. Kuota tiket telah dikembalikan.');
-        window.location.href = '/events';
+        clearInterval(timerInterval);
+        clearInterval(pollingInterval);
+        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        renderClosedState('cancelled');
       } catch (err: any) {
-        alert(err.message || 'Gagal membatalkan pesanan.');
+        showFeedback(err?.message || 'Gagal membatalkan pesanan.', true);
         cancelBtn.disabled = false;
       }
     });
+
+    const onAuthChanged = () => {
+      loadOrderDetail();
+    };
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+
+    loadOrderDetail();
+
+    return () => {
+      isDisposed = true;
+      clearInterval(timerInterval);
+      clearInterval(pollingInterval);
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
   }
 
-  document.addEventListener('astro:page-load', initOrderCheckout);
+  let orderCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (orderCleanup) orderCleanup();
+    orderCleanup = initOrderCheckout();
+  });
 </script>
