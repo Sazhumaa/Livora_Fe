@@ -5,7 +5,7 @@ import RootLayout from '../../layouts/RootLayout.astro';
 import Footer from '../../components/landing/Footer.astro';
 
 const rawTab = Astro.url.searchParams.get('tab') || 'pulse';
-const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit'].includes(rawTab)
+const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'orders', 'users', 'audit'].includes(rawTab)
   ? rawTab
   : 'pulse';
 ---
@@ -17,21 +17,21 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
   <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
 
     <!-- Access Guard -->
-    <div id="admin-access-guard" class="hidden text-center py-24 rounded-3xl bg-dark-plum/60 border border-red-500/30">
-      <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-300 font-mono text-[10px] font-bold uppercase">
+    <div id="admin-access-guard" class="hidden text-center py-24 rounded-3xl bg-white dark:bg-dark-plum/60 border border-red-200 dark:border-red-500/30 shadow-sm dark:shadow-none">
+      <span class="px-3 py-1 rounded-full bg-red-50 dark:bg-red-500/20 text-red-700 dark:text-red-300 font-mono text-[10px] font-bold uppercase">
         RESTRICTED // ADMIN PLATFORM ONLY
       </span>
-      <h1 id="admin-guard-title" class="font-display text-4xl sm:text-5xl text-soft-white mt-3 mb-2">
+      <h1 id="admin-guard-title" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white mt-3 mb-2">
         AKSES KHUSUS ADMINISTRATOR
       </h1>
-      <p id="admin-guard-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+      <p id="admin-guard-desc" class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
         Masuk menggunakan akun Administrator (`admin@soundtix.id`) untuk membuka pusat kontrol operasional platform.
       </p>
       <div class="flex flex-wrap justify-center gap-3">
-        <button id="admin-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        <button id="admin-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
           Masuk Akun Admin
         </button>
-        <a href="/" class="px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+        <a href="/" class="px-7 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
           Kembali ke Beranda
         </a>
       </div>
@@ -43,27 +43,29 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded bg-electric-magenta/20 border border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold uppercase">
+            <span class="px-2.5 py-0.5 rounded bg-electric-magenta/15 dark:bg-electric-magenta/20 border border-electric-magenta/30 dark:border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold uppercase">
               PLATFORM COMMAND CENTER
             </span>
-            <span id="admin-operator-badge" class="text-[11px] font-mono text-muted-gray"></span>
+            <span id="admin-operator-badge" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray"></span>
           </div>
-          <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+          <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
             AFTERGLOW ADMIN CONSOLE
           </h1>
         </div>
-        <button id="admin-refresh-current-btn" type="button" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono font-bold uppercase transition-all">
+        <button id="admin-refresh-current-btn" type="button" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono font-bold uppercase transition-all">
           Refresh Data Aktif
         </button>
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-dark-plum border border-white/10 w-fit" id="admin-tabs">
+      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none w-fit" id="admin-tabs">
         <button data-tab="pulse" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Command Pulse</button>
         <button data-tab="organizers" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Promotor Queue</button>
         <button data-tab="events" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Event Curation</button>
         <button data-tab="escrow" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Escrow & Payouts</button>
         <button data-tab="refunds" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Refund Queue</button>
+        <button data-tab="orders" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Orders & Payments</button>
+        <button data-tab="users" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Users</button>
         <button data-tab="audit" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Audit & Cron Jobs</button>
       </div>
 
@@ -74,17 +76,58 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       <section id="adm-panel-pulse" class="adm-panel hidden space-y-8">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="adm-pulse-kpis"></div>
 
+        <!-- Escrow Liability & Platform Cashflow Breakdown -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">NERACA PENAMPUNGAN ESCROW PLATFORM</span>
+            <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">LIABILITAS DANA & PENCAIRAN PROMOTOR</h2>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="adm-escrow-summary-grid"></div>
+        </div>
+
+        <!-- 14-Day Platform GMV & Fee Chart -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">PERFORMA PENJUALAN 14 HARI TERAKHIR</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">GRAFIK GMV & PENDAPATAN FEE 5%</h2>
+            </div>
+            <div id="adm-revenue-summary" class="text-xs font-mono text-neutral-600 dark:text-muted-gray"></div>
+          </div>
+          <div id="adm-revenue-chart-wrap" class="w-full overflow-x-auto"></div>
+        </div>
+
         <div>
-          <h2 class="font-display text-2xl text-soft-white mb-4">ACTION CENTER // ANTREAN BUTUH TINDAKAN</h2>
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-4">ACTION CENTER // ANTREAN BUTUH TINDAKAN</h2>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="adm-action-center"></div>
+        </div>
+
+        <!-- Top Grossing Events -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none">
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-4">TOP KONSER BERDASARKAN GMV</h2>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="text-left text-neutral-500 dark:text-muted-gray font-mono border-b border-neutral-200 dark:border-white/10">
+                  <th class="pb-3">KONSER & PROMOTOR</th>
+                  <th class="pb-3">STATUS</th>
+                  <th class="pb-3 text-right">ORDER LUNAS</th>
+                  <th class="pb-3 text-right">TERJUAL / KUOTA</th>
+                  <th class="pb-3 text-right">GMV</th>
+                  <th class="pb-3 text-right">FEE PLATFORM</th>
+                </tr>
+              </thead>
+              <tbody id="adm-top-events-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
       <!-- TAB 2: ORGANIZERS REVIEW -->
       <section id="adm-panel-organizers" class="adm-panel hidden space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <h2 class="font-display text-2xl text-soft-white">VERIFIKASI PENDAFTARAN PROMOTOR</h2>
-          <select id="adm-org-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">VERIFIKASI PENDAFTARAN PROMOTOR</h2>
+          <select id="adm-org-filter" class="px-4 py-2 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
             <option value="pending">Pending Review</option>
             <option value="">Semua Status</option>
             <option value="verified">Verified</option>
@@ -97,8 +140,8 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       <!-- TAB 3: EVENT CURATION -->
       <section id="adm-panel-events" class="adm-panel hidden space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <h2 class="font-display text-2xl text-soft-white">KURASI & MODERASI EVENT KONSER</h2>
-          <select id="adm-ev-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">KURASI & MODERASI EVENT KONSER</h2>
+          <select id="adm-ev-filter" class="px-4 py-2 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
             <option value="pending">Menunggu Persetujuan (Pending)</option>
             <option value="">Semua Status</option>
             <option value="published">Published</option>
@@ -114,24 +157,27 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
 
       <!-- TAB 4: ESCROW & PAYOUTS -->
       <section id="adm-panel-escrow" class="adm-panel hidden space-y-6">
-        <!-- Manual Event H+1 Settlement Box -->
-        <div class="p-6 rounded-3xl bg-dark-plum/85 border border-white/15 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">EKSEKUSI ESCROW MANUAL</span>
-            <h3 class="font-display text-2xl text-soft-white mt-0.5">SETTLEMENT DANA EVENT H+1</h3>
-            <p class="text-xs text-muted-gray">Pindahkan net omzet event berstatus selesai / H+1 dari pending_balance ke withdrawable_balance promotor.</p>
+        <!-- Settlement-Ready Events Queue -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">ANTRIAN RELEASE H+1 (UNSETTLED ORDERS)</span>
+              <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-0.5">KONSER SIAP SETTLE ESCROW</h3>
+              <p class="text-xs text-neutral-600 dark:text-muted-gray">Konser berstatus selesai yang masih memiliki dana net tertahan pada pending_balance promotor.</p>
+            </div>
+            <form id="adm-manual-settle-form" class="flex items-center gap-2 shrink-0">
+              <input id="adm-settle-ev-id" type="number" min="1" required placeholder="Manual ID" class="w-28 px-3 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-neutral-900 dark:bg-white/10 hover:bg-electric-magenta text-white text-xs font-bold uppercase transition-colors">
+                Settle ID
+              </button>
+            </form>
           </div>
-          <form id="adm-manual-settle-form" class="flex items-center gap-2 shrink-0">
-            <input id="adm-settle-ev-id" type="number" min="1" required placeholder="Event ID" class="w-32 px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-            <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 text-xs font-bold uppercase">
-              Settle Escrow
-            </button>
-          </form>
+          <div id="adm-settle-candidates-list" class="space-y-3"></div>
         </div>
 
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <h2 class="font-display text-2xl text-soft-white">ANTREAN PENCAIRAN DANA (PAYOUTS)</h2>
-          <select id="adm-payout-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">ANTREAN PENCAIRAN DANA (PAYOUTS)</h2>
+          <select id="adm-payout-filter" class="px-4 py-2 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
             <option value="pending">Pending Approval</option>
             <option value="">Semua Status</option>
             <option value="completed">Completed</option>
@@ -145,8 +191,8 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       <!-- TAB 5: REFUND QUEUE -->
       <section id="adm-panel-refunds" class="adm-panel hidden space-y-5">
         <div class="flex flex-wrap items-center justify-between gap-4">
-          <h2 class="font-display text-2xl text-soft-white">ANTREAN PENGEMBALIAN DANA (REFUNDS)</h2>
-          <select id="adm-refund-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">ANTREAN PENGEMBALIAN DANA (REFUNDS)</h2>
+          <select id="adm-refund-filter" class="px-4 py-2 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
             <option value="pending">Pending Transfer</option>
             <option value="">Semua Status</option>
             <option value="completed">Completed</option>
@@ -155,13 +201,92 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
         <div id="adm-refunds-list" class="space-y-4"></div>
       </section>
 
+      <!-- TAB 6: ORDERS & PAYMENTS MONITOR -->
+      <section id="adm-panel-orders" class="adm-panel hidden space-y-5">
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">MONITOR GLOBAL GATEWAY & ESCROW</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">SELURUH TRANSAKSI & INVOICE XENDIT</h2>
+            </div>
+            <form id="adm-orders-filter-form" class="flex flex-wrap items-center gap-2">
+              <select id="adm-orders-status" class="px-3 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white">
+                <option value="">Semua Status</option>
+                <option value="paid">Paid</option>
+                <option value="pending">Pending</option>
+                <option value="expired">Expired</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+              </select>
+              <label class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-500/30 text-xs font-mono text-amber-800 dark:text-amber-300 cursor-pointer">
+                <input id="adm-orders-late-only" type="checkbox" class="accent-electric-magenta" />
+                <span>Late Payment Saja</span>
+              </label>
+              <input id="adm-orders-search" type="text" placeholder="Cari order / email / invoice..." class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">Filter</button>
+            </form>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="text-left text-neutral-500 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
+                  <th class="pb-3">ORDER & INVOICE XENDIT</th>
+                  <th class="pb-3">PEMBELI</th>
+                  <th class="pb-3">KONSER</th>
+                  <th class="pb-3 text-right">NOMINAL</th>
+                  <th class="pb-3 text-right">STATUS & ESCROW</th>
+                </tr>
+              </thead>
+              <tbody id="adm-orders-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 7: USERS DIRECTORY -->
+      <section id="adm-panel-users" class="adm-panel hidden space-y-5">
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">DIREKTORI PENGGUNA PLATFORM</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">AKUN PENONTON, PROMOTOR & ADMIN</h2>
+            </div>
+            <form id="adm-users-filter-form" class="flex flex-wrap items-center gap-2">
+              <select id="adm-users-role" class="px-3 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white">
+                <option value="">Semua Role</option>
+                <option value="3">Penonton (USER)</option>
+                <option value="2">Promotor (ORGANIZER)</option>
+                <option value="1">Admin (ADMIN)</option>
+              </select>
+              <input id="adm-users-search" type="text" placeholder="Cari nama / email..." class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">Cari</button>
+            </form>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="text-left text-neutral-500 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
+                  <th class="pb-3">USER</th>
+                  <th class="pb-3">ROLE</th>
+                  <th class="pb-3">VERIFIKASI</th>
+                  <th class="pb-3">ORGANISASI PROMOTOR</th>
+                  <th class="pb-3 text-right">ORDER PAID</th>
+                  <th class="pb-3 text-right">BERGABUNG</th>
+                </tr>
+              </thead>
+              <tbody id="adm-users-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
       <!-- TAB 6: AUDIT LOGS & CRON JOBS -->
       <section id="adm-panel-audit" class="adm-panel hidden space-y-8">
         <!-- Manual Worker Triggers -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-4">
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
           <div>
             <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">AUTOMATION & UKK DEMO WORKERS</span>
-            <h2 class="font-display text-2xl text-soft-white mt-0.5">TRIGGER BACKGROUND CRON JOBS MANUAL</h2>
+            <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-0.5">TRIGGER BACKGROUND CRON JOBS MANUAL</h2>
           </div>
 
           <div class="flex flex-wrap gap-3" id="adm-jobs-buttons">
@@ -175,24 +300,24 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
               <button
                 type="button"
                 data-trigger-job={j.name}
-                class="adm-job-btn px-4 py-2.5 rounded-xl bg-void-black border border-white/15 hover:border-electric-magenta hover:text-electric-magenta text-xs font-mono font-bold text-soft-white transition-all"
+                class="adm-job-btn px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 hover:border-electric-magenta hover:text-electric-magenta text-xs font-mono font-bold text-neutral-950 dark:text-soft-white transition-all"
               >
                 {j.label}
               </button>
             ))}
           </div>
 
-          <pre id="adm-job-output" class="hidden p-4 rounded-2xl bg-void-black border border-emerald-500/30 text-[11px] font-mono text-emerald-300 overflow-x-auto"></pre>
+          <pre id="adm-job-output" class="hidden p-4 rounded-2xl bg-neutral-50 dark:bg-void-black border border-emerald-300 dark:border-emerald-500/30 text-[11px] font-mono text-emerald-800 dark:text-emerald-300 overflow-x-auto"></pre>
         </div>
 
         <!-- Audit Logs Explorer -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-5">
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
           <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-            <h2 class="font-display text-2xl text-soft-white">JEJAK AUDIT FINANSIAL & KEAMANAN</h2>
+            <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">JEJAK AUDIT FINANSIAL & KEAMANAN</h2>
             <form id="adm-audit-filter-form" class="flex flex-wrap items-center gap-2">
-              <input id="audit-action-input" type="text" placeholder="Filter Action (mis. ORDER_PAID)" class="px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <input id="audit-target-input" type="text" placeholder="Target (mis. orders)" class="px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+              <input id="audit-action-input" type="text" placeholder="Filter Action (mis. ORDER_PAID)" class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
+              <input id="audit-target-input" type="text" placeholder="Target (mis. orders)" class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
                 Filter Logs
               </button>
             </form>
@@ -201,7 +326,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
           <div class="overflow-x-auto">
             <table class="w-full text-xs font-mono">
               <thead>
-                <tr class="text-left text-muted-gray border-b border-white/10">
+                <tr class="text-left text-neutral-600 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
                   <th class="pb-3">WAKTU</th>
                   <th class="pb-3">AKSI</th>
                   <th class="pb-3">TARGET</th>
@@ -209,7 +334,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
                   <th class="pb-3">IP & DETAIL</th>
                 </tr>
               </thead>
-              <tbody id="adm-audit-tbody" class="divide-y divide-white/5"></tbody>
+              <tbody id="adm-audit-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
           </div>
         </div>
@@ -218,17 +343,17 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
   </div>
 
   <!-- REASON INPUT MODAL (Reject / Cancel Actions) -->
-  <div id="admin-reason-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="w-full max-w-md rounded-3xl bg-dark-plum border border-white/15 p-6 space-y-4 shadow-2xl">
+  <div id="admin-reason-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-4 bg-black/60 dark:bg-black/80 backdrop-blur-md">
+    <div class="w-full max-w-md rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 p-6 space-y-4 shadow-2xl">
       <div>
         <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">KONFIRMASI TINDAKAN ADMIN</span>
-        <h3 id="adm-reason-title" class="font-display text-2xl text-soft-white mt-1">ALASAN PENOLAKAN</h3>
-        <p id="adm-reason-desc" class="text-xs text-muted-gray mt-1"></p>
+        <h3 id="adm-reason-title" class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">ALASAN PENOLAKAN</h3>
+        <p id="adm-reason-desc" class="text-xs text-neutral-600 dark:text-muted-gray mt-1"></p>
       </div>
       <form id="adm-reason-form" class="space-y-4">
-        <textarea id="adm-reason-input" rows="3" minlength="5" maxlength="250" required placeholder="Masukkan alasan resmi minimal 5 karakter..." class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta"></textarea>
+        <textarea id="adm-reason-input" rows="3" minlength="5" maxlength="250" required placeholder="Masukkan alasan resmi minimal 5 karakter..." class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta"></textarea>
         <div class="flex gap-3">
-          <button type="button" id="adm-reason-cancel" class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase text-muted-gray hover:text-soft-white">Batal</button>
+          <button type="button" id="adm-reason-cancel" class="flex-1 py-2.5 rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-xs font-bold uppercase text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">Batal</button>
           <button type="submit" id="adm-reason-confirm" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold uppercase text-white">Konfirmasi</button>
         </div>
       </form>
@@ -244,6 +369,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
 
 <script>
   import { api, resolveAssetUrl } from '../../lib/api';
+  import { renderDailyRevenueChartSvg } from '../../lib/charts';
   import { getStoredUser, isAdmin, isAuthenticated } from '../../lib/auth';
   import { escapeHtml, formatDateIndo, formatRupiah } from '../../lib/formatters';
 
@@ -286,7 +412,9 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (!toastEl) return;
       toastEl.textContent = msg;
       toastEl.className = `p-4 rounded-2xl border text-xs font-mono ${
-        isErr ? 'bg-red-500/10 border-red-500/30 text-red-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+        isErr
+          ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300'
+          : 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
       }`;
       toastEl.classList.remove('hidden');
       setTimeout(() => {
@@ -327,9 +455,10 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       tabBtns.forEach((b) => {
         const active = b.dataset.tab === tab;
         b.classList.toggle('bg-electric-magenta', active);
-        b.classList.toggle('text-soft-white', active);
+        b.classList.toggle('text-white', active);
         b.classList.toggle('shadow-magenta-glow', active);
-        b.classList.toggle('text-muted-gray', !active);
+        b.classList.toggle('text-neutral-600', !active);
+        b.classList.toggle('dark:text-muted-gray', !active);
       });
       panels.forEach((p) => p.classList.toggle('hidden', p.id !== `adm-panel-${tab}`));
       loadActiveTab();
@@ -339,8 +468,13 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (currentTab === 'pulse') loadPulse();
       if (currentTab === 'organizers') loadOrganizers();
       if (currentTab === 'events') loadEvents();
-      if (currentTab === 'escrow') loadPayouts();
+      if (currentTab === 'escrow') {
+        loadSettleCandidates();
+        loadPayouts();
+      }
       if (currentTab === 'refunds') loadRefunds();
+      if (currentTab === 'orders') loadAdminOrders();
+      if (currentTab === 'users') loadAdminUsers();
       if (currentTab === 'audit') loadAuditLogs();
     }
 
@@ -350,7 +484,11 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
     // TAB 1: PULSE
     async function loadPulse() {
       const kpiWrap = document.getElementById('adm-pulse-kpis');
+      const escrowWrap = document.getElementById('adm-escrow-summary-grid');
+      const chartWrap = document.getElementById('adm-revenue-chart-wrap');
+      const chartSummary = document.getElementById('adm-revenue-summary');
       const acWrap = document.getElementById('adm-action-center');
+      const topEventsTbody = document.getElementById('adm-top-events-tbody');
       if (!kpiWrap || !acWrap) return;
 
       try {
@@ -359,6 +497,9 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
         const fin = dash.financials || {};
         const stats = dash.platform_stats || {};
         const ac = dash.action_center || {};
+        const es = dash.escrow_summary || {};
+        const revSeries = Array.isArray(dash.revenue_series) ? dash.revenue_series : [];
+        const topEvents = Array.isArray(dash.top_events) ? dash.top_events : [];
 
         kpiWrap.innerHTML = [
           { label: 'Total GMV Platform', val: formatRupiah(fin.total_gmv || 0), sub: `Diskon voucher: ${formatRupiah(fin.total_discounts || 0)}` },
@@ -367,14 +508,51 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
         ]
           .map(
             (k) => `
-            <div class="p-6 rounded-3xl bg-dark-plum/90 border ${k.accent ? 'border-electric-magenta/45' : 'border-white/15'}">
-              <span class="text-[11px] font-mono uppercase text-muted-gray block">${escapeHtml(k.label)}</span>
-              <strong class="font-display text-4xl text-soft-white mt-1 block">${escapeHtml(k.val)}</strong>
+            <div class="p-6 rounded-3xl bg-white dark:bg-dark-plum/90 border shadow-sm dark:shadow-none ${k.accent ? 'border-electric-magenta/45' : 'border-neutral-200 dark:border-white/15'}">
+              <span class="text-[11px] font-mono uppercase text-neutral-600 dark:text-muted-gray block">${escapeHtml(k.label)}</span>
+              <strong class="font-display text-4xl text-neutral-950 dark:text-soft-white mt-1 block">${escapeHtml(k.val)}</strong>
               <span class="text-xs font-mono text-electric-magenta mt-1 block">${escapeHtml(k.sub)}</span>
             </div>
           `
           )
           .join('');
+
+        if (escrowWrap) {
+          escrowWrap.innerHTML = [
+            { label: 'Escrow Tertahan (Pending)', val: formatRupiah(es.total_pending_balance || 0), sub: 'Menunggu konser selesai H+1', tone: 'text-amber-600 dark:text-amber-300' },
+            { label: 'Saldo Siap Tarik Promotor', val: formatRupiah(es.total_withdrawable_balance || 0), sub: `Payout pending: ${formatRupiah(es.pending_payouts_amount || 0)}`, tone: 'text-emerald-600 dark:text-emerald-400' },
+            { label: 'Total Payout Sudah Cair', val: formatRupiah(es.completed_payouts_amount || 0), sub: `Total ditarik saldo: ${formatRupiah(es.total_withdrawn_amount || 0)}`, tone: 'text-neutral-950 dark:text-soft-white' },
+            { label: 'Antrean Refund Pembeli', val: formatRupiah(es.pending_refunds_amount || 0), sub: `Sudah direfund: ${formatRupiah(es.completed_refunds_amount || 0)}`, tone: 'text-electric-magenta' },
+          ]
+            .map(
+              (c) => `
+              <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10">
+                <span class="text-[10px] font-mono uppercase text-neutral-500 dark:text-muted-gray block">${escapeHtml(c.label)}</span>
+                <strong class="font-display text-2xl ${c.tone} mt-1 block">${escapeHtml(c.val)}</strong>
+                <span class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray mt-1 block">${escapeHtml(c.sub)}</span>
+              </div>
+            `
+            )
+            .join('');
+        }
+
+        if (chartWrap) {
+          const gmv14 = revSeries.reduce((s: number, d: any) => s + Number(d.gmv_total || 0), 0);
+          const fee14 = revSeries.reduce((s: number, d: any) => s + Number(d.platform_fee_total || 0), 0);
+          const ord14 = revSeries.reduce((s: number, d: any) => s + Number(d.orders_count || 0), 0);
+          if (chartSummary) {
+            chartSummary.textContent = `14 Hari: ${ord14} order lunas • GMV ${formatRupiah(gmv14)} • Fee ${formatRupiah(fee14)}`;
+          }
+          chartWrap.innerHTML = renderDailyRevenueChartSvg(
+            revSeries.map((d: any) => ({
+              label: d.label || String(d.date || '').slice(5),
+              primary: Number(d.gmv_total || 0),
+              secondary: Number(d.platform_fee_total || 0),
+              count: Number(d.orders_count || 0),
+            })),
+            { primaryLabel: 'GMV Penjualan', secondaryLabel: 'Platform Fee 5%' }
+          );
+        }
 
         acWrap.innerHTML = [
           { tab: 'organizers', count: ac.pending_organizers || 0, title: 'Promotor Pending', desc: 'Verifikasi KYC & rekening bank' },
@@ -387,15 +565,15 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
             <button
               type="button"
               data-jump-tab="${item.tab}"
-              class="text-left p-5 rounded-3xl bg-dark-plum/85 border ${Number(item.count) > 0 ? 'border-amber-500/45 hover:border-electric-magenta' : 'border-white/10 hover:border-white/25'} transition-all group"
+              class="text-left p-5 rounded-3xl bg-white dark:bg-dark-plum/85 border shadow-sm dark:shadow-none ${Number(item.count) > 0 ? 'border-amber-400 dark:border-amber-500/45 hover:border-electric-magenta' : 'border-neutral-200 dark:border-white/10 hover:border-neutral-300 dark:hover:border-white/25'} transition-all group"
             >
               <div class="flex items-center justify-between mb-2">
-                <span class="text-[10px] font-mono uppercase text-muted-gray">${escapeHtml(item.title)}</span>
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${Number(item.count) > 0 ? 'bg-amber-500/20 text-amber-300' : 'bg-white/10 text-muted-gray'}">
+                <span class="text-[10px] font-mono uppercase text-neutral-600 dark:text-muted-gray">${escapeHtml(item.title)}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${Number(item.count) > 0 ? 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300' : 'bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray'}">
                   ${Number(item.count)}
                 </span>
               </div>
-              <p class="text-xs text-soft-white group-hover:text-electric-magenta transition-colors">${escapeHtml(item.desc)} →</p>
+              <p class="text-xs text-neutral-950 dark:text-soft-white group-hover:text-electric-magenta transition-colors">${escapeHtml(item.desc)} →</p>
             </button>
           `
           )
@@ -411,6 +589,29 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
             activateTab(targetTab);
           });
         });
+
+        if (topEventsTbody) {
+          topEventsTbody.innerHTML =
+            topEvents.length === 0
+              ? `<tr><td colspan="6" class="py-6 text-center font-mono text-neutral-500 dark:text-muted-gray">Belum ada konser dengan transaksi berbayar.</td></tr>`
+              : topEvents
+                  .map(
+                    (ev: any) => `
+                  <tr>
+                    <td class="py-3">
+                      <a href="/events/${ev.event_id}" target="_blank" class="font-bold text-neutral-950 dark:text-soft-white hover:text-electric-magenta block">${escapeHtml(ev.nama_event)}</a>
+                      <span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">${escapeHtml(ev.organization_name || '-')}</span>
+                    </td>
+                    <td class="py-3 font-mono text-[11px] uppercase text-electric-magenta">${escapeHtml(ev.status)}</td>
+                    <td class="py-3 text-right font-mono text-neutral-950 dark:text-soft-white">${Number(ev.paid_orders_count || 0)}</td>
+                    <td class="py-3 text-right font-mono text-neutral-600 dark:text-muted-gray">${Number(ev.sold_quota || 0)} / ${Number(ev.total_quota || 0)}</td>
+                    <td class="py-3 text-right font-mono font-bold text-neutral-950 dark:text-soft-white">${escapeHtml(formatRupiah(ev.gmv_total || 0))}</td>
+                    <td class="py-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">${escapeHtml(formatRupiah(ev.platform_fee_total || 0))}</td>
+                  </tr>
+                `
+                  )
+                  .join('');
+        }
       } catch (err: any) {
         showToast(err?.message || 'Gagal memuat dashboard Admin.', true);
       }
@@ -422,54 +623,54 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (!listEl) return;
       const st = orgFilter?.value || '';
       const q = st ? `?verification_status=${encodeURIComponent(st)}` : '';
-      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean promotor...</div>`;
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray">Memuat antrean promotor...</div>`;
       try {
         const rows = await api.get<any[]>(`/get/organizer${q}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
         if (list.length === 0) {
-          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada pendaftaran promotor pada status ini.</div>`;
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 text-center text-sm text-neutral-600 dark:text-muted-gray">Tidak ada pendaftaran promotor pada status ini.</div>`;
           return;
         }
         listEl.innerHTML = list
           .map(
             (o) => `
-            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 space-y-3">
+            <div class="p-5 sm:p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/12 shadow-sm dark:shadow-none space-y-3">
               <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                   <div class="flex items-center gap-2 mb-1">
-                    <span class="font-mono text-xs text-muted-gray">ORG #${o.id} (User #${o.user_id})</span>
+                    <span class="font-mono text-xs text-neutral-500 dark:text-muted-gray">ORG #${o.id} (User #${o.user_id})</span>
                     <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
-                      o.verification_status === 'verified' ? 'bg-emerald-500/20 text-emerald-300' : o.verification_status === 'rejected' ? 'bg-red-500/15 text-red-300' : 'bg-amber-500/20 text-amber-300'
+                      o.verification_status === 'verified' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : o.verification_status === 'rejected' ? 'bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300' : 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300'
                     }">${escapeHtml(o.verification_status)}</span>
                   </div>
-                  <h3 class="font-display text-2xl text-soft-white">${escapeHtml(o.organization_name)}</h3>
-                  <p class="text-xs font-mono text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(o.created_at))}</p>
-                  ${o.rejection_reason ? `<p class="text-xs font-mono text-red-300 mt-1">Alasan Tolak: ${escapeHtml(o.rejection_reason)}</p>` : ''}
+                  <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white">${escapeHtml(o.organization_name)}</h3>
+                  <p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(o.created_at))}</p>
+                  ${o.rejection_reason ? `<p class="text-xs font-mono text-red-600 dark:text-red-300 mt-1">Alasan Tolak: ${escapeHtml(o.rejection_reason)}</p>` : ''}
                 </div>
                 <div class="flex flex-wrap gap-2 shrink-0">
-                  <button type="button" data-org-detail="${o.id}" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono uppercase">
+                  <button type="button" data-org-detail="${o.id}" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono uppercase transition-colors">
                     Lihat Bank & Pemilik
                   </button>
                   ${o.verification_status !== 'verified' ? `
-                    <button type="button" data-org-approve="${o.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">
+                    <button type="button" data-org-approve="${o.id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase">
                       Approve
                     </button>
                   ` : ''}
                   ${o.verification_status === 'pending' ? `
-                    <button type="button" data-org-reject="${o.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">
+                    <button type="button" data-org-reject="${o.id}" class="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">
                       Tolak
                     </button>
                   ` : ''}
                 </div>
               </div>
-              <div id="org-detail-box-${o.id}" class="hidden p-4 rounded-2xl bg-void-black/70 border border-white/10 text-xs font-mono text-muted-gray"></div>
+              <div id="org-detail-box-${o.id}" class="hidden p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray"></div>
             </div>
           `
           )
           .join('');
       } catch (err: any) {
-        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat promotor.')}</div>`;
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat promotor.')}</div>`;
       }
     }
 
@@ -487,8 +688,8 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
           const d = await api.get<any>(`/get/organizer/${id}`);
           box.innerHTML = `
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <div><span class="block text-[10px]">PEMILIK AKUN:</span><strong class="text-soft-white">${escapeHtml(d.user_username || '-')} (${escapeHtml(d.user_email || '-')})</strong></div>
-              <div><span class="block text-[10px]">BANK PENCAIRAN:</span><strong class="text-soft-white">${escapeHtml(d.bank_account || '-')}</strong></div>
+              <div><span class="block text-[10px]">PEMILIK AKUN:</span><strong class="text-neutral-950 dark:text-soft-white">${escapeHtml(d.user_username || '-')} (${escapeHtml(d.user_email || '-')})</strong></div>
+              <div><span class="block text-[10px]">BANK PENCAIRAN:</span><strong class="text-neutral-950 dark:text-soft-white">${escapeHtml(d.bank_account || '-')}</strong></div>
               <div><span class="block text-[10px]">NO. REKENING:</span><strong class="text-electric-magenta">${escapeHtml(d.account_number || '-')}</strong></div>
             </div>
           `;
@@ -533,51 +734,52 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (!listEl) return;
       const st = evFilter?.value || '';
       const q = st ? `?status=${encodeURIComponent(st)}` : '';
-      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean kurasi event...</div>`;
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray">Memuat antrean kurasi event...</div>`;
       try {
         const rows = await api.get<any[]>(`/events${q}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
         if (list.length === 0) {
-          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada event pada filter status ini.</div>`;
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 text-center text-sm text-neutral-600 dark:text-muted-gray">Tidak ada event pada filter status ini.</div>`;
           return;
         }
         listEl.innerHTML = list
           .map((ev) => {
             const canApprove = ev.status === 'pending' || ev.status === 'draft';
-            const canSettle = ev.status === 'selesai' || ev.status === 'published' || ev.status === 'ongoing';
+            const canSettle = ev.status === 'selesai' && !ev.escrow_settled_at;
             const canCancel = ev.status === 'published' || ev.status === 'ongoing';
 
             return `
-              <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+              <div class="p-5 sm:p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/12 shadow-sm dark:shadow-none flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div class="flex items-start gap-4">
-                  <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-20 h-20 rounded-2xl object-cover bg-void-black border border-white/10 shrink-0" />
+                  <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-20 h-20 rounded-2xl object-cover bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 shrink-0" />
                   <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
-                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-white/10 text-soft-white">${escapeHtml(ev.status)}</span>
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-soft-white">${escapeHtml(ev.status)}</span>
                       <span class="text-xs font-mono text-electric-magenta">${escapeHtml(ev.organization_name || `Org #${ev.organizer_id}`)}</span>
-                      <span class="text-xs font-mono text-muted-gray">Event #${ev.id}</span>
+                      <span class="text-xs font-mono text-neutral-500 dark:text-muted-gray">Event #${ev.id}</span>
+                      ${ev.escrow_settled_at ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Escrow Settled</span>` : ''}
                     </div>
-                    <h3 class="font-display text-2xl text-soft-white">${escapeHtml(ev.nama_event)}</h3>
-                    <p class="text-xs text-muted-gray">${escapeHtml(ev.artis)} • ${escapeHtml(formatDateIndo(ev.tanggal_mulai))} • ${escapeHtml(ev.alamat)}</p>
-                    <p class="text-[11px] font-mono text-muted-gray">Terjual ${Number(ev.sold_quota || 0)} / ${Number(ev.total_quota || 0)} • Mulai ${escapeHtml(formatRupiah(ev.min_price || 0))}</p>
+                    <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white">${escapeHtml(ev.nama_event)}</h3>
+                    <p class="text-xs text-neutral-600 dark:text-muted-gray">${escapeHtml(ev.artis)} • ${escapeHtml(formatDateIndo(ev.tanggal_mulai))} • ${escapeHtml(ev.alamat)}</p>
+                    <p class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">Terjual ${Number(ev.sold_quota || 0)} / ${Number(ev.total_quota || 0)} • Mulai ${escapeHtml(formatRupiah(ev.min_price || 0))}</p>
                   </div>
                 </div>
                 <div class="flex flex-wrap gap-2 shrink-0">
-                  <a href="/events/${ev.id}" target="_blank" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono uppercase">Preview</a>
+                  <a href="/events/${ev.id}" target="_blank" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono uppercase transition-colors">Preview</a>
                   ${canApprove ? `
-                    <button type="button" data-ev-publish="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">Publish</button>
-                    <button type="button" data-ev-reject="${ev.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Reject</button>
+                    <button type="button" data-ev-publish="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase">Publish</button>
+                    <button type="button" data-ev-reject="${ev.id}" class="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Reject</button>
                   ` : ''}
-                  ${canSettle ? `<button type="button" data-ev-settle="${ev.id}" class="px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase">Settle H+1</button>` : ''}
-                  ${canCancel ? `<button type="button" data-ev-cancel="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Cancel & Refund</button>` : ''}
+                  ${canSettle ? `<button type="button" data-ev-settle="${ev.id}" class="px-3.5 py-2 rounded-xl bg-cyan-50 dark:bg-cyan-500/15 border border-cyan-200 dark:border-cyan-500/30 text-cyan-700 dark:text-cyan-300 text-xs font-bold uppercase">Settle H+1</button>` : ''}
+                  ${canCancel ? `<button type="button" data-ev-cancel="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Cancel & Refund</button>` : ''}
                 </div>
               </div>
             `;
           })
           .join('');
       } catch (err: any) {
-        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar event.')}</div>`;
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar event.')}</div>`;
       }
     }
 
@@ -620,6 +822,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
         try {
           await api.post(`/admin/events/${id}/settle`, {});
           showToast(`Escrow H+1 Event #${id} berhasil diselesaikan!`);
+          await loadEvents();
         } catch (err: any) {
           showToast(err?.message || 'Event belum memenuhi syarat settlement H+1.', true);
         }
@@ -642,13 +845,77 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
     });
 
     // TAB 4: ESCROW & PAYOUTS
+    async function loadSettleCandidates() {
+      const box = document.getElementById('adm-settle-candidates-list');
+      if (!box) return;
+      box.innerHTML = `<p class="text-xs font-mono text-neutral-500 dark:text-muted-gray">Memuat konser siap settle H+1...</p>`;
+      try {
+        const rows = await api.get<any[]>('/admin/escrow/settle-candidates');
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          box.innerHTML = `<div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/50 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray">Tidak ada konser selesai dengan dana tertahan (semua sudah settle H+1).</div>`;
+          return;
+        }
+        box.innerHTML = list
+          .map(
+            (c: any) => `
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <div>
+                <div class="flex flex-wrap items-center gap-2 text-xs font-mono">
+                  <span class="font-bold text-neutral-950 dark:text-soft-white">Event #${c.event_id}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[10px] uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-bold">${escapeHtml(c.status)}</span>
+                  <span class="text-electric-magenta">${escapeHtml(c.organization_name || '-')}</span>
+                </div>
+                <h4 class="font-bold text-sm text-neutral-950 dark:text-soft-white mt-0.5">${escapeHtml(c.nama_event)}</h4>
+                <p class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray">
+                  ${Number(c.unsettled_orders_count || 0)} order unsettled • Gross ${escapeHtml(formatRupiah(c.total_gross || 0))} • Fee 5%: ${escapeHtml(formatRupiah(c.total_platform_fee || 0))}
+                </p>
+              </div>
+              <div class="flex items-center gap-3 shrink-0">
+                <div class="text-right">
+                  <span class="text-[10px] font-mono uppercase text-neutral-500 dark:text-muted-gray block">Net Siap Rilis</span>
+                  <strong class="font-display text-2xl text-emerald-600 dark:text-emerald-400">${escapeHtml(formatRupiah(c.organizer_net_ready || 0))}</strong>
+                </div>
+                <button type="button" data-candidate-settle="${c.event_id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/30 text-xs font-bold uppercase">
+                  Settle Sekarang
+                </button>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        box.innerHTML = `<p class="text-xs font-mono text-red-600 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat antrean settlement.')}</p>`;
+      }
+    }
+
+    document.getElementById('adm-settle-candidates-list')?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-candidate-settle]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const id = Number(btn.dataset.candidateSettle);
+      if (!id || !confirm(`Rilis seluruh dana net Event #${id} ke saldo siap tarik promotor sekarang?`)) return;
+      btn.disabled = true;
+      try {
+        await api.post(`/admin/events/${id}/settle`, {});
+        showToast(`Escrow Event #${id} berhasil dirilis!`);
+        await loadSettleCandidates();
+      } catch (err: any) {
+        showToast(err?.message || 'Gagal melakukan settlement escrow event.', true);
+        btn.disabled = false;
+      }
+    });
+
     document.getElementById('adm-manual-settle-form')?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const id = Number((document.getElementById('adm-settle-ev-id') as HTMLInputElement).value);
+      const input = document.getElementById('adm-settle-ev-id') as HTMLInputElement;
+      const id = Number(input.value);
       if (!id) return;
       try {
         await api.post(`/admin/events/${id}/settle`, {});
+        input.value = '';
         showToast(`Escrow Event #${id} berhasil dirilis ke saldo siap tarik promotor!`);
+        await loadSettleCandidates();
       } catch (err: any) {
         showToast(err?.message || 'Gagal melakukan settlement escrow event.', true);
       }
@@ -659,40 +926,40 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (!listEl) return;
       const st = payoutFilter?.value || '';
       const q = st ? `?status=${encodeURIComponent(st)}` : '';
-      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean payout...</div>`;
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray">Memuat antrean payout...</div>`;
       try {
         const rows = await api.get<any[]>(`/admin/payouts${q}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
         if (list.length === 0) {
-          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada pengajuan payout pada filter status ini.</div>`;
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 text-center text-sm text-neutral-600 dark:text-muted-gray">Tidak ada pengajuan payout pada filter status ini.</div>`;
           return;
         }
         listEl.innerHTML = list
           .map(
             (p) => `
-            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="p-5 sm:p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/12 shadow-sm dark:shadow-none flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="space-y-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="font-mono text-xs font-bold text-soft-white">PAYOUT #${p.id}</span>
+                  <span class="font-mono text-xs font-bold text-neutral-950 dark:text-soft-white">PAYOUT #${p.id}</span>
                   <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
-                    p.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300' : p.status === 'failed' ? 'bg-red-500/15 text-red-300' : 'bg-amber-500/20 text-amber-300'
+                    p.status === 'completed' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : p.status === 'failed' ? 'bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300' : 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300'
                   }">${escapeHtml(p.status)}</span>
                 </div>
-                <h3 class="font-bold text-base text-soft-white">${escapeHtml(p.nama_organizer || `Org #${p.organizer_id}`)} — ${escapeHtml(p.nama_event || `Event #${p.event_id}`)}</h3>
-                <p class="text-xs font-mono text-muted-gray">Tujuan: ${escapeHtml(p.bank_account)} • ${escapeHtml(p.account_number)}</p>
-                <p class="text-[11px] font-mono text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(p.created_at))}</p>
-                ${p.rejection_reason ? `<p class="text-xs font-mono text-red-300">Alasan Tolak: ${escapeHtml(p.rejection_reason)}</p>` : ''}
+                <h3 class="font-bold text-base text-neutral-950 dark:text-soft-white">${escapeHtml(p.nama_organizer || `Org #${p.organizer_id}`)} — ${escapeHtml(p.nama_event || `Event #${p.event_id}`)}</h3>
+                <p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Tujuan: ${escapeHtml(p.bank_account)} • ${escapeHtml(p.account_number)}</p>
+                <p class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(p.created_at))}</p>
+                ${p.rejection_reason ? `<p class="text-xs font-mono text-red-600 dark:text-red-300">Alasan Tolak: ${escapeHtml(p.rejection_reason)}</p>` : ''}
               </div>
 
               <div class="flex flex-col sm:items-end gap-3 shrink-0">
                 <strong class="font-display text-3xl text-electric-magenta">${escapeHtml(formatRupiah(p.amount))}</strong>
                 ${p.status === 'pending' ? `
                   <div class="flex gap-2">
-                    <button type="button" data-payout-approve="${p.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">
+                    <button type="button" data-payout-approve="${p.id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase">
                       Approve Transfer
                     </button>
-                    <button type="button" data-payout-reject="${p.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">
+                    <button type="button" data-payout-reject="${p.id}" class="px-4 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">
                       Tolak
                     </button>
                   </div>
@@ -703,7 +970,7 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
           )
           .join('');
       } catch (err: any) {
-        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat payout.')}</div>`;
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat payout.')}</div>`;
       }
     }
 
@@ -745,44 +1012,44 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (!listEl) return;
       const st = refundFilter?.value || '';
       const q = st ? `?status=${encodeURIComponent(st)}` : '';
-      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean refund...</div>`;
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 text-xs font-mono text-neutral-600 dark:text-muted-gray">Memuat antrean refund...</div>`;
       try {
         const rows = await api.get<any[]>(`/admin/refunds${q}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
         if (list.length === 0) {
-          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada antrean refund pada filter ini.</div>`;
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 text-center text-sm text-neutral-600 dark:text-muted-gray">Tidak ada antrean refund pada filter ini.</div>`;
           return;
         }
         listEl.innerHTML = list
           .map(
             (r) => `
-            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="p-5 sm:p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/12 shadow-sm dark:shadow-none flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div class="space-y-1">
                 <div class="flex flex-wrap items-center gap-2">
-                  <span class="font-mono text-xs font-bold text-soft-white">REFUND #${r.id} • ${escapeHtml(r.order_code)}</span>
+                  <span class="font-mono text-xs font-bold text-neutral-950 dark:text-soft-white">REFUND #${r.id} • ${escapeHtml(r.order_code)}</span>
                   <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
-                    r.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'
+                    r.status === 'completed' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300'
                   }">${escapeHtml(r.status)}</span>
                 </div>
-                <h3 class="font-bold text-base text-soft-white">${escapeHtml(r.nama_event)}</h3>
-                <p class="text-xs font-mono text-muted-gray">Pembeli: ${escapeHtml(r.user_email || `User #${r.user_id}`)}</p>
-                <p class="text-xs text-muted-gray">Alasan: ${escapeHtml(r.alasan || '-')}</p>
+                <h3 class="font-bold text-base text-neutral-950 dark:text-soft-white">${escapeHtml(r.nama_event)}</h3>
+                <p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Pembeli: ${escapeHtml(r.user_email || `User #${r.user_id}`)}</p>
+                <p class="text-xs text-neutral-600 dark:text-muted-gray">Alasan: ${escapeHtml(r.alasan || '-')}</p>
               </div>
               <div class="flex flex-col sm:items-end gap-3 shrink-0">
-                <strong class="font-display text-3xl text-emerald-400">${escapeHtml(formatRupiah(r.amount))}</strong>
+                <strong class="font-display text-3xl text-emerald-600 dark:text-emerald-400">${escapeHtml(formatRupiah(r.amount))}</strong>
                 ${r.status === 'pending' ? `
-                  <button type="button" data-refund-process="${r.id}" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+                  <button type="button" data-refund-process="${r.id}" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
                     Proses Refund Selesai
                   </button>
-                ` : `<span class="text-[11px] font-mono text-muted-gray">Diproses: ${escapeHtml(formatDateIndo(r.processed_at))}</span>`}
+                ` : `<span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">Diproses: ${escapeHtml(formatDateIndo(r.processed_at))}</span>`}
               </div>
             </div>
           `
           )
           .join('');
       } catch (err: any) {
-        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat refund.')}</div>`;
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat refund.')}</div>`;
       }
     }
 
@@ -803,7 +1070,151 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       }
     });
 
-    // TAB 6: AUDIT LOGS & CRON JOBS
+    // TAB 6: GLOBAL ORDERS & PAYMENTS MONITOR
+    async function loadAdminOrders() {
+      const tbody = document.getElementById('adm-orders-tbody');
+      if (!tbody) return;
+      const status = (document.getElementById('adm-orders-status') as HTMLSelectElement | null)?.value || '';
+      const lateOnly = Boolean((document.getElementById('adm-orders-late-only') as HTMLInputElement | null)?.checked);
+      const q = (document.getElementById('adm-orders-search') as HTMLInputElement | null)?.value.trim() || '';
+
+      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      if (status) params.set('status', status);
+      if (lateOnly) params.set('late_only', 'true');
+      if (q) params.set('q', q);
+
+      tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-neutral-600 dark:text-muted-gray">Memuat data transaksi global...</td></tr>`;
+      try {
+        const rows = await api.get<any[]>(`/admin/orders?${params.toString()}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Tidak ada order yang cocok dengan filter.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = list
+          .map((o: any) => {
+            const stCls =
+              o.status === 'paid'
+                ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                : o.status === 'pending'
+                ? 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                : o.status === 'refunded'
+                ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300'
+                : 'bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray';
+
+            return `
+              <tr>
+                <td class="py-3">
+                  <strong class="text-neutral-950 dark:text-soft-white block">${escapeHtml(o.order_code)}</strong>
+                  <span class="text-[10px] text-neutral-500 dark:text-muted-gray block">
+                    ${escapeHtml((o.payment_channel || o.payment_method || 'ONLINE').toUpperCase())}${o.xendit_invoice_id ? ` • ${escapeHtml(o.xendit_invoice_id)}` : ''}
+                  </span>
+                  <span class="text-[10px] text-neutral-500 dark:text-muted-gray">${escapeHtml(formatDateIndo(o.paid_at || o.created_at))}</span>
+                </td>
+                <td class="py-3">
+                  <span class="text-neutral-950 dark:text-soft-white block">${escapeHtml(o.buyer_username || '-')}</span>
+                  <span class="text-[11px] text-neutral-500 dark:text-muted-gray">${escapeHtml(o.buyer_email || '-')}</span>
+                </td>
+                <td class="py-3">
+                  <span class="text-neutral-950 dark:text-soft-white block">${escapeHtml(o.nama_event || '-')}</span>
+                  <span class="text-[11px] text-neutral-500 dark:text-muted-gray">${escapeHtml(o.organization_name || '-')}</span>
+                </td>
+                <td class="py-3 text-right">
+                  <strong class="text-neutral-950 dark:text-soft-white block">${escapeHtml(formatRupiah(o.final_amount || 0))}</strong>
+                  <span class="text-[10px] text-electric-magenta">Fee: ${escapeHtml(formatRupiah(o.platform_fee || 0))}</span>
+                </td>
+                <td class="py-3 text-right">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${stCls}">${escapeHtml(o.status)}</span>
+                  ${o.is_late_payment ? `<span class="block text-[10px] font-bold text-amber-600 dark:text-amber-300 mt-1">LATE PAYMENT (${escapeHtml(o.refund_status || 'pending')})</span>` : ''}
+                  ${o.status === 'paid' ? `<span class="block text-[10px] mt-1 ${o.escrow_settled_at ? 'text-emerald-600 dark:text-emerald-400' : 'text-neutral-500 dark:text-muted-gray'}">${o.escrow_settled_at ? 'Settled H+1' : 'Escrow Pending'}</span>` : ''}
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      } catch (err: any) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-red-600 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar order global.')}</td></tr>`;
+      }
+    }
+
+    document.getElementById('adm-orders-filter-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loadAdminOrders();
+    });
+    document.getElementById('adm-orders-status')?.addEventListener('change', loadAdminOrders);
+    document.getElementById('adm-orders-late-only')?.addEventListener('change', loadAdminOrders);
+
+    // TAB 7: USERS DIRECTORY
+    async function loadAdminUsers() {
+      const tbody = document.getElementById('adm-users-tbody');
+      if (!tbody) return;
+      const roleId = (document.getElementById('adm-users-role') as HTMLSelectElement | null)?.value || '';
+      const q = (document.getElementById('adm-users-search') as HTMLInputElement | null)?.value.trim() || '';
+
+      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      if (roleId) params.set('role_id', roleId);
+      if (q) params.set('q', q);
+
+      tbody.innerHTML = `<tr><td colspan="6" class="py-5 text-center text-neutral-600 dark:text-muted-gray">Memuat direktori akun...</td></tr>`;
+      try {
+        const rows = await api.get<any[]>(`/admin/users?${params.toString()}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Tidak ada akun pengguna yang sesuai.</td></tr>`;
+          return;
+        }
+        const roleLabel = (id: number) =>
+          id === 1 ? 'ADMIN' : id === 2 ? 'ORGANIZER' : 'USER';
+
+        tbody.innerHTML = list
+          .map((u: any) => {
+            const rLabel = roleLabel(Number(u.role_id));
+            const rCls =
+              Number(u.role_id) === 1
+                ? 'bg-electric-magenta/15 text-electric-magenta border-electric-magenta/40'
+                : Number(u.role_id) === 2
+                ? 'bg-cyan-50 dark:bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-500/30'
+                : 'bg-neutral-100 dark:bg-white/10 text-neutral-700 dark:text-soft-white border-neutral-200 dark:border-white/15';
+
+            return `
+              <tr>
+                <td class="py-3">
+                  <strong class="text-neutral-950 dark:text-soft-white block">${escapeHtml(u.username || '-')}</strong>
+                  <span class="text-[11px] text-neutral-500 dark:text-muted-gray">${escapeHtml(u.email)}</span>
+                </td>
+                <td class="py-3">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border ${rCls}">${rLabel}</span>
+                </td>
+                <td class="py-3">
+                  <span class="${u.is_verified ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-300'} font-bold">
+                    ${u.is_verified ? 'TERVERIFIKASI' : 'BELUM OTP'}
+                  </span>
+                </td>
+                <td class="py-3">
+                  ${u.organization_name
+                    ? `<span class="text-neutral-950 dark:text-soft-white block">${escapeHtml(u.organization_name)}</span><span class="text-[10px] text-neutral-500 dark:text-muted-gray uppercase">${escapeHtml(u.organizer_status || '-')}</span>`
+                    : `<span class="text-neutral-400 dark:text-muted-gray">-</span>`}
+                </td>
+                <td class="py-3 text-right font-bold text-neutral-950 dark:text-soft-white">${Number(u.paid_orders_count || 0)}</td>
+                <td class="py-3 text-right text-neutral-500 dark:text-muted-gray whitespace-nowrap">${escapeHtml(formatDateIndo(u.created_at, { showTime: false }))}</td>
+              </tr>
+            `;
+          })
+          .join('');
+      } catch (err: any) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-5 text-center text-red-600 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar pengguna.')}</td></tr>`;
+      }
+    }
+
+    document.getElementById('adm-users-filter-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loadAdminUsers();
+    });
+    document.getElementById('adm-users-role')?.addEventListener('change', loadAdminUsers);
+
+    // TAB 8: AUDIT LOGS & CRON JOBS
     document.getElementById('adm-jobs-buttons')?.addEventListener('click', async (e) => {
       const btn = (e.target as HTMLElement).closest('[data-trigger-job]') as HTMLButtonElement | null;
       if (!btn) return;
@@ -834,30 +1245,30 @@ const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit
       if (action) params.set('action', action);
       if (target) params.set('target_type', target);
 
-      tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-muted-gray">Memuat jejak audit...</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-neutral-600 dark:text-muted-gray">Memuat jejak audit...</td></tr>`;
       try {
         const rows = await api.get<any[]>(`/admin/audit-logs?${params.toString()}`);
         if (isDisposed) return;
         const list = Array.isArray(rows) ? rows : [];
         if (list.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-muted-gray">Belum ada catatan audit log sesuai filter.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-neutral-600 dark:text-muted-gray">Belum ada catatan audit log sesuai filter.</td></tr>`;
           return;
         }
         tbody.innerHTML = list
           .map(
             (l) => `
             <tr>
-              <td class="py-2.5 text-muted-gray whitespace-nowrap">${escapeHtml(formatDateIndo(l.created_at))}</td>
+              <td class="py-2.5 text-neutral-600 dark:text-muted-gray whitespace-nowrap">${escapeHtml(formatDateIndo(l.created_at))}</td>
               <td class="py-2.5 text-electric-magenta font-bold">${escapeHtml(l.action)}</td>
-              <td class="py-2.5 text-soft-white">${escapeHtml(l.target_type)}${l.target_id ? `#${l.target_id}` : ''}</td>
-              <td class="py-2.5 text-muted-gray">${escapeHtml(l.username || l.email || (l.user_id ? `User #${l.user_id}` : 'SYSTEM'))}</td>
-              <td class="py-2.5 text-muted-gray max-w-xs truncate">${escapeHtml(l.ip_address || '-')} • ${escapeHtml(l.details ? JSON.stringify(l.details) : '-')}</td>
+              <td class="py-2.5 text-neutral-950 dark:text-soft-white">${escapeHtml(l.target_type)}${l.target_id ? `#${l.target_id}` : ''}</td>
+              <td class="py-2.5 text-neutral-600 dark:text-muted-gray">${escapeHtml(l.username || l.email || (l.user_id ? `User #${l.user_id}` : 'SYSTEM'))}</td>
+              <td class="py-2.5 text-neutral-600 dark:text-muted-gray max-w-xs truncate">${escapeHtml(l.ip_address || '-')} • ${escapeHtml(l.details ? JSON.stringify(l.details) : '-')}</td>
             </tr>
           `
           )
           .join('');
       } catch (err: any) {
-        tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-red-300">${escapeHtml(err?.message || 'Gagal memuat audit logs.')}</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-red-600 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat audit logs.')}</td></tr>`;
       }
     }
 
