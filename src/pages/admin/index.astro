@@ -1,0 +1,909 @@
+---
+export const prerender = false;
+
+import RootLayout from '../../layouts/RootLayout.astro';
+import Footer from '../../components/landing/Footer.astro';
+
+const rawTab = Astro.url.searchParams.get('tab') || 'pulse';
+const initialTab = ['pulse', 'organizers', 'events', 'escrow', 'refunds', 'audit'].includes(rawTab)
+  ? rawTab
+  : 'pulse';
+---
+
+<RootLayout
+  title="Admin Command Center — AFTERGLOW"
+  description="Pusat kendali platform AFTERGLOW: verifikasi promotor, kurasi konser, persetujuan payout escrow, refund, dan audit trail."
+>
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
+
+    <!-- Access Guard -->
+    <div id="admin-access-guard" class="hidden text-center py-24 rounded-3xl bg-dark-plum/60 border border-red-500/30">
+      <span class="px-3 py-1 rounded-full bg-red-500/20 text-red-300 font-mono text-[10px] font-bold uppercase">
+        RESTRICTED // ADMIN PLATFORM ONLY
+      </span>
+      <h1 id="admin-guard-title" class="font-display text-4xl sm:text-5xl text-soft-white mt-3 mb-2">
+        AKSES KHUSUS ADMINISTRATOR
+      </h1>
+      <p id="admin-guard-desc" class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+        Masuk menggunakan akun Administrator (`admin@soundtix.id`) untuk membuka pusat kontrol operasional platform.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button id="admin-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          Masuk Akun Admin
+        </button>
+        <a href="/" class="px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white font-bold text-xs uppercase tracking-wider transition-all">
+          Kembali ke Beranda
+        </a>
+      </div>
+    </div>
+
+    <!-- Admin Workspace -->
+    <div id="admin-workspace" class="hidden space-y-8">
+      <!-- Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="px-2.5 py-0.5 rounded bg-electric-magenta/20 border border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold uppercase">
+              PLATFORM COMMAND CENTER
+            </span>
+            <span id="admin-operator-badge" class="text-[11px] font-mono text-muted-gray"></span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+            AFTERGLOW ADMIN CONSOLE
+          </h1>
+        </div>
+        <button id="admin-refresh-current-btn" type="button" class="self-start md:self-auto px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono font-bold uppercase transition-all">
+          Refresh Data Aktif
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-dark-plum border border-white/10 w-fit" id="admin-tabs">
+        <button data-tab="pulse" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Command Pulse</button>
+        <button data-tab="organizers" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Promotor Queue</button>
+        <button data-tab="events" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Event Curation</button>
+        <button data-tab="escrow" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Escrow & Payouts</button>
+        <button data-tab="refunds" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Refund Queue</button>
+        <button data-tab="audit" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Audit & Cron Jobs</button>
+      </div>
+
+      <!-- Global Action Toast Banner -->
+      <div id="admin-toast" class="hidden p-4 rounded-2xl border text-xs font-mono"></div>
+
+      <!-- TAB 1: COMMAND PULSE -->
+      <section id="adm-panel-pulse" class="adm-panel hidden space-y-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="adm-pulse-kpis"></div>
+
+        <div>
+          <h2 class="font-display text-2xl text-soft-white mb-4">ACTION CENTER // ANTREAN BUTUH TINDAKAN</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="adm-action-center"></div>
+        </div>
+      </section>
+
+      <!-- TAB 2: ORGANIZERS REVIEW -->
+      <section id="adm-panel-organizers" class="adm-panel hidden space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-2xl text-soft-white">VERIFIKASI PENDAFTARAN PROMOTOR</h2>
+          <select id="adm-org-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="pending">Pending Review</option>
+            <option value="">Semua Status</option>
+            <option value="verified">Verified</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+        <div id="adm-organizers-list" class="space-y-4"></div>
+      </section>
+
+      <!-- TAB 3: EVENT CURATION -->
+      <section id="adm-panel-events" class="adm-panel hidden space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-2xl text-soft-white">KURASI & MODERASI EVENT KONSER</h2>
+          <select id="adm-ev-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="pending">Menunggu Persetujuan (Pending)</option>
+            <option value="">Semua Status</option>
+            <option value="published">Published</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="selesai">Selesai</option>
+            <option value="rejected">Rejected</option>
+            <option value="dibatalkan">Dibatalkan</option>
+            <option value="draft">Draft</option>
+          </select>
+        </div>
+        <div id="adm-events-list" class="space-y-4"></div>
+      </section>
+
+      <!-- TAB 4: ESCROW & PAYOUTS -->
+      <section id="adm-panel-escrow" class="adm-panel hidden space-y-6">
+        <!-- Manual Event H+1 Settlement Box -->
+        <div class="p-6 rounded-3xl bg-dark-plum/85 border border-white/15 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">EKSEKUSI ESCROW MANUAL</span>
+            <h3 class="font-display text-2xl text-soft-white mt-0.5">SETTLEMENT DANA EVENT H+1</h3>
+            <p class="text-xs text-muted-gray">Pindahkan net omzet event berstatus selesai / H+1 dari pending_balance ke withdrawable_balance promotor.</p>
+          </div>
+          <form id="adm-manual-settle-form" class="flex items-center gap-2 shrink-0">
+            <input id="adm-settle-ev-id" type="number" min="1" required placeholder="Event ID" class="w-32 px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+            <button type="submit" class="px-5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 text-xs font-bold uppercase">
+              Settle Escrow
+            </button>
+          </form>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-2xl text-soft-white">ANTREAN PENCAIRAN DANA (PAYOUTS)</h2>
+          <select id="adm-payout-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="pending">Pending Approval</option>
+            <option value="">Semua Status</option>
+            <option value="completed">Completed</option>
+            <option value="failed">Failed / Rejected</option>
+          </select>
+        </div>
+
+        <div id="adm-payouts-list" class="space-y-4"></div>
+      </section>
+
+      <!-- TAB 5: REFUND QUEUE -->
+      <section id="adm-panel-refunds" class="adm-panel hidden space-y-5">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-2xl text-soft-white">ANTREAN PENGEMBALIAN DANA (REFUNDS)</h2>
+          <select id="adm-refund-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="pending">Pending Transfer</option>
+            <option value="">Semua Status</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+        <div id="adm-refunds-list" class="space-y-4"></div>
+      </section>
+
+      <!-- TAB 6: AUDIT LOGS & CRON JOBS -->
+      <section id="adm-panel-audit" class="adm-panel hidden space-y-8">
+        <!-- Manual Worker Triggers -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-4">
+          <div>
+            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">AUTOMATION & UKK DEMO WORKERS</span>
+            <h2 class="font-display text-2xl text-soft-white mt-0.5">TRIGGER BACKGROUND CRON JOBS MANUAL</h2>
+          </div>
+
+          <div class="flex flex-wrap gap-3" id="adm-jobs-buttons">
+            {[
+              { name: 'expire-orders', label: '1. Expire Orders (>15m)' },
+              { name: 'transition-events', label: '2. Transition Event Lifecycle' },
+              { name: 'settle-escrow', label: '3. Auto-Settle Escrow H+1' },
+              { name: 'dispatch-emails', label: '4. Dispatch Email Outbox' },
+              { name: 'cleanup-auth', label: '5. Cleanup Expired OTP/Tokens' },
+            ].map((j) => (
+              <button
+                type="button"
+                data-trigger-job={j.name}
+                class="adm-job-btn px-4 py-2.5 rounded-xl bg-void-black border border-white/15 hover:border-electric-magenta hover:text-electric-magenta text-xs font-mono font-bold text-soft-white transition-all"
+              >
+                {j.label}
+              </button>
+            ))}
+          </div>
+
+          <pre id="adm-job-output" class="hidden p-4 rounded-2xl bg-void-black border border-emerald-500/30 text-[11px] font-mono text-emerald-300 overflow-x-auto"></pre>
+        </div>
+
+        <!-- Audit Logs Explorer -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-5">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <h2 class="font-display text-2xl text-soft-white">JEJAK AUDIT FINANSIAL & KEAMANAN</h2>
+            <form id="adm-audit-filter-form" class="flex flex-wrap items-center gap-2">
+              <input id="audit-action-input" type="text" placeholder="Filter Action (mis. ORDER_PAID)" class="px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+              <input id="audit-target-input" type="text" placeholder="Target (mis. orders)" class="px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+                Filter Logs
+              </button>
+            </form>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="text-left text-muted-gray border-b border-white/10">
+                  <th class="pb-3">WAKTU</th>
+                  <th class="pb-3">AKSI</th>
+                  <th class="pb-3">TARGET</th>
+                  <th class="pb-3">PELAKU</th>
+                  <th class="pb-3">IP & DETAIL</th>
+                </tr>
+              </thead>
+              <tbody id="adm-audit-tbody" class="divide-y divide-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- REASON INPUT MODAL (Reject / Cancel Actions) -->
+  <div id="admin-reason-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div class="w-full max-w-md rounded-3xl bg-dark-plum border border-white/15 p-6 space-y-4 shadow-2xl">
+      <div>
+        <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">KONFIRMASI TINDAKAN ADMIN</span>
+        <h3 id="adm-reason-title" class="font-display text-2xl text-soft-white mt-1">ALASAN PENOLAKAN</h3>
+        <p id="adm-reason-desc" class="text-xs text-muted-gray mt-1"></p>
+      </div>
+      <form id="adm-reason-form" class="space-y-4">
+        <textarea id="adm-reason-input" rows="3" minlength="5" maxlength="250" required placeholder="Masukkan alasan resmi minimal 5 karakter..." class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta"></textarea>
+        <div class="flex gap-3">
+          <button type="button" id="adm-reason-cancel" class="flex-1 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-bold uppercase text-muted-gray hover:text-soft-white">Batal</button>
+          <button type="submit" id="adm-reason-confirm" class="flex-1 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-xs font-bold uppercase text-white">Konfirmasi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>
+
+<script define:vars={{ initialTab }}>
+  window.__adminInitialTab = initialTab;
+</script>
+
+<script>
+  import { api, resolveAssetUrl } from '../../lib/api';
+  import { getStoredUser, isAdmin, isAuthenticated } from '../../lib/auth';
+  import { escapeHtml, formatDateIndo, formatRupiah } from '../../lib/formatters';
+
+  function initAdminCommandCenter() {
+    const accessGuard = document.getElementById('admin-access-guard');
+    const guardTitle = document.getElementById('admin-guard-title');
+    const guardDesc = document.getElementById('admin-guard-desc');
+    const loginBtn = document.getElementById('admin-login-btn');
+    const workspace = document.getElementById('admin-workspace');
+    const operatorBadge = document.getElementById('admin-operator-badge');
+    const refreshBtn = document.getElementById('admin-refresh-current-btn');
+    const toastEl = document.getElementById('admin-toast');
+
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.adm-tab-btn');
+    const panels = document.querySelectorAll<HTMLElement>('.adm-panel');
+
+    const orgFilter = document.getElementById('adm-org-filter') as HTMLSelectElement | null;
+    const evFilter = document.getElementById('adm-ev-filter') as HTMLSelectElement | null;
+    const payoutFilter = document.getElementById('adm-payout-filter') as HTMLSelectElement | null;
+    const refundFilter = document.getElementById('adm-refund-filter') as HTMLSelectElement | null;
+
+    // Reason modal
+    const reasonModal = document.getElementById('admin-reason-modal');
+    const reasonTitle = document.getElementById('adm-reason-title');
+    const reasonDesc = document.getElementById('adm-reason-desc');
+    const reasonForm = document.getElementById('adm-reason-form') as HTMLFormElement | null;
+    const reasonInput = document.getElementById('adm-reason-input') as HTMLTextAreaElement | null;
+    const reasonCancel = document.getElementById('adm-reason-cancel');
+
+    let currentTab: string = (window as any).__adminInitialTab || 'pulse';
+    let pendingReasonHandler: ((reason: string) => Promise<void>) | null = null;
+    let isDisposed = false;
+
+    loginBtn?.addEventListener('click', () => {
+      if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+      else window.location.href = '/masuk';
+    });
+
+    function showToast(msg: string, isErr = false) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.className = `p-4 rounded-2xl border text-xs font-mono ${
+        isErr ? 'bg-red-500/10 border-red-500/30 text-red-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+      }`;
+      toastEl.classList.remove('hidden');
+      setTimeout(() => {
+        if (!isDisposed) toastEl.classList.add('hidden');
+      }, 5000);
+    }
+
+    function openReasonPrompt(title: string, desc: string, onConfirm: (reason: string) => Promise<void>) {
+      if (reasonTitle) reasonTitle.textContent = title;
+      if (reasonDesc) reasonDesc.textContent = desc;
+      if (reasonInput) reasonInput.value = '';
+      pendingReasonHandler = onConfirm;
+      reasonModal?.classList.remove('hidden');
+      reasonModal?.classList.add('flex');
+      reasonInput?.focus();
+    }
+
+    reasonCancel?.addEventListener('click', () => {
+      pendingReasonHandler = null;
+      reasonModal?.classList.add('hidden');
+      reasonModal?.classList.remove('flex');
+    });
+
+    reasonForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const val = reasonInput?.value.trim() || '';
+      if (val.length < 5 || !pendingReasonHandler) return;
+      const handler = pendingReasonHandler;
+      pendingReasonHandler = null;
+      reasonModal?.classList.add('hidden');
+      reasonModal?.classList.remove('flex');
+      await handler(val);
+    });
+
+    function activateTab(tab: string) {
+      currentTab = tab;
+      window.history.replaceState(null, '', `${window.location.pathname}?tab=${encodeURIComponent(tab)}`);
+      tabBtns.forEach((b) => {
+        const active = b.dataset.tab === tab;
+        b.classList.toggle('bg-electric-magenta', active);
+        b.classList.toggle('text-soft-white', active);
+        b.classList.toggle('shadow-magenta-glow', active);
+        b.classList.toggle('text-muted-gray', !active);
+      });
+      panels.forEach((p) => p.classList.toggle('hidden', p.id !== `adm-panel-${tab}`));
+      loadActiveTab();
+    }
+
+    function loadActiveTab() {
+      if (currentTab === 'pulse') loadPulse();
+      if (currentTab === 'organizers') loadOrganizers();
+      if (currentTab === 'events') loadEvents();
+      if (currentTab === 'escrow') loadPayouts();
+      if (currentTab === 'refunds') loadRefunds();
+      if (currentTab === 'audit') loadAuditLogs();
+    }
+
+    tabBtns.forEach((b) => b.addEventListener('click', () => activateTab(b.dataset.tab || 'pulse')));
+    refreshBtn?.addEventListener('click', loadActiveTab);
+
+    // TAB 1: PULSE
+    async function loadPulse() {
+      const kpiWrap = document.getElementById('adm-pulse-kpis');
+      const acWrap = document.getElementById('adm-action-center');
+      if (!kpiWrap || !acWrap) return;
+
+      try {
+        const dash = await api.get<any>('/admin/dashboard');
+        if (isDisposed) return;
+        const fin = dash.financials || {};
+        const stats = dash.platform_stats || {};
+        const ac = dash.action_center || {};
+
+        kpiWrap.innerHTML = [
+          { label: 'Total GMV Platform', val: formatRupiah(fin.total_gmv || 0), sub: `Diskon voucher: ${formatRupiah(fin.total_discounts || 0)}` },
+          { label: 'Laba Platform Fee (5%)', val: formatRupiah(fin.total_platform_fee || 0), sub: 'Akumulasi order paid', accent: true },
+          { label: 'Ekosistem Pengguna', val: `${Number(stats.total_users || 0)} Akun`, sub: `${Number(stats.total_verified_organizers || 0)} Promotor • ${Number(stats.total_events || 0)} Konser` },
+        ]
+          .map(
+            (k) => `
+            <div class="p-6 rounded-3xl bg-dark-plum/90 border ${k.accent ? 'border-electric-magenta/45' : 'border-white/15'}">
+              <span class="text-[11px] font-mono uppercase text-muted-gray block">${escapeHtml(k.label)}</span>
+              <strong class="font-display text-4xl text-soft-white mt-1 block">${escapeHtml(k.val)}</strong>
+              <span class="text-xs font-mono text-electric-magenta mt-1 block">${escapeHtml(k.sub)}</span>
+            </div>
+          `
+          )
+          .join('');
+
+        acWrap.innerHTML = [
+          { tab: 'organizers', count: ac.pending_organizers || 0, title: 'Promotor Pending', desc: 'Verifikasi KYC & rekening bank' },
+          { tab: 'events', count: ac.pending_events || 0, title: 'Event Review', desc: 'Kurasi konser sebelum publikasi' },
+          { tab: 'escrow', count: ac.pending_payouts || 0, title: 'Payout Queue', desc: 'Persetujuan transfer dana' },
+          { tab: 'refunds', count: ac.pending_refunds || 0, title: 'Refund Queue', desc: 'Antrean pengembalian dana user' },
+        ]
+          .map(
+            (item) => `
+            <button
+              type="button"
+              data-jump-tab="${item.tab}"
+              class="text-left p-5 rounded-3xl bg-dark-plum/85 border ${Number(item.count) > 0 ? 'border-amber-500/45 hover:border-electric-magenta' : 'border-white/10 hover:border-white/25'} transition-all group"
+            >
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[10px] font-mono uppercase text-muted-gray">${escapeHtml(item.title)}</span>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-mono font-bold ${Number(item.count) > 0 ? 'bg-amber-500/20 text-amber-300' : 'bg-white/10 text-muted-gray'}">
+                  ${Number(item.count)}
+                </span>
+              </div>
+              <p class="text-xs text-soft-white group-hover:text-electric-magenta transition-colors">${escapeHtml(item.desc)} →</p>
+            </button>
+          `
+          )
+          .join('');
+
+        acWrap.querySelectorAll<HTMLButtonElement>('[data-jump-tab]').forEach((b) => {
+          b.addEventListener('click', () => {
+            const targetTab = b.dataset.jumpTab || 'pulse';
+            if (targetTab === 'organizers' && orgFilter) orgFilter.value = 'pending';
+            if (targetTab === 'events' && evFilter) evFilter.value = 'pending';
+            if (targetTab === 'escrow' && payoutFilter) payoutFilter.value = 'pending';
+            if (targetTab === 'refunds' && refundFilter) refundFilter.value = 'pending';
+            activateTab(targetTab);
+          });
+        });
+      } catch (err: any) {
+        showToast(err?.message || 'Gagal memuat dashboard Admin.', true);
+      }
+    }
+
+    // TAB 2: ORGANIZERS
+    async function loadOrganizers() {
+      const listEl = document.getElementById('adm-organizers-list');
+      if (!listEl) return;
+      const st = orgFilter?.value || '';
+      const q = st ? `?verification_status=${encodeURIComponent(st)}` : '';
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean promotor...</div>`;
+      try {
+        const rows = await api.get<any[]>(`/get/organizer${q}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada pendaftaran promotor pada status ini.</div>`;
+          return;
+        }
+        listEl.innerHTML = list
+          .map(
+            (o) => `
+            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 space-y-3">
+              <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="font-mono text-xs text-muted-gray">ORG #${o.id} (User #${o.user_id})</span>
+                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                      o.verification_status === 'verified' ? 'bg-emerald-500/20 text-emerald-300' : o.verification_status === 'rejected' ? 'bg-red-500/15 text-red-300' : 'bg-amber-500/20 text-amber-300'
+                    }">${escapeHtml(o.verification_status)}</span>
+                  </div>
+                  <h3 class="font-display text-2xl text-soft-white">${escapeHtml(o.organization_name)}</h3>
+                  <p class="text-xs font-mono text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(o.created_at))}</p>
+                  ${o.rejection_reason ? `<p class="text-xs font-mono text-red-300 mt-1">Alasan Tolak: ${escapeHtml(o.rejection_reason)}</p>` : ''}
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <button type="button" data-org-detail="${o.id}" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono uppercase">
+                    Lihat Bank & Pemilik
+                  </button>
+                  ${o.verification_status !== 'verified' ? `
+                    <button type="button" data-org-approve="${o.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">
+                      Approve
+                    </button>
+                  ` : ''}
+                  ${o.verification_status === 'pending' ? `
+                    <button type="button" data-org-reject="${o.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">
+                      Tolak
+                    </button>
+                  ` : ''}
+                </div>
+              </div>
+              <div id="org-detail-box-${o.id}" class="hidden p-4 rounded-2xl bg-void-black/70 border border-white/10 text-xs font-mono text-muted-gray"></div>
+            </div>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat promotor.')}</div>`;
+      }
+    }
+
+    orgFilter?.addEventListener('change', loadOrganizers);
+    document.getElementById('adm-organizers-list')?.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      const detailBtn = target.closest('[data-org-detail]') as HTMLButtonElement | null;
+      if (detailBtn) {
+        const id = Number(detailBtn.dataset.orgDetail);
+        const box = document.getElementById(`org-detail-box-${id}`);
+        if (!box) return;
+        box.classList.remove('hidden');
+        box.textContent = 'Mengambil info bank terproteksi...';
+        try {
+          const d = await api.get<any>(`/get/organizer/${id}`);
+          box.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div><span class="block text-[10px]">PEMILIK AKUN:</span><strong class="text-soft-white">${escapeHtml(d.user_username || '-')} (${escapeHtml(d.user_email || '-')})</strong></div>
+              <div><span class="block text-[10px]">BANK PENCAIRAN:</span><strong class="text-soft-white">${escapeHtml(d.bank_account || '-')}</strong></div>
+              <div><span class="block text-[10px]">NO. REKENING:</span><strong class="text-electric-magenta">${escapeHtml(d.account_number || '-')}</strong></div>
+            </div>
+          `;
+        } catch (err: any) {
+          box.textContent = err?.message || 'Gagal memuat detail promotor.';
+        }
+        return;
+      }
+
+      const appBtn = target.closest('[data-org-approve]') as HTMLButtonElement | null;
+      if (appBtn) {
+        const id = Number(appBtn.dataset.orgApprove);
+        if (!confirm(`Verifikasi & promosikan Organizer #${id} menjadi ORGANIZER aktif?`)) return;
+        try {
+          await api.patch(`/update-organizer-status/${id}`, { verification_status: 'verified' });
+          showToast(`Organizer #${id} berhasil diverifikasi!`);
+          await loadOrganizers();
+        } catch (err: any) {
+          showToast(err?.message || 'Gagal menyetujui organizer.', true);
+        }
+        return;
+      }
+
+      const rejBtn = target.closest('[data-org-reject]') as HTMLButtonElement | null;
+      if (rejBtn) {
+        const id = Number(rejBtn.dataset.orgReject);
+        openReasonPrompt(`TOLAK PROMOTOR #${id}`, 'Alasan akan dikirimkan ke dashboard pendaftar agar dapat diperbaiki.', async (reason) => {
+          try {
+            await api.patch(`/update-organizer-status/${id}`, { verification_status: 'rejected', rejection_reason: reason });
+            showToast(`Organizer #${id} ditolak.`);
+            await loadOrganizers();
+          } catch (err: any) {
+            showToast(err?.message || 'Gagal menolak organizer.', true);
+          }
+        });
+      }
+    });
+
+    // TAB 3: EVENT CURATION
+    async function loadEvents() {
+      const listEl = document.getElementById('adm-events-list');
+      if (!listEl) return;
+      const st = evFilter?.value || '';
+      const q = st ? `?status=${encodeURIComponent(st)}` : '';
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean kurasi event...</div>`;
+      try {
+        const rows = await api.get<any[]>(`/events${q}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada event pada filter status ini.</div>`;
+          return;
+        }
+        listEl.innerHTML = list
+          .map((ev) => {
+            const canApprove = ev.status === 'pending' || ev.status === 'draft';
+            const canSettle = ev.status === 'selesai' || ev.status === 'published' || ev.status === 'ongoing';
+            const canCancel = ev.status === 'published' || ev.status === 'ongoing';
+
+            return `
+              <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-20 h-20 rounded-2xl object-cover bg-void-black border border-white/10 shrink-0" />
+                  <div class="space-y-1">
+                    <div class="flex flex-wrap items-center gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-white/10 text-soft-white">${escapeHtml(ev.status)}</span>
+                      <span class="text-xs font-mono text-electric-magenta">${escapeHtml(ev.organization_name || `Org #${ev.organizer_id}`)}</span>
+                      <span class="text-xs font-mono text-muted-gray">Event #${ev.id}</span>
+                    </div>
+                    <h3 class="font-display text-2xl text-soft-white">${escapeHtml(ev.nama_event)}</h3>
+                    <p class="text-xs text-muted-gray">${escapeHtml(ev.artis)} • ${escapeHtml(formatDateIndo(ev.tanggal_mulai))} • ${escapeHtml(ev.alamat)}</p>
+                    <p class="text-[11px] font-mono text-muted-gray">Terjual ${Number(ev.sold_quota || 0)} / ${Number(ev.total_quota || 0)} • Mulai ${escapeHtml(formatRupiah(ev.min_price || 0))}</p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-2 shrink-0">
+                  <a href="/events/${ev.id}" target="_blank" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-mono uppercase">Preview</a>
+                  ${canApprove ? `
+                    <button type="button" data-ev-publish="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">Publish</button>
+                    <button type="button" data-ev-reject="${ev.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Reject</button>
+                  ` : ''}
+                  ${canSettle ? `<button type="button" data-ev-settle="${ev.id}" class="px-3.5 py-2 rounded-xl bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-bold uppercase">Settle H+1</button>` : ''}
+                  ${canCancel ? `<button type="button" data-ev-cancel="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Cancel & Refund</button>` : ''}
+                </div>
+              </div>
+            `;
+          })
+          .join('');
+      } catch (err: any) {
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar event.')}</div>`;
+      }
+    }
+
+    evFilter?.addEventListener('change', loadEvents);
+    document.getElementById('adm-events-list')?.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      const pubBtn = target.closest('[data-ev-publish]') as HTMLButtonElement | null;
+      if (pubBtn) {
+        const id = Number(pubBtn.dataset.evPublish);
+        if (!confirm(`Publikasikan Event #${id} ke katalog publik? Harga tiket akan terkunci (Immutable Pricing Guard).`)) return;
+        try {
+          await api.patch(`/update/verification-event/${id}`, { status: 'published' });
+          showToast(`Event #${id} berhasil dipublikasikan!`);
+          await loadEvents();
+        } catch (err: any) {
+          showToast(err?.message || 'Gagal mempublikasikan event.', true);
+        }
+        return;
+      }
+
+      const rejBtn = target.closest('[data-ev-reject]') as HTMLButtonElement | null;
+      if (rejBtn) {
+        const id = Number(rejBtn.dataset.evReject);
+        openReasonPrompt(`TOLAK EVENT #${id}`, 'Jelaskan kekurangan dokumen atau jadwal agar promotor bisa memperbaiki.', async (reason) => {
+          try {
+            await api.patch(`/update/verification-event/${id}`, { status: 'rejected', rejection_reason: reason });
+            showToast(`Event #${id} ditolak.`);
+            await loadEvents();
+          } catch (err: any) {
+            showToast(err?.message || 'Gagal menolak event.', true);
+          }
+        });
+        return;
+      }
+
+      const settleBtn = target.closest('[data-ev-settle]') as HTMLButtonElement | null;
+      if (settleBtn) {
+        const id = Number(settleBtn.dataset.evSettle);
+        if (!confirm(`Eksekusi settlement escrow H+1 untuk Event #${id}?`)) return;
+        try {
+          await api.post(`/admin/events/${id}/settle`, {});
+          showToast(`Escrow H+1 Event #${id} berhasil diselesaikan!`);
+        } catch (err: any) {
+          showToast(err?.message || 'Event belum memenuhi syarat settlement H+1.', true);
+        }
+        return;
+      }
+
+      const cancelBtn = target.closest('[data-ev-cancel]') as HTMLButtonElement | null;
+      if (cancelBtn) {
+        const id = Number(cancelBtn.dataset.evCancel);
+        openReasonPrompt(`BATALKAN KONSER #${id} & MASS REFUND`, 'Seluruh tiket aktif akan hangus dan seluruh order lunas masuk ke antrean refund.', async (reason) => {
+          try {
+            await api.post(`/events/${id}/cancel`, { reason });
+            showToast(`Konser #${id} dibatalkan & antrean refund dibuat.`);
+            await loadEvents();
+          } catch (err: any) {
+            showToast(err?.message || 'Gagal membatalkan konser.', true);
+          }
+        });
+      }
+    });
+
+    // TAB 4: ESCROW & PAYOUTS
+    document.getElementById('adm-manual-settle-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = Number((document.getElementById('adm-settle-ev-id') as HTMLInputElement).value);
+      if (!id) return;
+      try {
+        await api.post(`/admin/events/${id}/settle`, {});
+        showToast(`Escrow Event #${id} berhasil dirilis ke saldo siap tarik promotor!`);
+      } catch (err: any) {
+        showToast(err?.message || 'Gagal melakukan settlement escrow event.', true);
+      }
+    });
+
+    async function loadPayouts() {
+      const listEl = document.getElementById('adm-payouts-list');
+      if (!listEl) return;
+      const st = payoutFilter?.value || '';
+      const q = st ? `?status=${encodeURIComponent(st)}` : '';
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean payout...</div>`;
+      try {
+        const rows = await api.get<any[]>(`/admin/payouts${q}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada pengajuan payout pada filter status ini.</div>`;
+          return;
+        }
+        listEl.innerHTML = list
+          .map(
+            (p) => `
+            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-mono text-xs font-bold text-soft-white">PAYOUT #${p.id}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                    p.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300' : p.status === 'failed' ? 'bg-red-500/15 text-red-300' : 'bg-amber-500/20 text-amber-300'
+                  }">${escapeHtml(p.status)}</span>
+                </div>
+                <h3 class="font-bold text-base text-soft-white">${escapeHtml(p.nama_organizer || `Org #${p.organizer_id}`)} — ${escapeHtml(p.nama_event || `Event #${p.event_id}`)}</h3>
+                <p class="text-xs font-mono text-muted-gray">Tujuan: ${escapeHtml(p.bank_account)} • ${escapeHtml(p.account_number)}</p>
+                <p class="text-[11px] font-mono text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(p.created_at))}</p>
+                ${p.rejection_reason ? `<p class="text-xs font-mono text-red-300">Alasan Tolak: ${escapeHtml(p.rejection_reason)}</p>` : ''}
+              </div>
+
+              <div class="flex flex-col sm:items-end gap-3 shrink-0">
+                <strong class="font-display text-3xl text-electric-magenta">${escapeHtml(formatRupiah(p.amount))}</strong>
+                ${p.status === 'pending' ? `
+                  <div class="flex gap-2">
+                    <button type="button" data-payout-approve="${p.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">
+                      Approve Transfer
+                    </button>
+                    <button type="button" data-payout-reject="${p.id}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">
+                      Tolak
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat payout.')}</div>`;
+      }
+    }
+
+    payoutFilter?.addEventListener('change', loadPayouts);
+    document.getElementById('adm-payouts-list')?.addEventListener('click', async (e) => {
+      const target = e.target as HTMLElement;
+      const appBtn = target.closest('[data-payout-approve]') as HTMLButtonElement | null;
+      if (appBtn) {
+        const id = Number(appBtn.dataset.payoutApprove);
+        if (!confirm(`Setujui & tandai Payout #${id} telah ditransfer ke rekening promotor?`)) return;
+        try {
+          await api.post(`/admin/payouts/${id}/approve`, {});
+          showToast(`Payout #${id} disetujui & selesai.`);
+          await loadPayouts();
+        } catch (err: any) {
+          showToast(err?.message || 'Gagal menyetujui payout.', true);
+        }
+        return;
+      }
+
+      const rejBtn = target.closest('[data-payout-reject]') as HTMLButtonElement | null;
+      if (rejBtn) {
+        const id = Number(rejBtn.dataset.payoutReject);
+        openReasonPrompt(`TOLAK PAYOUT #${id}`, 'Dana akan dikembalikan secara atomik ke withdrawable_balance promotor.', async (reason) => {
+          try {
+            await api.post(`/admin/payouts/${id}/reject`, { rejection_reason: reason });
+            showToast(`Payout #${id} ditolak & saldo dikembalikan.`);
+            await loadPayouts();
+          } catch (err: any) {
+            showToast(err?.message || 'Gagal menolak payout.', true);
+          }
+        });
+      }
+    });
+
+    // TAB 5: REFUNDS
+    async function loadRefunds() {
+      const listEl = document.getElementById('adm-refunds-list');
+      if (!listEl) return;
+      const st = refundFilter?.value || '';
+      const q = st ? `?status=${encodeURIComponent(st)}` : '';
+      listEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat antrean refund...</div>`;
+      try {
+        const rows = await api.get<any[]>(`/admin/refunds${q}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          listEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada antrean refund pada filter ini.</div>`;
+          return;
+        }
+        listEl.innerHTML = list
+          .map(
+            (r) => `
+            <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-mono text-xs font-bold text-soft-white">REFUND #${r.id} • ${escapeHtml(r.order_code)}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                    r.status === 'completed' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-amber-500/20 text-amber-300'
+                  }">${escapeHtml(r.status)}</span>
+                </div>
+                <h3 class="font-bold text-base text-soft-white">${escapeHtml(r.nama_event)}</h3>
+                <p class="text-xs font-mono text-muted-gray">Pembeli: ${escapeHtml(r.user_email || `User #${r.user_id}`)}</p>
+                <p class="text-xs text-muted-gray">Alasan: ${escapeHtml(r.alasan || '-')}</p>
+              </div>
+              <div class="flex flex-col sm:items-end gap-3 shrink-0">
+                <strong class="font-display text-3xl text-emerald-400">${escapeHtml(formatRupiah(r.amount))}</strong>
+                ${r.status === 'pending' ? `
+                  <button type="button" data-refund-process="${r.id}" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+                    Proses Refund Selesai
+                  </button>
+                ` : `<span class="text-[11px] font-mono text-muted-gray">Diproses: ${escapeHtml(formatDateIndo(r.processed_at))}</span>`}
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        listEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat refund.')}</div>`;
+      }
+    }
+
+    refundFilter?.addEventListener('change', loadRefunds);
+    document.getElementById('adm-refunds-list')?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-refund-process]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const id = Number(btn.dataset.refundProcess);
+      if (!confirm(`Tandai Refund #${id} telah berhasil dikembalikan ke pembeli?`)) return;
+      btn.disabled = true;
+      try {
+        await api.post(`/admin/refunds/${id}/process`, {});
+        showToast(`Refund #${id} selesai diproses.`);
+        await loadRefunds();
+      } catch (err: any) {
+        showToast(err?.message || 'Gagal memproses refund.', true);
+        btn.disabled = false;
+      }
+    });
+
+    // TAB 6: AUDIT LOGS & CRON JOBS
+    document.getElementById('adm-jobs-buttons')?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-trigger-job]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const jobName = btn.dataset.triggerJob;
+      if (!jobName) return;
+      const outEl = document.getElementById('adm-job-output');
+      btn.disabled = true;
+      try {
+        const res = await api.post(`/admin/jobs/trigger/${jobName}`, {});
+        if (outEl) {
+          outEl.textContent = JSON.stringify({ job: jobName, timestamp: new Date().toISOString(), result: res }, null, 2);
+          outEl.classList.remove('hidden');
+        }
+        showToast(`Worker "${jobName}" selesai dieksekusi.`);
+      } catch (err: any) {
+        showToast(err?.message || `Gagal menjalankan worker ${jobName}.`, true);
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    async function loadAuditLogs() {
+      const tbody = document.getElementById('adm-audit-tbody');
+      if (!tbody) return;
+      const action = (document.getElementById('audit-action-input') as HTMLInputElement | null)?.value.trim() || '';
+      const target = (document.getElementById('audit-target-input') as HTMLInputElement | null)?.value.trim() || '';
+      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      if (action) params.set('action', action);
+      if (target) params.set('target_type', target);
+
+      tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-muted-gray">Memuat jejak audit...</td></tr>`;
+      try {
+        const rows = await api.get<any[]>(`/admin/audit-logs?${params.toString()}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-muted-gray">Belum ada catatan audit log sesuai filter.</td></tr>`;
+          return;
+        }
+        tbody.innerHTML = list
+          .map(
+            (l) => `
+            <tr>
+              <td class="py-2.5 text-muted-gray whitespace-nowrap">${escapeHtml(formatDateIndo(l.created_at))}</td>
+              <td class="py-2.5 text-electric-magenta font-bold">${escapeHtml(l.action)}</td>
+              <td class="py-2.5 text-soft-white">${escapeHtml(l.target_type)}${l.target_id ? `#${l.target_id}` : ''}</td>
+              <td class="py-2.5 text-muted-gray">${escapeHtml(l.username || l.email || (l.user_id ? `User #${l.user_id}` : 'SYSTEM'))}</td>
+              <td class="py-2.5 text-muted-gray max-w-xs truncate">${escapeHtml(l.ip_address || '-')} • ${escapeHtml(l.details ? JSON.stringify(l.details) : '-')}</td>
+            </tr>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        tbody.innerHTML = `<tr><td colspan="5" class="py-5 text-center text-red-300">${escapeHtml(err?.message || 'Gagal memuat audit logs.')}</td></tr>`;
+      }
+    }
+
+    document.getElementById('adm-audit-filter-form')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loadAuditLogs();
+    });
+
+    function syncAdminAccess() {
+      const loggedIn = isAuthenticated();
+      const adminOk = loggedIn && isAdmin();
+      if (!adminOk) {
+        workspace?.classList.add('hidden');
+        accessGuard?.classList.remove('hidden');
+        if (loggedIn) {
+          if (guardTitle) guardTitle.textContent = 'AKSES DITOLAK (BUKAN ADMIN)';
+          if (guardDesc) guardDesc.textContent = 'Akun yang sedang login tidak memiliki hak akses Administrator platform.';
+          loginBtn?.classList.add('hidden');
+        } else {
+          if (guardTitle) guardTitle.textContent = 'AKSES KHUSUS ADMINISTRATOR';
+          if (guardDesc) guardDesc.textContent = 'Masuk menggunakan akun Administrator (admin@soundtix.id) untuk membuka pusat kontrol platform.';
+          loginBtn?.classList.remove('hidden');
+        }
+        return;
+      }
+
+      accessGuard?.classList.add('hidden');
+      workspace?.classList.remove('hidden');
+      const user = getStoredUser();
+      if (operatorBadge && user) operatorBadge.textContent = `OPERATOR: ${user.email}`;
+      activateTab(currentTab);
+    }
+
+    const onAuthChanged = () => syncAdminAccess();
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+    syncAdminAccess();
+
+    return () => {
+      isDisposed = true;
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
+  }
+
+  let adminCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (adminCleanup) adminCleanup();
+    adminCleanup = initAdminCommandCenter();
+  });
+</script>
