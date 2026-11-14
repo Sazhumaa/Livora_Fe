@@ -1,0 +1,499 @@
+---
+export const prerender = false;
+
+import RootLayout from '../layouts/RootLayout.astro';
+import Footer from '../components/landing/Footer.astro';
+
+const rawTab = Astro.url.searchParams.get('tab') || 'profile';
+const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab) ? rawTab : 'profile';
+---
+
+<RootLayout
+  title="Akun & Riwayat Saya — AFTERGLOW"
+  description="Kelola profil pembeli, riwayat pesanan tiket, konser tersimpan (wishlist), dan status pengembalian dana."
+>
+  <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-6xl mx-auto w-full">
+    <!-- Auth Guard -->
+    <div id="account-auth-guard" class="hidden text-center py-24 rounded-3xl bg-dark-plum/60 border border-white/10">
+      <h1 class="font-display text-4xl text-soft-white mb-2">MASUK KE HUB AKUN</h1>
+      <p class="text-sm text-muted-gray max-w-md mx-auto mb-6">
+        Login untuk mengelola profil identitas tiket, memantau status order, wishlist konser, dan pengajuan refund.
+      </p>
+      <button id="account-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        Masuk / Daftar OTP
+      </button>
+    </div>
+
+    <!-- Main Account Workspace -->
+    <div id="account-workspace" class="hidden space-y-8">
+      <!-- Profile Identity Hero -->
+      <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/90 border border-white/15 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div class="flex items-center gap-5">
+          <div id="account-avatar" class="w-16 h-16 rounded-2xl bg-gradient-to-br from-electric-magenta to-deep-magenta flex items-center justify-center font-display text-3xl text-soft-white shrink-0">
+            U
+          </div>
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <span id="account-role-badge" class="px-2.5 py-0.5 rounded bg-electric-magenta/20 border border-electric-magenta/40 text-electric-magenta font-mono text-[10px] font-bold uppercase">
+                PENONTON RESMI
+              </span>
+              <span id="account-verified-badge" class="px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-300 font-mono text-[10px] font-bold uppercase">
+                TERVERIFIKASI
+              </span>
+            </div>
+            <h1 id="account-hero-name" class="font-display text-3xl sm:text-4xl text-soft-white tracking-wide">
+              Memuat Akun...
+            </h1>
+            <p id="account-hero-email" class="text-xs font-mono text-muted-gray mt-0.5">-</p>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-3">
+          <a href="/tickets" class="px-4 py-2.5 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+            E-Tiket Saya →
+          </a>
+          <a id="account-studio-link" href="/organizer" class="px-4 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
+            Studio Promotor
+          </a>
+          <a id="account-admin-link" href="/admin" class="hidden px-4 py-2.5 rounded-xl bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold uppercase tracking-wider transition-all">
+            Admin Panel
+          </a>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-dark-plum border border-white/10 w-fit" id="account-tabs">
+        <button data-tab="profile" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+          Profil Saya
+        </button>
+        <button data-tab="orders" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+          Riwayat Order
+        </button>
+        <button data-tab="wishlist" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+          Wishlist Konser
+        </button>
+        <button data-tab="refunds" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+          Status Refund
+        </button>
+      </div>
+
+      <!-- TAB 1: PROFILE -->
+      <section id="panel-profile" class="acc-panel hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-dark-plum/80 border border-white/15">
+          <h2 class="font-display text-2xl text-soft-white mb-1">PENGATURAN IDENTITAS AKUN</h2>
+          <p class="text-xs text-muted-gray mb-6">Pastikan nama dan nomor ponsel aktif untuk menerima notifikasi jadwal konser.</p>
+
+          <form id="profile-update-form" class="space-y-5">
+            <div>
+              <label class="text-xs font-mono text-muted-gray block mb-1.5">Email Terdaftar (Primary OTP)</label>
+              <input id="profile-email-input" type="email" disabled class="w-full px-4 py-3 rounded-xl bg-void-black/60 border border-white/10 text-sm text-muted-gray cursor-not-allowed" />
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="profile-username-input" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Lengkap / Username</label>
+                <input id="profile-username-input" type="text" minlength="2" maxlength="80" required class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta" />
+              </div>
+
+              <div>
+                <label for="profile-phone-input" class="text-xs font-mono text-muted-gray block mb-1.5">Nomor HP / WhatsApp</label>
+                <input id="profile-phone-input" type="tel" pattern="[0-9+]{9,16}" placeholder="081234567890" class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+              </div>
+            </div>
+
+            <div id="profile-feedback" class="hidden p-3.5 rounded-xl border text-xs font-mono"></div>
+
+            <button id="profile-save-btn" type="submit" class="px-6 py-3 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+              Simpan Perubahan Profil
+            </button>
+          </form>
+        </div>
+
+        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/80 border border-white/15 space-y-4">
+          <h3 class="font-display text-xl text-soft-white">RINGKASAN KEAMANAN</h3>
+          <div class="space-y-3 text-xs font-mono">
+            <div class="p-3.5 rounded-xl bg-void-black/70 border border-white/10 flex justify-between">
+              <span class="text-muted-gray">Autentikasi:</span>
+              <span class="text-soft-white">Passwordless OTP</span>
+            </div>
+            <div class="p-3.5 rounded-xl bg-void-black/70 border border-white/10 flex justify-between">
+              <span class="text-muted-gray">Bergabung Sejak:</span>
+              <span id="profile-joined-at" class="text-soft-white">-</span>
+            </div>
+          </div>
+          <p class="text-[11px] text-muted-gray leading-relaxed">
+            Pembelian tiket diawasi sistem anti-calo otomatis per akun dan dilindungi rekening bersama escrow platform.
+          </p>
+        </div>
+      </section>
+
+      <!-- TAB 2: ORDER HISTORY -->
+      <section id="panel-orders" class="acc-panel hidden space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <h2 class="font-display text-2xl text-soft-white">RIWAYAT TRANSAKSI WAR TIKET</h2>
+          <select id="orders-status-filter" class="px-4 py-2 rounded-xl bg-dark-plum border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta">
+            <option value="">Semua Status Order</option>
+            <option value="pending">Pending (Menunggu Bayar)</option>
+            <option value="paid">Lunas (Paid)</option>
+            <option value="expired">Kedaluwarsa</option>
+            <option value="cancelled">Dibatalkan</option>
+            <option value="refunded">Di-Refund</option>
+          </select>
+        </div>
+        <div id="account-orders-list" class="space-y-4"></div>
+      </section>
+
+      <!-- TAB 3: WISHLIST -->
+      <section id="panel-wishlist" class="acc-panel hidden space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="font-display text-2xl text-soft-white">KONSER TERSIMPAN (WISHLIST)</h2>
+          <a href="/events" class="text-xs font-mono text-electric-magenta hover:underline">Jelajahi Katalog →</a>
+        </div>
+        <div id="account-wishlist-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </section>
+
+      <!-- TAB 4: REFUNDS -->
+      <section id="panel-refunds" class="acc-panel hidden space-y-6">
+        <div>
+          <h2 class="font-display text-2xl text-soft-white">STATUS PENGEMBALIAN DANA (REFUND)</h2>
+          <p class="text-xs text-muted-gray mt-1">Riwayat refund otomatis akibat pembatalan konser massal oleh promotor/admin.</p>
+        </div>
+        <div id="account-refunds-list" class="space-y-4"></div>
+      </section>
+    </div>
+  </div>
+
+  <Footer />
+</RootLayout>
+
+<script define:vars={{ initialTab }}>
+  window.__accountInitialTab = initialTab;
+</script>
+
+<script>
+  import { api, resolveAssetUrl } from '../lib/api';
+  import { fetchCurrentUser, isAdmin, isAuthenticated, isOrganizer, USER_ROLES } from '../lib/auth';
+  import { toggleBookmark } from '../lib/events';
+  import { escapeHtml, formatDateIndo, formatRupiah } from '../lib/formatters';
+
+  function initAccountHub() {
+    const authGuard = document.getElementById('account-auth-guard');
+    const workspace = document.getElementById('account-workspace');
+    const loginBtn = document.getElementById('account-login-btn');
+
+    const avatarEl = document.getElementById('account-avatar');
+    const roleBadgeEl = document.getElementById('account-role-badge');
+    const heroNameEl = document.getElementById('account-hero-name');
+    const heroEmailEl = document.getElementById('account-hero-email');
+    const studioLink = document.getElementById('account-studio-link');
+    const adminLink = document.getElementById('account-admin-link');
+
+    const tabBtns = document.querySelectorAll<HTMLButtonElement>('.acc-tab-btn');
+    const panels = document.querySelectorAll<HTMLElement>('.acc-panel');
+
+    const emailInput = document.getElementById('profile-email-input') as HTMLInputElement | null;
+    const usernameInput = document.getElementById('profile-username-input') as HTMLInputElement | null;
+    const phoneInput = document.getElementById('profile-phone-input') as HTMLInputElement | null;
+    const joinedAtEl = document.getElementById('profile-joined-at');
+    const profileForm = document.getElementById('profile-update-form') as HTMLFormElement | null;
+    const profileFeedback = document.getElementById('profile-feedback');
+    const profileSaveBtn = document.getElementById('profile-save-btn') as HTMLButtonElement | null;
+
+    const ordersFilter = document.getElementById('orders-status-filter') as HTMLSelectElement | null;
+    const ordersList = document.getElementById('account-orders-list');
+    const wishlistGrid = document.getElementById('account-wishlist-grid');
+    const refundsList = document.getElementById('account-refunds-list');
+
+    let currentTab: string = (window as any).__accountInitialTab || 'profile';
+    let isDisposed = false;
+
+    loginBtn?.addEventListener('click', () => {
+      if (typeof (window as any).openAuthModal === 'function') (window as any).openAuthModal();
+      else window.location.href = '/masuk';
+    });
+
+    function activateTab(tab: string) {
+      currentTab = tab;
+      const nextUrl = `${window.location.pathname}?tab=${encodeURIComponent(tab)}`;
+      window.history.replaceState(null, '', nextUrl);
+
+      tabBtns.forEach((b) => {
+        const active = b.dataset.tab === tab;
+        b.classList.toggle('bg-electric-magenta', active);
+        b.classList.toggle('text-soft-white', active);
+        b.classList.toggle('shadow-magenta-glow', active);
+        b.classList.toggle('text-muted-gray', !active);
+      });
+
+      panels.forEach((p) => {
+        p.classList.toggle('hidden', p.id !== `panel-${tab}`);
+      });
+
+      if (tab === 'orders') loadOrders();
+      if (tab === 'wishlist') loadWishlist();
+      if (tab === 'refunds') loadRefunds();
+    }
+
+    tabBtns.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const next = btn.dataset.tab || 'profile';
+        activateTab(next);
+      });
+    });
+
+    async function loadProfile() {
+      try {
+        const user = await api.get('/users/me');
+        if (isDisposed || !user) return;
+        if (avatarEl) avatarEl.textContent = String(user.username || user.email || 'U').charAt(0).toUpperCase();
+        if (heroNameEl) heroNameEl.textContent = user.username || 'Pengguna AFTERGLOW';
+        if (heroEmailEl) heroEmailEl.textContent = user.email || '-';
+        if (emailInput) emailInput.value = user.email || '';
+        if (usernameInput) usernameInput.value = user.username || '';
+        if (phoneInput) phoneInput.value = user.no_hp || '';
+        if (joinedAtEl) joinedAtEl.textContent = user.created_at ? formatDateIndo(user.created_at, { showTime: false }) : '-';
+
+        if (roleBadgeEl) {
+          if (user.role_id === USER_ROLES.ADMIN) roleBadgeEl.textContent = 'ADMIN PLATFORM';
+          else if (user.role_id === USER_ROLES.ORGANIZER) roleBadgeEl.textContent = 'PROMOTOR TERVERIFIKASI';
+          else roleBadgeEl.textContent = 'PENONTON RESMI';
+        }
+        if (studioLink) studioLink.textContent = isOrganizer() ? 'Dashboard Promotor' : 'Jadi Promotor';
+        if (adminLink) adminLink.classList.toggle('hidden', !isAdmin());
+      } catch {}
+    }
+
+    profileForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!profileSaveBtn) return;
+      profileSaveBtn.disabled = true;
+      profileSaveBtn.textContent = 'Menyimpan...';
+      profileFeedback?.classList.add('hidden');
+
+      try {
+        const payload: any = { username: usernameInput?.value.trim() };
+        const hp = phoneInput?.value.trim();
+        if (hp) payload.no_hp = hp;
+
+        await api.patch('/users/me', payload);
+        await fetchCurrentUser();
+        await loadProfile();
+        if (profileFeedback) {
+          profileFeedback.className = 'p-3.5 rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-xs font-mono';
+          profileFeedback.textContent = 'Profil berhasil diperbarui!';
+          profileFeedback.classList.remove('hidden');
+        }
+      } catch (err: any) {
+        if (profileFeedback) {
+          profileFeedback.className = 'p-3.5 rounded-xl border border-red-500/30 bg-red-500/10 text-red-300 text-xs font-mono';
+          profileFeedback.textContent = err?.message || 'Gagal memperbarui profil.';
+          profileFeedback.classList.remove('hidden');
+        }
+      } finally {
+        profileSaveBtn.disabled = false;
+        profileSaveBtn.textContent = 'Simpan Perubahan Profil';
+      }
+    });
+
+    function orderStatusBadge(status: string) {
+      const map: Record<string, string> = {
+        pending: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+        paid: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+        expired: 'bg-white/10 text-muted-gray border-white/15',
+        cancelled: 'bg-red-500/15 text-red-300 border-red-500/30',
+        refunded: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/30',
+      };
+      const cls = map[status] || 'bg-white/10 text-muted-gray border-white/15';
+      return `<span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase border ${cls}">${escapeHtml(status)}</span>`;
+    }
+
+    async function loadOrders() {
+      if (!ordersList) return;
+      ordersList.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat riwayat order...</div>`;
+      const status = ordersFilter?.value || '';
+      const q = status ? `?status=${encodeURIComponent(status)}` : '';
+      try {
+        const rows = await api.get<any[]>(`/orders${q}`);
+        if (isDisposed) return;
+        if (!Array.isArray(rows) || rows.length === 0) {
+          ordersList.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Belum ada transaksi order${status ? ` berstatus "${escapeHtml(status)}"` : ''}.</div>`;
+          return;
+        }
+        ordersList.innerHTML = rows
+          .map((o) => {
+            const actionLinks =
+              o.status === 'pending'
+                ? `<a href="/orders/${escapeHtml(o.order_code)}" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">Lanjutkan Bayar</a>
+                   <button type="button" data-cancel-order="${escapeHtml(o.order_code)}" class="px-4 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Batalkan</button>`
+                : o.status === 'paid'
+                ? `<a href="/orders/${escapeHtml(o.order_code)}/receipt" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase">Kuitansi</a>
+                   <a href="/tickets" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">Buka Tiket</a>`
+                : `<a href="/events/${o.event_id}" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase">Lihat Konser</a>`;
+
+            return `
+              <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div class="flex items-start gap-4">
+                  <img src="${escapeHtml(resolveAssetUrl(o.poster_url))}" alt="${escapeHtml(o.nama_event)}" class="w-16 h-16 rounded-2xl object-cover bg-void-black border border-white/10 shrink-0" />
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2 mb-1">
+                      <span class="font-mono text-xs font-bold text-soft-white">${escapeHtml(o.order_code)}</span>
+                      ${orderStatusBadge(o.status)}
+                    </div>
+                    <h3 class="font-bold text-base text-soft-white">${escapeHtml(o.nama_event || 'Konser AFTERGLOW')}</h3>
+                    <p class="text-xs text-muted-gray mt-0.5">${escapeHtml(formatDateIndo(o.tanggal_mulai))} • ${escapeHtml(o.alamat || '-')}</p>
+                    <p class="text-xs font-mono text-electric-magenta font-bold mt-1">Total: ${escapeHtml(formatRupiah(o.final_amount))}</p>
+                  </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2 shrink-0">${actionLinks}</div>
+              </div>
+            `;
+          })
+          .join('');
+      } catch (err: any) {
+        ordersList.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat riwayat order.')}</div>`;
+      }
+    }
+
+    ordersFilter?.addEventListener('change', loadOrders);
+    ordersList?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-cancel-order]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const code = btn.dataset.cancelOrder;
+      if (!code || !confirm(`Batalkan pesanan ${code}?`)) return;
+      btn.disabled = true;
+      try {
+        await api.post(`/orders/${code}/cancel`);
+        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        await loadOrders();
+      } catch (err: any) {
+        alert(err?.message || 'Gagal membatalkan pesanan.');
+        btn.disabled = false;
+      }
+    });
+
+    async function loadWishlist() {
+      if (!wishlistGrid) return;
+      wishlistGrid.innerHTML = `<div class="col-span-full p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat konser tersimpan...</div>`;
+      try {
+        const rows = await api.get<any[]>('/users/bookmarks');
+        if (isDisposed) return;
+        if (!Array.isArray(rows) || rows.length === 0) {
+          wishlistGrid.innerHTML = `<div class="col-span-full p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Belum ada konser yang disimpan ke wishlist.</div>`;
+          return;
+        }
+        wishlistGrid.innerHTML = rows
+          .map(
+            (ev) => `
+            <article class="rounded-3xl bg-dark-plum/85 border border-white/12 overflow-hidden flex flex-col">
+              <a href="/events/${ev.id}" class="aspect-[16/9] bg-void-black block overflow-hidden">
+                <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-full h-full object-cover" />
+              </a>
+              <div class="p-5 flex-1 flex flex-col justify-between gap-4">
+                <div>
+                  <span class="text-[11px] font-mono text-electric-magenta block">${escapeHtml(formatDateIndo(ev.tanggal_mulai, { showTime: false }))}</span>
+                  <h3 class="font-display text-2xl text-soft-white mt-1 line-clamp-2">${escapeHtml(ev.nama_event)}</h3>
+                  <p class="text-xs text-muted-gray mt-1">${escapeHtml(ev.artis)} • ${escapeHtml(ev.alamat)}</p>
+                </div>
+                <div class="flex items-center justify-between pt-3 border-t border-white/10">
+                  <span class="font-display text-xl text-soft-white">${escapeHtml(formatRupiah(ev.min_price || 0))}</span>
+                  <div class="flex items-center gap-2">
+                    <button type="button" data-unsave-id="${ev.id}" class="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-red-500/20 text-xs text-muted-gray hover:text-red-300 font-mono">
+                      Hapus
+                    </button>
+                    <a href="/events/${ev.id}" class="px-4 py-1.5 rounded-lg bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+                      Beli
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </article>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        wishlistGrid.innerHTML = `<div class="col-span-full p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat wishlist.')}</div>`;
+      }
+    }
+
+    wishlistGrid?.addEventListener('click', async (e) => {
+      const btn = (e.target as HTMLElement).closest('[data-unsave-id]') as HTMLButtonElement | null;
+      if (!btn) return;
+      const id = Number(btn.dataset.unsaveId || 0);
+      if (!id) return;
+      btn.disabled = true;
+      try {
+        await toggleBookmark(id);
+        await loadWishlist();
+      } catch {
+        btn.disabled = false;
+      }
+    });
+
+    async function loadRefunds() {
+      if (!refundsList) return;
+      refundsList.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat data pengembalian dana...</div>`;
+      try {
+        const rows = await api.get<any[]>('/users/refunds');
+        if (isDisposed) return;
+        if (!Array.isArray(rows) || rows.length === 0) {
+          refundsList.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada pengajuan atau riwayat refund pada akun Anda.</div>`;
+          return;
+        }
+        refundsList.innerHTML = rows
+          .map(
+            (r) => `
+            <div class="p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="font-mono text-xs font-bold text-soft-white">${escapeHtml(r.order_code || `ORDER #${r.order_id}`)}</span>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase ${
+                    r.status === 'processed' || r.status === 'completed'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'
+                      : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                  }">${escapeHtml(r.status)}</span>
+                </div>
+                <h3 class="font-bold text-base text-soft-white">${escapeHtml(r.nama_event || 'Konser Dibatalkan')}</h3>
+                <p class="text-xs text-muted-gray">Alasan: ${escapeHtml(r.alasan || 'Pembatalan event')}</p>
+                <p class="text-[11px] font-mono text-muted-gray">Diajukan: ${escapeHtml(formatDateIndo(r.created_at))}${r.processed_at ? ` • Diproses: ${escapeHtml(formatDateIndo(r.processed_at))}` : ''}</p>
+              </div>
+              <div class="text-left sm:text-right shrink-0">
+                <span class="text-[10px] font-mono uppercase text-muted-gray block">Nominal Refund</span>
+                <strong class="font-display text-2xl text-emerald-400">${escapeHtml(formatRupiah(r.amount))}</strong>
+              </div>
+            </div>
+          `
+          )
+          .join('');
+      } catch (err: any) {
+        refundsList.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat data refund.')}</div>`;
+      }
+    }
+
+    async function refreshSessionView() {
+      if (!isAuthenticated()) {
+        authGuard?.classList.remove('hidden');
+        workspace?.classList.add('hidden');
+        return;
+      }
+      authGuard?.classList.add('hidden');
+      workspace?.classList.remove('hidden');
+      await loadProfile();
+      activateTab(currentTab);
+    }
+
+    const onAuthChanged = () => refreshSessionView();
+    window.addEventListener('afterglow-auth-changed', onAuthChanged);
+    refreshSessionView();
+
+    return () => {
+      isDisposed = true;
+      window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+    };
+  }
+
+  let accountCleanup: (() => void) | undefined;
+  document.addEventListener('astro:page-load', () => {
+    if (accountCleanup) accountCleanup();
+    accountCleanup = initAccountHub();
+  });
+</script>
