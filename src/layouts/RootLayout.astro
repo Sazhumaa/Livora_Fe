@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Navbar from '../components/common/Navbar.astro';
 import FloatingHud from '../components/common/FloatingHud.astro';
 import AuthModal from '../components/auth/AuthModal.astro';
+import ActiveOrderBanner from '../components/common/ActiveOrderBanner.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -90,6 +91,9 @@ const {
 
     <!-- Floating HUD Elements -->
     <FloatingHud />
+
+    <!-- Active Pending Order Recovery Banner -->
+    <ActiveOrderBanner />
 
     <!-- Global Passwordless Auth Modal -->
     <AuthModal />

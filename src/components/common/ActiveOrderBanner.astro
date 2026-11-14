@@ -1,0 +1,162 @@
+---
+// AFTERGLOW Floating Active Order Recovery Banner
+// Automatically alerts users if they have an unpaid pending order (15-min reservation hold).
+---
+
+<div
+  id="active-order-recovery-banner"
+  class="hidden fixed bottom-5 left-4 right-4 sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:max-w-2xl z-40 rounded-2xl bg-white/95 dark:bg-void-black/95 border border-electric-magenta/50 dark:border-electric-magenta/60 shadow-[0_12px_35px_rgba(209,77,145,0.22)] dark:shadow-[0_0_35px_rgba(209,77,145,0.35)] backdrop-blur-xl p-4 sm:px-5 sm:py-3.5 print:hidden"
+  role="region"
+  aria-label="Pesanan Tiket Aktif Belum Dibayar"
+>
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div class="flex items-start sm:items-center gap-3 min-w-0">
+      <div class="w-10 h-10 rounded-xl bg-electric-magenta/15 dark:bg-electric-magenta/20 border border-electric-magenta/40 dark:border-electric-magenta/50 flex items-center justify-center shrink-0">
+        <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta animate-ping"></span>
+      </div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[10px] font-mono font-bold uppercase tracking-widest text-electric-magenta">
+            RESERVASI KUOTA AKTIF
+          </span>
+          <span
+            id="recovery-banner-timer"
+            class="px-2 py-0.5 rounded bg-electric-magenta text-white font-mono text-[11px] font-bold tracking-wider"
+          >
+            00:00
+          </span>
+        </div>
+        <p class="text-xs sm:text-sm font-semibold text-neutral-950 dark:text-soft-white truncate mt-0.5">
+          <span id="recovery-event-name">Menunggu pembayaran...</span>
+          <span class="text-neutral-500 dark:text-muted-gray font-mono text-[11px] ml-1.5" id="recovery-order-amount"></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 shrink-0">
+      <a
+        id="recovery-pay-link"
+        href="/orders/demo"
+        class="flex-1 sm:flex-initial text-center px-4 py-2 rounded-xl bg-electric-magenta text-white font-mono text-[11px] font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all"
+      >
+        LANJUT BAYAR
+      </a>
+      <button
+        id="recovery-cancel-btn"
+        type="button"
+        class="px-3 py-2 rounded-xl bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-neutral-600 dark:text-muted-gray hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-500/40 font-mono text-[11px] font-semibold uppercase transition-colors"
+        title="Batalkan pesanan aktif ini"
+      >
+        Batalkan
+      </button>
+      <button
+        id="recovery-dismiss-btn"
+        type="button"
+        aria-label="Tutup sementara"
+        class="w-8 h-8 rounded-lg flex items-center justify-center text-neutral-500 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors"
+      >
+        ✕
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { api } from '../../lib/api';
+  import { isAuthenticated } from '../../lib/auth';
+  import { formatCountdown, formatRupiah } from '../../lib/formatters';
+
+  let activeBannerTimer: number | undefined;
+
+  async function syncActiveOrderBanner() {
+    const banner = document.getElementById('active-order-recovery-banner');
+    if (!banner) return;
+
+    if (activeBannerTimer) {
+      window.clearInterval(activeBannerTimer);
+      activeBannerTimer = undefined;
+    }
+
+    // Hide on payment screen or receipt screen to avoid redundant UI
+    const path = window.location.pathname;
+    if (path.startsWith('/orders/') || !isAuthenticated()) {
+      banner.classList.add('hidden');
+      return;
+    }
+
+    try {
+      const order = await api.get<any>('/users/active-order');
+      if (!order || !order.order_code) {
+        banner.classList.add('hidden');
+        return;
+      }
+
+      // Skip if user temporarily dismissed this order in current tab session
+      if (sessionStorage.getItem(`dismiss_order_${order.order_code}`) === '1') {
+        banner.classList.add('hidden');
+        return;
+      }
+
+      const eventNameEl = document.getElementById('recovery-event-name');
+      const amountEl = document.getElementById('recovery-order-amount');
+      const timerEl = document.getElementById('recovery-banner-timer');
+      const payLink = document.getElementById('recovery-pay-link') as HTMLAnchorElement | null;
+      const cancelBtn = document.getElementById('recovery-cancel-btn') as HTMLButtonElement | null;
+      const dismissBtn = document.getElementById('recovery-dismiss-btn') as HTMLButtonElement | null;
+
+      if (eventNameEl) eventNameEl.textContent = order.nama_event || order.order_code;
+      if (amountEl) amountEl.textContent = `• ${formatRupiah(order.final_amount || order.total_amount || 0)}`;
+      if (payLink) payLink.href = `/orders/${order.order_code}`;
+
+      const expiresAtMs = order.payment_expires_at
+        ? new Date(order.payment_expires_at).getTime()
+        : Date.now() + Number(order.expires_in_seconds || 0) * 1000;
+
+      const updateTick = () => {
+        const remaining = Math.floor((expiresAtMs - Date.now()) / 1000);
+        if (remaining <= 0) {
+          banner.classList.add('hidden');
+          if (activeBannerTimer) window.clearInterval(activeBannerTimer);
+          return;
+        }
+        if (timerEl) timerEl.textContent = formatCountdown(remaining).formatted;
+      };
+
+      updateTick();
+      banner.classList.remove('hidden');
+      activeBannerTimer = window.setInterval(updateTick, 1000);
+
+      if (dismissBtn) {
+        dismissBtn.onclick = () => {
+          sessionStorage.setItem(`dismiss_order_${order.order_code}`, '1');
+          banner.classList.add('hidden');
+        };
+      }
+
+      if (cancelBtn) {
+        cancelBtn.onclick = async () => {
+          if (!confirm(`Batalkan pesanan ${order.order_code} dan lepaskan kuota tiket?`)) return;
+          cancelBtn.disabled = true;
+          cancelBtn.textContent = '...';
+          try {
+            await api.post(`/orders/${order.order_code}/cancel`);
+            banner.classList.add('hidden');
+            if (activeBannerTimer) window.clearInterval(activeBannerTimer);
+            window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
+          } catch (err: any) {
+            alert(err.message || 'Gagal membatalkan pesanan aktif.');
+          } finally {
+            cancelBtn.disabled = false;
+            cancelBtn.textContent = 'Batalkan';
+          }
+        };
+      }
+    } catch {
+      banner.classList.add('hidden');
+    }
+  }
+
+  document.addEventListener('astro:page-load', syncActiveOrderBanner);
+  window.addEventListener('afterglow-auth-changed', syncActiveOrderBanner);
+  window.addEventListener('afterglow-order-updated', syncActiveOrderBanner);
+</script>

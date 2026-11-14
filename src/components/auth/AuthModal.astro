@@ -13,17 +13,17 @@
   <!-- Backdrop Blur with Ambient Stage Lighting -->
   <div 
     id="auth-modal-backdrop" 
-    class="absolute inset-0 bg-void-black/80 backdrop-blur-xl transition-opacity duration-500 cursor-pointer"
+    class="absolute inset-0 bg-neutral-950/55 dark:bg-void-black/80 backdrop-blur-xl transition-opacity duration-500 cursor-pointer"
   ></div>
 
   <!-- Stage Laser Beam Accent Gradients -->
-  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-electric-magenta/25 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
-  <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-deep-magenta/30 rounded-full blur-[100px] pointer-events-none"></div>
+  <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 bg-electric-magenta/15 dark:bg-electric-magenta/25 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
+  <div class="absolute -bottom-32 left-1/4 w-80 h-80 bg-deep-magenta/15 dark:bg-deep-magenta/30 rounded-full blur-[100px] pointer-events-none"></div>
 
   <!-- Modal Shell -->
   <div 
     id="auth-modal-card" 
-    class="relative w-full max-w-md rounded-3xl bg-dark-plum/95 border border-white/15 p-7 sm:p-9 shadow-2xl backdrop-blur-2xl overflow-hidden scale-95 transition-all duration-500 ease-cinematic text-soft-white"
+    class="relative w-full max-w-md rounded-3xl bg-white/95 dark:bg-dark-plum/95 border border-neutral-200 dark:border-white/15 p-7 sm:p-9 shadow-2xl backdrop-blur-2xl overflow-hidden scale-95 transition-all duration-500 ease-cinematic text-neutral-950 dark:text-soft-white"
   >
     <!-- Animated Neon Border Glow Ray -->
     <div class="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-electric-magenta to-transparent animate-pulse"></div>
@@ -33,7 +33,7 @@
       id="auth-modal-close" 
       type="button" 
       aria-label="Tutup Dialog Masuk" 
-      class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center bg-white/5 border border-white/10 text-muted-gray hover:text-soft-white hover:border-white/30 hover:bg-white/10 transition-all duration-200"
+      class="absolute top-5 right-5 w-9 h-9 rounded-full flex items-center justify-center bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-500 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-neutral-300 dark:hover:border-white/30 hover:bg-neutral-200/70 dark:hover:bg-white/10 transition-all duration-200"
     >
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -43,7 +43,7 @@
     <!-- Header Section with Stage Equalizer Motion Graphic -->
     <div class="flex items-center gap-4 mb-6">
       <!-- Dynamic Equalizer Animation Disc -->
-      <div class="relative w-14 h-14 rounded-2xl bg-void-black/80 border border-electric-magenta/40 flex items-center justify-center shadow-magenta-glow shrink-0 overflow-hidden group">
+      <div class="relative w-14 h-14 rounded-2xl bg-neutral-950 dark:bg-void-black/80 border border-electric-magenta/40 flex items-center justify-center shadow-magenta-glow shrink-0 overflow-hidden group">
         <!-- Laser sweep line -->
         <div class="absolute inset-0 bg-gradient-to-b from-transparent via-electric-magenta/20 to-transparent translate-y-[-100%] animate-[scan_3s_ease-in-out_infinite]"></div>
         
@@ -61,7 +61,7 @@
         <span class="text-[10px] font-bold tracking-[0.25em] text-electric-magenta uppercase block font-mono">
           AKSES GERBANG // PASSWORDLESS
         </span>
-        <h2 id="auth-modal-title" class="font-display text-3xl tracking-wide text-soft-white">
+        <h2 id="auth-modal-title" class="font-display text-3xl tracking-wide text-neutral-950 dark:text-soft-white">
           MASUK ARENA KONSER
         </h2>
       </div>
@@ -76,15 +76,15 @@
     </div>
 
     <!-- Dev Mode Quick-Fill Pill -->
-    <div id="auth-dev-pill" class="hidden mb-5 p-2.5 rounded-xl bg-electric-magenta/15 border border-electric-magenta/40 flex items-center justify-between gap-2 text-xs">
+    <div id="auth-dev-pill" class="hidden mb-5 p-2.5 rounded-xl bg-electric-magenta/10 dark:bg-electric-magenta/15 border border-electric-magenta/30 dark:border-electric-magenta/40 flex items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-1.5 font-mono text-[11px] text-electric-magenta">
         <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-ping"></span>
-        <span>DEV OTP: <strong id="auth-dev-otp-code" class="text-soft-white tracking-widest text-sm">------</strong></span>
+        <span>DEV OTP: <strong id="auth-dev-otp-code" class="text-neutral-950 dark:text-soft-white tracking-widest text-sm">------</strong></span>
       </div>
       <button 
         id="auth-dev-autofill-btn" 
         type="button" 
-        class="px-2.5 py-1 rounded-md bg-electric-magenta text-soft-white font-bold text-[10px] uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
+        class="px-2.5 py-1 rounded-md bg-electric-magenta text-white font-bold text-[10px] uppercase tracking-wider hover:brightness-110 active:scale-95 transition-all"
       >
         Isi Otomatis
       </button>
@@ -95,7 +95,7 @@
     <!-- ============================================== -->
     <form id="auth-step1-form" class="space-y-4">
       <div>
-        <label for="auth-email-input" class="block text-xs font-semibold uppercase tracking-wider text-muted-gray mb-1.5 font-mono">
+        <label for="auth-email-input" class="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-muted-gray mb-1.5 font-mono">
           Alamat Email Resmi <span class="text-electric-magenta">*</span>
         </label>
         <div class="relative">
@@ -105,18 +105,18 @@
             required 
             placeholder="nama@email.com" 
             autocomplete="email" 
-            class="w-full px-4 py-3 pl-11 rounded-xl bg-void-black/70 border border-white/15 text-sm text-soft-white placeholder-muted-gray/60 focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
+            class="w-full px-4 py-3 pl-11 rounded-xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white placeholder-neutral-400 dark:placeholder-muted-gray/60 focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
           />
-          <svg class="w-4 h-4 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-neutral-400 dark:text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206" />
           </svg>
         </div>
-        <p class="text-[11px] text-muted-gray mt-1">Kami akan mengirimkan 6-digit kode tiket ke email ini.</p>
+        <p class="text-[11px] text-neutral-500 dark:text-muted-gray mt-1">Kami akan mengirimkan 6-digit kode tiket ke email ini.</p>
       </div>
 
       <div>
-        <label for="auth-username-input" class="block text-xs font-semibold uppercase tracking-wider text-muted-gray mb-1.5 font-mono">
-          Nama Lengkap Penonton <span class="text-muted-gray/60 text-[10px]">(Opsional / Akun Baru)</span>
+        <label for="auth-username-input" class="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-muted-gray mb-1.5 font-mono">
+          Nama Lengkap Penonton <span class="text-neutral-400 dark:text-muted-gray/60 text-[10px]">(Opsional / Akun Baru)</span>
         </label>
         <div class="relative">
           <input 
@@ -124,9 +124,9 @@
             id="auth-username-input" 
             placeholder="Contoh: Budi Santoso" 
             autocomplete="name" 
-            class="w-full px-4 py-3 pl-11 rounded-xl bg-void-black/70 border border-white/15 text-sm text-soft-white placeholder-muted-gray/60 focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
+            class="w-full px-4 py-3 pl-11 rounded-xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white placeholder-neutral-400 dark:placeholder-muted-gray/60 focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta transition-all"
           />
-          <svg class="w-4 h-4 text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <svg class="w-4 h-4 text-neutral-400 dark:text-muted-gray absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
         </div>
@@ -136,7 +136,7 @@
       <button 
         type="submit" 
         id="auth-submit-step1-btn" 
-        class="w-full mt-2 py-3.5 px-6 rounded-xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+        class="w-full mt-2 py-3.5 px-6 rounded-xl bg-electric-magenta text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
       >
         <span class="btn-text">DAPATKAN KODE AKSES PANGGUNG</span>
         <svg class="w-4 h-4 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
@@ -146,17 +146,20 @@
       </button>
 
       <!-- Quick Test Accounts Helper -->
-      <div class="pt-4 border-t border-white/10 text-center">
-        <span class="text-[11px] text-muted-gray block mb-2 font-mono">Akun Uji Demo Cepat:</span>
+      <div class="pt-4 border-t border-neutral-200 dark:border-white/10 text-center">
+        <span class="text-[11px] text-neutral-500 dark:text-muted-gray block mb-2 font-mono">Akun Uji Demo Cepat:</span>
         <div class="flex flex-wrap items-center justify-center gap-1.5">
-          <button type="button" data-fill-account="buyer@soundtix.id" class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-muted-gray hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
+          <button type="button" data-fill-account="buyer@soundtix.id" class="px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-[10px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
             buyer@soundtix.id
           </button>
-          <button type="button" data-fill-account="organizer@soundtix.id" class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-muted-gray hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
+          <button type="button" data-fill-account="organizer@soundtix.id" class="px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-[10px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
             organizer@soundtix.id
           </button>
-          <button type="button" data-fill-account="gatecrew@soundtix.id" class="px-2.5 py-1 rounded-md bg-white/5 border border-white/10 text-[10px] font-mono text-muted-gray hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
+          <button type="button" data-fill-account="gatecrew@soundtix.id" class="px-2.5 py-1 rounded-md bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-[10px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white hover:border-electric-magenta/60 transition-colors">
             gatecrew@soundtix.id
+          </button>
+          <button type="button" data-fill-account="admin@soundtix.id" class="px-2.5 py-1 rounded-md bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-[10px] font-mono text-amber-700 dark:text-amber-300 hover:text-amber-900 dark:hover:text-soft-white hover:border-amber-400 transition-colors">
+            admin@soundtix.id
           </button>
         </div>
       </div>
@@ -166,10 +169,10 @@
     <!-- STEP 2: VERIFY OTP FORM (6-DIGIT PIN BOXES)    -->
     <!-- ============================================== -->
     <form id="auth-step2-form" class="space-y-5 hidden">
-      <div class="p-3.5 rounded-xl bg-void-black/60 border border-white/10 flex items-center justify-between text-xs">
+      <div class="p-3.5 rounded-xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 flex items-center justify-between text-xs">
         <div class="truncate">
-          <span class="text-[10px] text-muted-gray block font-mono">KODE TERKIRIM KE:</span>
-          <span id="auth-sent-target-email" class="font-semibold text-soft-white truncate block"></span>
+          <span class="text-[10px] text-neutral-500 dark:text-muted-gray block font-mono">KODE TERKIRIM KE:</span>
+          <span id="auth-sent-target-email" class="font-semibold text-neutral-950 dark:text-soft-white truncate block"></span>
         </div>
         <button 
           id="auth-change-email-btn" 
@@ -181,24 +184,24 @@
       </div>
 
       <div>
-        <label class="block text-xs font-semibold uppercase tracking-wider text-muted-gray mb-2 font-mono text-center">
+        <label class="block text-xs font-semibold uppercase tracking-wider text-neutral-600 dark:text-muted-gray mb-2 font-mono text-center">
           Masukkan 6-Digit Kode Verifikasi
         </label>
         
         <!-- 6 OTP Inputs -->
         <div class="flex justify-between gap-2 sm:gap-2.5" id="otp-input-group">
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="0" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" autofocus />
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="1" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="2" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="3" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="4" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
-          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="5" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-void-black/80 border border-white/20 rounded-xl text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="0" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" autofocus />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="1" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="2" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="3" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="4" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
+          <input type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" data-otp-index="5" class="otp-box w-12 h-14 sm:w-13 sm:h-16 text-center font-display text-2xl sm:text-3xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-300 dark:border-white/20 rounded-xl text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta focus:shadow-magenta-glow transition-all" />
         </div>
       </div>
 
       <!-- Resend Timer -->
       <div class="text-center text-xs">
-        <span id="auth-resend-countdown" class="text-muted-gray font-mono">
+        <span id="auth-resend-countdown" class="text-neutral-500 dark:text-muted-gray font-mono">
           Kirim ulang kode dalam <strong id="auth-timer-sec" class="text-electric-magenta font-bold">60</strong>s
         </span>
         <button 
@@ -214,7 +217,7 @@
       <button 
         type="submit" 
         id="auth-submit-step2-btn" 
-        class="w-full py-3.5 px-6 rounded-xl bg-electric-magenta text-soft-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
+        class="w-full py-3.5 px-6 rounded-xl bg-electric-magenta text-white font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 hover:shadow-magenta-glow transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:pointer-events-none"
       >
         <span class="btn-text">VERIFIKASI & MASUK ARENA</span>
         <svg class="w-4 h-4 btn-spinner hidden animate-spin" fill="none" viewBox="0 0 24 24">
@@ -321,9 +324,9 @@
       alertText.textContent = msg;
 
       if (isError) {
-        alertBox.className = 'mb-5 p-3.5 rounded-xl text-xs font-medium border flex items-start gap-2.5 transition-all bg-red-950/40 border-red-500/40 text-red-200';
+        alertBox.className = 'mb-5 p-3.5 rounded-xl text-xs font-medium border flex items-start gap-2.5 transition-all bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-500/40 text-red-700 dark:text-red-200';
       } else {
-        alertBox.className = 'mb-5 p-3.5 rounded-xl text-xs font-medium border flex items-start gap-2.5 transition-all bg-emerald-950/40 border-emerald-500/40 text-emerald-200';
+        alertBox.className = 'mb-5 p-3.5 rounded-xl text-xs font-medium border flex items-start gap-2.5 transition-all bg-emerald-50 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-200';
       }
     }
 

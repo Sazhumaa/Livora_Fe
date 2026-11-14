@@ -640,6 +640,120 @@ import '../styles/global.css';
       </div>
     </section>
 
+    <!-- ================================================================ -->
+    <!-- SECTION 04: CONSOLE & WALLET WIREFRAMES (Phase 0 Alignment)      -->
+    <!-- ================================================================ -->
+    <section class="relative px-6 py-20 lg:px-16 border-t border-white/10">
+      <div class="max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+          <div>
+            <span class="font-mono-tech text-xs text-electric-magenta tracking-widest uppercase block mb-2">
+              04 // STAGE CONSOLES &amp; PASSES WIREFRAME
+            </span>
+            <h2 class="font-display text-5xl sm:text-6xl text-soft-white">
+              PROMOTOR, ADMIN &amp; QR PASS ARCHITECTURE
+            </h2>
+          </div>
+          <div class="flex flex-wrap gap-2 text-xs font-mono-tech">
+            <a href="/organizer" class="px-3.5 py-2 rounded-xl bg-dark-plum border border-white/15 hover:border-electric-magenta transition-colors">/organizer</a>
+            <a href="/admin" class="px-3.5 py-2 rounded-xl bg-dark-plum border border-amber-500/30 text-amber-300 hover:border-amber-400 transition-colors">/admin</a>
+            <a href="/scanner" class="px-3.5 py-2 rounded-xl bg-dark-plum border border-white/15 hover:border-electric-magenta transition-colors">/scanner</a>
+            <a href="/account" class="px-3.5 py-2 rounded-xl bg-dark-plum border border-white/15 hover:border-electric-magenta transition-colors">/account</a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Wireframe 1: Organizer Studio -->
+          <div class="p-6 rounded-3xl bg-dark-plum border border-white/15 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-[10px] text-electric-magenta uppercase font-bold">ORGANIZER STUDIO</span>
+              <span class="px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 font-mono-tech text-[10px]">VERIFIED</span>
+            </div>
+            <h3 class="font-display text-3xl text-soft-white">KENDALI PANGGUNG &amp; ESCROW</h3>
+            <div class="grid grid-cols-2 gap-2.5 text-xs font-mono-tech">
+              <div class="p-3 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px] block">SIAP DITARIK</span>
+                <strong class="text-soft-white text-base">Rp 42.5JT</strong>
+              </div>
+              <div class="p-3 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px] block">ESCROW H+1</span>
+                <strong class="text-electric-magenta text-base">Rp 18.0JT</strong>
+              </div>
+            </div>
+            <div class="space-y-1.5 text-[11px] font-mono-tech text-muted-gray">
+              <div class="flex justify-between px-3 py-2 rounded-lg bg-void-black/50 border border-white/5">
+                <span>Event &amp; Kategori</span><span class="text-soft-white">CRUD + Poster</span>
+              </div>
+              <div class="flex justify-between px-3 py-2 rounded-lg bg-void-black/50 border border-white/5">
+                <span>Gate Monitor</span><span class="text-emerald-400">Live CSV</span>
+              </div>
+              <div class="flex justify-between px-3 py-2 rounded-lg bg-void-black/50 border border-white/5">
+                <span>Rekening Payout</span><span class="text-amber-300">48h Guard</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Wireframe 2: Admin Command Center -->
+          <div class="p-6 rounded-3xl bg-dark-plum border border-amber-500/30 space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-[10px] text-amber-400 uppercase font-bold">ADMIN COMMAND CENTER</span>
+              <span class="px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 font-mono-tech text-[10px]">SUPERADMIN</span>
+            </div>
+            <h3 class="font-display text-3xl text-soft-white">PULSA PLATFORM &amp; KURASI</h3>
+            <div class="grid grid-cols-2 gap-2 text-xs font-mono-tech">
+              <div class="p-2.5 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px]">PENDING ORG</span>
+                <strong class="text-amber-300 block text-lg">03</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px]">PENDING EVENT</span>
+                <strong class="text-electric-magenta block text-lg">05</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px]">PAYOUT QUEUE</span>
+                <strong class="text-emerald-400 block text-lg">02</strong>
+              </div>
+              <div class="p-2.5 rounded-xl bg-void-black/80 border border-white/10">
+                <span class="text-muted-gray text-[10px]">REFUND QUEUE</span>
+                <strong class="text-red-400 block text-lg">01</strong>
+              </div>
+            </div>
+            <div class="px-3 py-2 rounded-xl bg-void-black/60 border border-white/10 text-[11px] font-mono-tech text-muted-gray flex justify-between">
+              <span>Audit Logs &amp; Cron Trigger</span>
+              <span class="text-soft-white">5 Workers</span>
+            </div>
+          </div>
+
+          <!-- Wireframe 3: Active Recovery + Boarding Pass QR -->
+          <div class="p-6 rounded-3xl bg-dark-plum border border-electric-magenta/40 space-y-4 flex flex-col justify-between">
+            <div>
+              <span class="font-mono-tech text-[10px] text-electric-magenta uppercase font-bold block mb-1">WAR TIKET RECOVERY &amp; PASS</span>
+              <h3 class="font-display text-3xl text-soft-white mb-3">FLOATING BANNER &amp; QR ASLI</h3>
+              <div class="p-3 rounded-2xl bg-void-black border border-electric-magenta/50 flex items-center justify-between gap-2 mb-3">
+                <div class="text-[11px] font-mono-tech truncate">
+                  <span class="text-electric-magenta font-bold">14:12</span> • ORD-2026...
+                </div>
+                <span class="px-2.5 py-1 rounded-lg bg-electric-magenta text-white text-[10px] font-bold">BAYAR</span>
+              </div>
+              <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10 text-xs font-mono-tech space-y-1">
+                <div class="flex justify-between">
+                  <span class="text-muted-gray">Payload QR:</span>
+                  <span class="text-soft-white">CODE|SECRET</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-muted-gray">Scanner Mode:</span>
+                  <span class="text-emerald-400">Kamera + PIN</span>
+                </div>
+              </div>
+            </div>
+            <a href="/tickets" class="w-full py-2.5 rounded-full bg-white/10 hover:bg-electric-magenta text-soft-white font-mono-tech text-xs text-center transition-colors">
+              BUKA DOMPET TIKET →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- Bottom Feedback & Direction Pill Bar -->
     <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-void-black/90 backdrop-blur-xl border border-white/20 rounded-full px-6 py-3.5 shadow-2xl flex items-center gap-4">
       <span class="w-2 h-2 rounded-full bg-electric-magenta animate-pulse"></span>
