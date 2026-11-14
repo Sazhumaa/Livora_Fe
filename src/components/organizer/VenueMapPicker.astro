@@ -1,0 +1,125 @@
+---
+// AFTERGLOW MapLibre Interactive Venue Picker for Organizer Studio
+import { VENUE_PRESETS } from '../../scripts/venueMapPicker';
+---
+
+<div class="rounded-2xl border border-neutral-200 dark:border-white/12 bg-neutral-50/90 dark:bg-void-black/60 p-4 space-y-3.5">
+  <div class="flex flex-wrap items-center justify-between gap-2">
+    <div>
+      <span class="text-[11px] font-mono font-bold uppercase tracking-wider text-electric-magenta block">
+        Lokasi &amp; Peta Interaktif Venue (MapLibre GL)
+      </span>
+      <p class="text-[11px] text-neutral-600 dark:text-muted-gray mt-0.5">
+        Cari nama venue, klik peta, atau geser pin Magenta — koordinat GPS terisi otomatis.
+      </p>
+    </div>
+    <span
+      id="ev-coord-badge"
+      class="px-3 py-1 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 text-[11px] font-mono text-neutral-900 dark:text-soft-white"
+    >
+      LAT -6.2186 · LNG 106.8026
+    </span>
+  </div>
+
+  <!-- Search + Device GPS -->
+  <div class="relative">
+    <div class="flex flex-col sm:flex-row gap-2">
+      <div class="flex-1 flex gap-2">
+        <input
+          id="ev-map-search-input"
+          type="text"
+          placeholder="Cari venue atau kota (cth: GBK Senayan, ICE BSD, GWK Bali)..."
+          class="flex-1 px-3.5 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta"
+        />
+        <button
+          id="ev-map-search-btn"
+          type="button"
+          class="px-3.5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold shrink-0 hover:shadow-magenta-glow transition-all"
+        >
+          Cari Peta
+        </button>
+      </div>
+      <button
+        id="ev-map-gps-btn"
+        type="button"
+        class="px-3.5 py-2 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-800 dark:text-soft-white hover:border-electric-magenta transition-colors shrink-0"
+      >
+        ⌖ Lokasi Saya
+      </button>
+    </div>
+
+    <!-- Nominatim Results Popover -->
+    <div
+      id="ev-map-search-results"
+      class="hidden absolute left-0 right-0 top-full mt-1.5 z-20 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 shadow-xl max-h-52 overflow-y-auto"
+    ></div>
+  </div>
+
+  <!-- Quick Preset Venue Pills -->
+  <div class="flex flex-wrap items-center gap-2 text-[11px] font-mono">
+    <span class="text-neutral-500 dark:text-muted-gray">Preset Cepat:</span>
+    {VENUE_PRESETS.map((preset) => (
+      <button
+        type="button"
+        data-ev-venue-preset={preset.id}
+        class="px-2.5 py-1 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors"
+      >
+        {preset.label}
+      </button>
+    ))}
+  </div>
+
+  <!-- Interactive MapLibre Viewport -->
+  <div class="relative rounded-xl border border-neutral-200 dark:border-white/15 overflow-hidden bg-neutral-200 dark:bg-void-black">
+    <div
+      id="ev-map-viewport"
+      data-lenis-prevent
+      class="w-full h-60 sm:h-64 min-h-[240px]"
+    ></div>
+    <div
+      id="ev-map-loading-overlay"
+      class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-1.5 text-xs font-mono text-neutral-600 dark:text-muted-gray bg-neutral-100/80 dark:bg-void-black/80 backdrop-blur-sm transition-opacity duration-200"
+    >
+      <span class="w-5 h-5 rounded-full border-2 border-electric-magenta border-t-transparent animate-spin"></span>
+      <span id="ev-map-loading-text">Memuat peta interaktif MapLibre...</span>
+    </div>
+    <div class="pointer-events-none absolute top-2.5 left-2.5 z-10 px-2.5 py-1 rounded-lg bg-white/90 dark:bg-void-black/85 border border-neutral-200 dark:border-white/15 text-[10px] font-mono text-neutral-700 dark:text-muted-gray backdrop-blur-sm">
+      Klik peta / geser pin untuk set lokasi gate venue
+    </div>
+  </div>
+
+  <p id="ev-map-status-note" class="hidden text-[11px] font-mono"></p>
+
+  <!-- Address + Synced Coordinate Field -->
+  <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+    <div class="sm:col-span-8">
+      <label for="ev-f-alamat" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">
+        Alamat Lengkap Venue * (Terisi otomatis dari pin / bisa disempurnakan)
+      </label>
+      <input
+        id="ev-f-alamat"
+        type="text"
+        required
+        placeholder="GBK Senayan, Jakarta"
+        class="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta"
+      />
+    </div>
+    <div class="sm:col-span-4">
+      <div class="flex items-center justify-between mb-1">
+        <label for="ev-f-lokasi" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray">Koordinat GPS *</label>
+        <button id="ev-toggle-manual-coord" type="button" class="text-[11px] font-mono font-bold text-electric-magenta hover:underline">
+          Edit Manual
+        </button>
+      </div>
+      <input
+        id="ev-f-lokasi"
+        type="text"
+        required
+        readonly
+        value="-6.2186,106.8026"
+        placeholder="-6.2186,106.8026"
+        class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-100 dark:bg-void-black/70 border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-700 dark:text-soft-white/90 focus:outline-none focus:border-electric-magenta"
+      />
+    </div>
+  </div>
+</div>

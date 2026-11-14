@@ -3,9 +3,10 @@ export const prerender = false;
 
 import RootLayout from '../../layouts/RootLayout.astro';
 import Footer from '../../components/landing/Footer.astro';
+import VenueMapPicker from '../../components/organizer/VenueMapPicker.astro';
 
 const rawTab = Astro.url.searchParams.get('tab') || 'overview';
-const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? rawTab : 'overview';
+const initialTab = ['overview', 'events', 'orders', 'gate', 'finance'].includes(rawTab) ? rawTab : 'overview';
 ---
 
 <RootLayout 
@@ -15,85 +16,85 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
   <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-7xl mx-auto w-full">
     
     <!-- Auth Guard -->
-    <div id="org-auth-guard" class="hidden text-center py-24 rounded-3xl bg-dark-plum/60 border border-white/10">
+    <div id="org-auth-guard" class="hidden text-center py-24 rounded-3xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
       <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
         ORGANIZER CONSOLE
       </span>
-      <h1 class="font-display text-4xl sm:text-5xl text-soft-white mb-3">MASUK KE STUDIO PROMOTOR</h1>
-      <p class="text-sm text-muted-gray max-w-lg mx-auto mb-6">
+      <h1 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white mb-3">MASUK KE STUDIO PROMOTOR</h1>
+      <p class="text-sm text-neutral-600 dark:text-muted-gray max-w-lg mx-auto mb-6">
         Login dengan akun AFTERGLOW untuk mendaftar sebagai penyelenggara konser atau mengelola event & pencairan escrow milikmu.
       </p>
-      <button id="org-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+      <button id="org-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         Masuk / Daftar OTP
       </button>
     </div>
 
     <!-- Admin Notice (Role 3 cannot use Organizer roleGuard routes directly without Organizer profile) -->
-    <div id="org-admin-notice" class="hidden text-center py-20 rounded-3xl bg-dark-plum/70 border border-amber-500/35">
-      <span class="px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-mono text-[10px] font-bold uppercase">AKUN ADMIN PLATFORM</span>
-      <h2 class="font-display text-4xl text-soft-white mt-3 mb-2">KAMU LOGIN SEBAGAI ADMINISTRATOR</h2>
-      <p class="text-sm text-muted-gray max-w-lg mx-auto mb-6">
+    <div id="org-admin-notice" class="hidden text-center py-20 rounded-3xl bg-white dark:bg-dark-plum/70 border border-amber-300 dark:border-amber-500/35 shadow-sm dark:shadow-none">
+      <span class="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-mono text-[10px] font-bold uppercase">AKUN ADMIN PLATFORM</span>
+      <h2 class="font-display text-4xl text-neutral-950 dark:text-soft-white mt-3 mb-2">KAMU LOGIN SEBAGAI ADMINISTRATOR</h2>
+      <p class="text-sm text-neutral-600 dark:text-muted-gray max-w-lg mx-auto mb-6">
         Untuk mereview promotor, mempublikasikan event, menyetujui payout, atau memproses refund massal, gunakan Admin Command Center.
       </p>
-      <a href="/admin" class="px-7 py-3 rounded-full bg-electric-magenta text-soft-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+      <a href="/admin" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         Buka Admin Command Center →
       </a>
     </div>
 
     <!-- Loading -->
     <div id="org-loading" class="animate-pulse space-y-6">
-      <div class="h-32 rounded-3xl bg-dark-plum/60 border border-white/10"></div>
-      <div class="h-72 rounded-3xl bg-dark-plum/60 border border-white/10"></div>
+      <div class="h-32 rounded-3xl bg-neutral-200/70 dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10"></div>
+      <div class="h-72 rounded-3xl bg-neutral-200/70 dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10"></div>
     </div>
 
     <!-- STATE A: NOT APPLIED YET -> ONBOARDING FORM -->
     <div id="org-apply-state" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
       <div class="lg:col-span-5 space-y-6">
-        <span class="px-3 py-1 rounded-full bg-electric-magenta/15 border border-electric-magenta/30 text-electric-magenta font-mono text-[11px] font-bold uppercase">
+        <span class="px-3 py-1 rounded-full bg-electric-magenta/10 dark:bg-electric-magenta/15 border border-electric-magenta/30 text-electric-magenta font-mono text-[11px] font-bold uppercase">
           JADI PROMOTOR RESMI
         </span>
-        <h1 class="font-display text-5xl sm:text-6xl text-soft-white leading-none">
+        <h1 class="font-display text-5xl sm:text-6xl text-neutral-950 dark:text-soft-white leading-none">
           GELAR KONSER BESARMU DI SINI
         </h1>
-        <p class="text-sm text-muted-gray leading-relaxed">
+        <p class="text-sm text-neutral-600 dark:text-muted-gray leading-relaxed">
           Tinggalkan sistem pencatatan manual. AFTERGLOW menyediakan atomic inventory anti-oversell, gate scanner anti-duplikasi, dan pencairan dana escrow H+1 transparan.
         </p>
         <div class="space-y-3 text-xs font-mono">
-          <div class="p-4 rounded-2xl bg-dark-plum/70 border border-white/10">
-            <strong class="text-soft-white block mb-1">Biaya Platform Transparan 5%</strong>
-            <span class="text-muted-gray">Ditanggung pada transaksi tiket. Dana tiket bersih masuk otomatis ke escrow organizer.</span>
+          <div class="p-4 rounded-2xl bg-white dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
+            <strong class="text-neutral-950 dark:text-soft-white block mb-1">Biaya Platform Transparan 5%</strong>
+            <span class="text-neutral-600 dark:text-muted-gray">Ditanggung pada transaksi tiket. Dana tiket bersih masuk otomatis ke escrow organizer.</span>
           </div>
-          <div class="p-4 rounded-2xl bg-dark-plum/70 border border-white/10">
-            <strong class="text-soft-white block mb-1">Anti-Calo & Audit Trail Real-Time</strong>
-            <span class="text-muted-gray">Pembatasan kuantitas per akun, CSPRNG QR secret, dan ekspor CSV penonton kapan saja.</span>
+          <div class="p-4 rounded-2xl bg-white dark:bg-dark-plum/70 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
+            <strong class="text-neutral-950 dark:text-soft-white block mb-1">Anti-Calo & Audit Trail Real-Time</strong>
+            <span class="text-neutral-600 dark:text-muted-gray">Pembatasan kuantitas per akun, CSPRNG QR secret, dan ekspor CSV penonton kapan saja.</span>
           </div>
         </div>
       </div>
 
-      <div class="lg:col-span-7 p-7 sm:p-9 rounded-3xl bg-dark-plum/90 border border-white/15 shadow-2xl">
-        <h2 class="font-display text-2xl text-soft-white mb-1">FORMULIR PENGAJUAN PROMOTOR</h2>
-        <p class="text-xs text-muted-gray mb-6">Lengkapi nama organisasi promotor dan rekening bank resmi untuk pencairan hasil tiket.</p>
+      <div class="lg:col-span-7 p-7 sm:p-9 rounded-3xl bg-white dark:bg-dark-plum/90 border border-neutral-200 dark:border-white/15 shadow-xl dark:shadow-2xl">
+        <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-1">FORMULIR PENGAJUAN PROMOTOR</h2>
+        <p class="text-xs text-neutral-600 dark:text-muted-gray mb-6">Lengkapi nama organisasi promotor dan rekening bank resmi untuk pencairan hasil tiket.</p>
 
         <form id="org-apply-form" class="space-y-4">
           <div>
-            <label for="apply-org-name" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Brand / Organisasi Promotor (5–50 karakter)</label>
-            <input id="apply-org-name" type="text" minlength="5" maxlength="50" required placeholder="Contoh: Afterglow Live Promotions" class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta" />
+            <label for="apply-org-name" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Brand / Organisasi Promotor (5–50 karakter)</label>
+            <input id="apply-org-name" type="text" minlength="5" maxlength="50" required placeholder="Contoh: Afterglow Live Promotions" class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
           </div>
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="apply-bank-name" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Bank Pencairan</label>
-              <input id="apply-bank-name" type="text" minlength="2" maxlength="50" required placeholder="Bank Central Asia (BCA)" class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta" />
+              <label for="apply-bank-name" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Bank Pencairan</label>
+              <input id="apply-bank-name" type="text" minlength="2" maxlength="50" required placeholder="Bank Central Asia (BCA)" class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
             </div>
             <div>
-              <label for="apply-acc-number" class="text-xs font-mono text-muted-gray block mb-1.5">Nomor Rekening (Hanya Angka)</label>
-              <input id="apply-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required placeholder="1234567890" class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+              <label for="apply-acc-number" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nomor Rekening (Hanya Angka)</label>
+              <input id="apply-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required placeholder="1234567890" class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
             </div>
           </div>
 
           <div id="apply-feedback" class="hidden p-3.5 rounded-xl border text-xs font-mono"></div>
 
-          <button id="apply-submit-btn" type="submit" class="w-full py-3.5 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          <button id="apply-submit-btn" type="submit" class="w-full py-3.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             Ajukan Pendaftaran Promotor →
           </button>
         </form>
@@ -101,44 +102,44 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     </div>
 
     <!-- STATE B: PENDING / REJECTED APPLICATION -->
-    <div id="org-status-state" class="hidden max-w-2xl mx-auto p-7 sm:p-9 rounded-3xl bg-dark-plum/90 border border-white/15 space-y-6">
+    <div id="org-status-state" class="hidden max-w-2xl mx-auto p-7 sm:p-9 rounded-3xl bg-white dark:bg-dark-plum/90 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-6">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <span id="status-pill-badge" class="px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase"></span>
-          <h2 id="status-headline" class="font-display text-3xl text-soft-white mt-2"></h2>
+          <h2 id="status-headline" class="font-display text-3xl text-neutral-950 dark:text-soft-white mt-2"></h2>
         </div>
-        <button id="status-refresh-btn" type="button" class="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-xs font-mono text-soft-white">
+        <button id="status-refresh-btn" type="button" class="px-4 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-800 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent text-xs font-mono dark:text-soft-white">
           Cek Status Terbaru
         </button>
       </div>
 
-      <div id="status-rejection-box" class="hidden p-4 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300"></div>
+      <div id="status-rejection-box" class="hidden p-4 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300"></div>
 
-      <div id="status-pending-info" class="hidden p-5 rounded-2xl bg-void-black/70 border border-white/10 space-y-2 text-xs font-mono">
-        <div class="flex justify-between"><span class="text-muted-gray">Organisasi:</span><strong id="pending-org-name" class="text-soft-white"></strong></div>
-        <div class="flex justify-between"><span class="text-muted-gray">Bank:</span><strong id="pending-bank-name" class="text-soft-white"></strong></div>
-        <div class="flex justify-between"><span class="text-muted-gray">No. Rekening:</span><strong id="pending-acc-num" class="text-soft-white"></strong></div>
+      <div id="status-pending-info" class="hidden p-5 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 space-y-2 text-xs font-mono">
+        <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">Organisasi:</span><strong id="pending-org-name" class="text-neutral-950 dark:text-soft-white"></strong></div>
+        <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">Bank:</span><strong id="pending-bank-name" class="text-neutral-950 dark:text-soft-white"></strong></div>
+        <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">No. Rekening:</span><strong id="pending-acc-num" class="text-neutral-950 dark:text-soft-white"></strong></div>
       </div>
 
       <!-- Resubmit Form (Shown when rejected) -->
-      <form id="org-resubmit-form" class="hidden space-y-4 pt-2 border-t border-white/10">
-        <p class="text-xs text-muted-gray">Perbaiki data profil/rekening di bawah lalu kirim ulang ke tim verifikasi Admin.</p>
+      <form id="org-resubmit-form" class="hidden space-y-4 pt-2 border-t border-neutral-200 dark:border-white/10">
+        <p class="text-xs text-neutral-600 dark:text-muted-gray">Perbaiki data profil/rekening di bawah lalu kirim ulang ke tim verifikasi Admin.</p>
         <div>
-          <label for="resubmit-org-name" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Organisasi</label>
-          <input id="resubmit-org-name" type="text" minlength="3" maxlength="50" required class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta" />
+          <label for="resubmit-org-name" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Organisasi</label>
+          <input id="resubmit-org-name" type="text" minlength="3" maxlength="50" required class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label for="resubmit-bank-name" class="text-xs font-mono text-muted-gray block mb-1.5">Nama Bank</label>
-            <input id="resubmit-bank-name" type="text" minlength="2" maxlength="50" required class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm text-soft-white focus:outline-none focus:border-electric-magenta" />
+            <label for="resubmit-bank-name" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Bank</label>
+            <input id="resubmit-bank-name" type="text" minlength="2" maxlength="50" required class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
           </div>
           <div>
-            <label for="resubmit-acc-number" class="text-xs font-mono text-muted-gray block mb-1.5">Nomor Rekening</label>
-            <input id="resubmit-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required class="w-full px-4 py-3 rounded-xl bg-void-black border border-white/15 text-sm font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+            <label for="resubmit-acc-number" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nomor Rekening</label>
+            <input id="resubmit-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
           </div>
         </div>
         <div id="resubmit-feedback" class="hidden p-3.5 rounded-xl border text-xs font-mono"></div>
-        <button id="resubmit-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+        <button id="resubmit-submit-btn" type="submit" class="w-full py-3 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
           Perbaiki & Ajukan Ulang →
         </button>
       </form>
@@ -150,30 +151,31 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
         <div>
           <div class="flex items-center gap-2 mb-2">
-            <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-mono text-[10px] font-bold uppercase">
+            <span class="px-2.5 py-0.5 rounded bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-mono text-[10px] font-bold uppercase">
               PROMOTOR TERVERIFIKASI
             </span>
-            <span id="studio-org-id-badge" class="text-[11px] font-mono text-muted-gray"></span>
+            <span id="studio-org-id-badge" class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray"></span>
           </div>
-          <h1 id="studio-org-title" class="font-display text-4xl sm:text-6xl text-soft-white tracking-wide">
+          <h1 id="studio-org-title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
             PROMOTOR STUDIO
           </h1>
         </div>
 
         <div class="flex flex-wrap items-center gap-3">
-          <button id="open-create-event-btn" type="button" class="px-5 py-3 rounded-full bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          <button id="open-create-event-btn" type="button" class="px-5 py-3 rounded-full bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             + Buat Konser Baru (Draft)
           </button>
-          <a href="/scanner" class="px-5 py-3 rounded-full bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
+          <a href="/scanner" class="px-5 py-3 rounded-full bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase tracking-wider transition-all">
             Gate Scanner →
           </a>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
-      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-dark-plum border border-white/10 w-fit" id="org-studio-tabs">
+      <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none w-fit" id="org-studio-tabs">
         <button data-tab="overview" class="org-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Overview & KPIs</button>
         <button data-tab="events" class="org-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Manajemen Konser</button>
+        <button data-tab="orders" class="org-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Order Masuk</button>
         <button data-tab="gate" class="org-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Gate & Kehadiran</button>
         <button data-tab="finance" class="org-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">Rekening & Payout</button>
       </div>
@@ -184,22 +186,61 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           <!-- Injected KPI cards -->
         </div>
 
-        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15">
+        <!-- 14-Day Revenue Chart (Custom SVG) -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">TRAFIK PENDAPATAN 14 HARI</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">ARUS PENJUALAN & NET REVENUE PROMOTOR</h2>
+            </div>
+            <div id="org-revenue-summary" class="text-xs font-mono text-neutral-600 dark:text-muted-gray"></div>
+          </div>
+          <div id="org-revenue-chart-wrap" class="w-full overflow-x-auto">
+            <p class="text-xs font-mono text-neutral-500 dark:text-muted-gray py-6">Memuat grafik pendapatan...</p>
+          </div>
+        </div>
+
+        <!-- Per-Event Financial & Escrow Breakdown -->
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none">
           <div class="flex items-center justify-between mb-4">
-            <h2 class="font-display text-2xl text-soft-white">RINGKASAN KONSER TERBARU</h2>
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">LAPORAN FINANSIAL PER KONSER</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">ALOKASI ESCROW & DANA SIAP TARIK</h2>
+            </div>
             <button type="button" id="goto-events-tab-btn" class="text-xs font-mono text-electric-magenta hover:underline">Kelola Semua Konser →</button>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-xs">
               <thead>
-                <tr class="text-left text-muted-gray font-mono border-b border-white/10">
+                <tr class="text-left text-neutral-500 dark:text-muted-gray font-mono border-b border-neutral-200 dark:border-white/10">
+                  <th class="pb-3">KONSER & STATUS</th>
+                  <th class="pb-3 text-right">TERJUAL</th>
+                  <th class="pb-3 text-right">OMZET BERSIH (NET)</th>
+                  <th class="pb-3 text-right">ESCROW PENDING</th>
+                  <th class="pb-3 text-right">SIAP PAYOUT</th>
+                  <th class="pb-3 text-right">SUDAH DITARIK</th>
+                </tr>
+              </thead>
+              <tbody id="org-event-financials-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">RINGKASAN KONSER TERBARU</h2>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs">
+              <thead>
+                <tr class="text-left text-neutral-500 dark:text-muted-gray font-mono border-b border-neutral-200 dark:border-white/10">
                   <th class="pb-3">KONSER</th>
                   <th class="pb-3">STATUS</th>
                   <th class="pb-3">JADWAL</th>
                   <th class="pb-3 text-right">TERJUAL / KUOTA</th>
                 </tr>
               </thead>
-              <tbody id="org-recent-events-tbody" class="divide-y divide-white/5"></tbody>
+              <tbody id="org-recent-events-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
           </div>
         </div>
@@ -210,7 +251,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         <div class="flex flex-wrap items-center justify-between gap-4">
           <div class="flex flex-wrap gap-2" id="org-events-status-filters">
             {['', 'draft', 'pending', 'published', 'ongoing', 'selesai', 'rejected', 'dibatalkan'].map((st) => (
-              <button data-status={st} class={`org-ev-filter px-3.5 py-1.5 rounded-full text-[11px] font-mono uppercase transition-all ${st === '' ? 'bg-electric-magenta text-soft-white font-bold' : 'bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white'}`}>
+              <button data-status={st} class={`org-ev-filter px-3.5 py-1.5 rounded-full text-[11px] font-mono uppercase transition-all ${st === '' ? 'bg-electric-magenta text-white font-bold' : 'bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'}`}>
                 {st === '' ? 'Semua' : st}
               </button>
             ))}
@@ -220,65 +261,129 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         <div id="org-events-list" class="space-y-4"></div>
       </section>
 
-      <!-- TAB 3: GATE & ATTENDANCE -->
-      <section id="org-panel-gate" class="org-panel hidden space-y-6">
-        <div class="p-6 rounded-3xl bg-dark-plum/85 border border-white/15 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div class="flex-1 max-w-md">
-            <label for="gate-event-select" class="text-xs font-mono text-muted-gray block mb-1.5">Pilih Event untuk Monitor Kehadiran</label>
-            <select id="gate-event-select" class="w-full px-4 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta">
-              <option value="">Memuat konser...</option>
-            </select>
+      <!-- TAB 3: ORDERS MONITOR -->
+      <section id="org-panel-orders" class="org-panel hidden space-y-6">
+        <div class="p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+          <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
+            <div>
+              <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">MONITOR TRANSAKSI PEMBELI</span>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">DAFTAR ORDER TIKET MASUK</h2>
+            </div>
+            <form id="org-orders-filter-form" class="flex flex-wrap items-center gap-2">
+              <select id="org-orders-event-filter" class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
+                <option value="">Semua Konser</option>
+              </select>
+              <select id="org-orders-status-filter" class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
+                <option value="">Semua Status</option>
+                <option value="paid">Paid (Lunas)</option>
+                <option value="pending">Pending</option>
+                <option value="expired">Expired</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="refunded">Refunded</option>
+              </select>
+              <input id="org-orders-search" type="text" placeholder="Cari kode / pembeli..." class="px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
+              <button type="submit" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">Filter</button>
+            </form>
           </div>
-          <div class="flex flex-wrap gap-2">
-            <button id="gate-export-csv-btn" type="button" class="px-5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
-              Ekspor Penonton (.CSV)
-            </button>
-            <a id="gate-open-scanner-link" href="/scanner" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
-              Buka Scanner →
-            </a>
-          </div>
-        </div>
 
-        <div id="gate-attendance-container" class="p-6 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-5">
-          <p class="text-xs font-mono text-muted-gray">Pilih konser untuk memuat data attendance real-time.</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono">
+              <thead>
+                <tr class="text-left text-neutral-500 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
+                  <th class="pb-3">KODE ORDER & ITEM</th>
+                  <th class="pb-3">KONSER</th>
+                  <th class="pb-3">PEMBELI</th>
+                  <th class="pb-3">CHANNEL</th>
+                  <th class="pb-3 text-right">NET PROMOTOR</th>
+                  <th class="pb-3 text-right">STATUS</th>
+                </tr>
+              </thead>
+              <tbody id="org-orders-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
+            </table>
+          </div>
         </div>
       </section>
 
-      <!-- TAB 4: FINANCE, BANK COOLDOWN & PAYOUTS -->
+      <!-- TAB 4: GATE & ATTENDANCE -->
+      <section id="org-panel-gate" class="org-panel hidden space-y-6">
+        <div class="p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div class="flex-1 max-w-md">
+              <label for="gate-event-select" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Pilih Event untuk Monitor Kehadiran</label>
+              <select id="gate-event-select" class="w-full px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta">
+                <option value="">Memuat konser...</option>
+              </select>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button id="gate-export-csv-btn" type="button" class="px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
+                Ekspor Penonton (.CSV)
+              </button>
+              <a id="gate-open-scanner-link" href="/scanner" class="px-5 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+                Buka Scanner →
+              </a>
+            </div>
+          </div>
+
+          <!-- Scanner PIN Control Strip -->
+          <div id="gate-pin-control" class="pt-4 border-t border-neutral-200 dark:border-white/10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="text-xs font-mono">
+              <span class="text-neutral-500 dark:text-muted-gray uppercase block">PIN GATE SCANNER KRU (EVENT TERPILIH)</span>
+              <div class="flex items-center gap-2 mt-1">
+                <strong id="gate-current-pin" class="text-sm text-electric-magenta tracking-widest">••••••</strong>
+                <button id="gate-toggle-pin-btn" type="button" class="px-2 py-0.5 rounded bg-neutral-100 dark:bg-white/10 text-[10px] text-neutral-700 dark:text-soft-white">Tampilkan</button>
+              </div>
+            </div>
+            <form id="gate-pin-update-form" class="flex flex-wrap items-center gap-2">
+              <input id="gate-new-pin-input" type="text" minlength="4" maxlength="20" required placeholder="PIN Baru (4-20 char)" class="w-44 px-3 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <button id="gate-pin-save-btn" type="submit" class="px-4 py-2 rounded-xl bg-neutral-900 dark:bg-white/15 hover:bg-electric-magenta text-white text-xs font-bold uppercase transition-colors">
+                Update PIN Gate
+              </button>
+            </form>
+          </div>
+          <div id="gate-pin-feedback" class="hidden p-3 rounded-xl border text-xs font-mono"></div>
+        </div>
+
+        <div id="gate-attendance-container" class="p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
+          <p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Pilih konser untuk memuat data attendance real-time.</p>
+        </div>
+      </section>
+
+      <!-- TAB 5: FINANCE, BANK COOLDOWN & PAYOUTS -->
       <section id="org-panel-finance" class="org-panel hidden space-y-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <!-- Left: Escrow Balances & Payout Request (7 cols) -->
           <div class="lg:col-span-7 space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div class="p-6 rounded-3xl bg-dark-plum/90 border border-emerald-500/35">
-                <span class="text-[11px] font-mono uppercase text-emerald-300 block">Saldo Siap Tarik (Withdrawable H+1)</span>
-                <strong id="fin-withdrawable" class="font-display text-4xl text-soft-white mt-1 block">Rp 0</strong>
-                <span class="text-[11px] font-mono text-muted-gray mt-2 block">Dapat dicairkan ke rekening terdaftar (min. Rp 50.000)</span>
+              <div class="p-6 rounded-3xl bg-white dark:bg-dark-plum/90 border border-emerald-300 dark:border-emerald-500/35 shadow-sm dark:shadow-none">
+                <span class="text-[11px] font-mono uppercase text-emerald-700 dark:text-emerald-300 block">Saldo Siap Tarik (Withdrawable H+1)</span>
+                <strong id="fin-withdrawable" class="font-display text-4xl text-neutral-950 dark:text-soft-white mt-1 block">Rp 0</strong>
+                <span class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray mt-2 block">Dapat dicairkan ke rekening terdaftar (min. Rp 50.000)</span>
               </div>
-              <div class="p-6 rounded-3xl bg-dark-plum/90 border border-amber-500/35">
-                <span class="text-[11px] font-mono uppercase text-amber-300 block">Saldo Tertahan Escrow (Pending)</span>
-                <strong id="fin-pending" class="font-display text-4xl text-soft-white mt-1 block">Rp 0</strong>
-                <span class="text-[11px] font-mono text-muted-gray mt-2 block">Dirilis otomatis H+1 setelah konser selesai</span>
+              <div class="p-6 rounded-3xl bg-white dark:bg-dark-plum/90 border border-amber-300 dark:border-amber-500/35 shadow-sm dark:shadow-none">
+                <span class="text-[11px] font-mono uppercase text-amber-700 dark:text-amber-300 block">Saldo Tertahan Escrow (Pending)</span>
+                <strong id="fin-pending" class="font-display text-4xl text-neutral-950 dark:text-soft-white mt-1 block">Rp 0</strong>
+                <span class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray mt-2 block">Dirilis otomatis H+1 setelah konser selesai</span>
               </div>
             </div>
 
-            <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-4">
-              <h2 class="font-display text-2xl text-soft-white">PENGAJUAN PENCAIRAN DANA (PAYOUT)</h2>
-              <div id="fin-cooldown-banner" class="hidden p-4 rounded-2xl bg-amber-500/15 border border-amber-500/40 text-xs font-mono text-amber-300"></div>
+            <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-4">
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white">PENGAJUAN PENCAIRAN DANA (PAYOUT)</h2>
+              <div id="fin-cooldown-banner" class="hidden p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/15 border border-amber-200 dark:border-amber-500/40 text-xs font-mono text-amber-700 dark:text-amber-300"></div>
 
               <form id="payout-request-form" class="space-y-4">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label for="payout-event-select" class="text-xs font-mono text-muted-gray block mb-1.5">Konser Sumber Dana</label>
-                    <select id="payout-event-select" required class="w-full px-4 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta"></select>
+                    <label for="payout-event-select" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Konser Sumber Dana</label>
+                    <select id="payout-event-select" required class="w-full px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta"></select>
                   </div>
                   <div>
-                    <label for="payout-amount-input" class="text-xs font-mono text-muted-gray block mb-1.5">Nominal Penarikan (Rp, min 50.000)</label>
-                    <input id="payout-amount-input" type="number" min="50000" step="1000" required placeholder="500000" class="w-full px-4 py-2.5 rounded-xl bg-void-black border border-white/15 text-sm font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+                    <label for="payout-amount-input" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nominal Penarikan (Rp, min 50.000)</label>
+                    <input id="payout-amount-input" type="number" min="50000" step="1000" required placeholder="500000" class="w-full px-4 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
                   </div>
                 </div>
+                <div id="payout-event-hint" class="hidden p-3.5 rounded-xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 text-xs font-mono flex flex-wrap items-center justify-between gap-2"></div>
                 <div id="payout-feedback" class="hidden p-3 rounded-xl border text-xs font-mono"></div>
-                <button id="payout-submit-btn" type="submit" class="px-6 py-3 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all disabled:opacity-40">
+                <button id="payout-submit-btn" type="submit" class="px-6 py-3 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all disabled:opacity-40">
                   Ajukan Penarikan Dana →
                 </button>
               </form>
@@ -286,32 +391,32 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           </div>
 
           <!-- Right: Bank Account & 48h Security Cooldown (5 cols) -->
-          <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15 space-y-5">
+          <div class="lg:col-span-5 p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none space-y-5">
             <div>
               <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">Keamanan Perbankan</span>
-              <h2 class="font-display text-2xl text-soft-white mt-1">REKENING PENCAIRAN</h2>
+              <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mt-1">REKENING PENCAIRAN</h2>
             </div>
 
-            <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10 text-xs font-mono space-y-1.5">
-              <div class="flex justify-between"><span class="text-muted-gray">Bank:</span><strong id="fin-bank-name" class="text-soft-white">-</strong></div>
-              <div class="flex justify-between"><span class="text-muted-gray">No. Rekening:</span><strong id="fin-acc-number" class="text-soft-white">-</strong></div>
-              <div class="flex justify-between"><span class="text-muted-gray">Sudah Ditarik:</span><strong id="fin-withdrawn-total" class="text-emerald-400">Rp 0</strong></div>
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 text-xs font-mono space-y-1.5">
+              <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">Bank:</span><strong id="fin-bank-name" class="text-neutral-950 dark:text-soft-white">-</strong></div>
+              <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">No. Rekening:</span><strong id="fin-acc-number" class="text-neutral-950 dark:text-soft-white">-</strong></div>
+              <div class="flex justify-between"><span class="text-neutral-500 dark:text-muted-gray">Sudah Ditarik:</span><strong id="fin-withdrawn-total" class="text-emerald-600 dark:text-emerald-400">Rp 0</strong></div>
             </div>
 
-            <form id="bank-update-form" class="space-y-3 pt-2 border-t border-white/10">
-              <p class="text-[11px] font-mono text-amber-300/90">
+            <form id="bank-update-form" class="space-y-3 pt-2 border-t border-neutral-200 dark:border-white/10">
+              <p class="text-[11px] font-mono text-amber-700 dark:text-amber-300/90">
                 Peringatan Keamanan: Mengganti rekening bank akan mengaktifkan cooldown penarikan dana selama 48 jam.
               </p>
               <div>
-                <label for="update-bank-name" class="text-[11px] font-mono text-muted-gray block mb-1">Bank Baru</label>
-                <input id="update-bank-name" type="text" minlength="2" maxlength="50" required class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white focus:outline-none focus:border-electric-magenta" />
+                <label for="update-bank-name" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Bank Baru</label>
+                <input id="update-bank-name" type="text" minlength="2" maxlength="50" required class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
               <div>
-                <label for="update-acc-number" class="text-[11px] font-mono text-muted-gray block mb-1">Nomor Rekening Baru</label>
-                <input id="update-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white focus:outline-none focus:border-electric-magenta" />
+                <label for="update-acc-number" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Nomor Rekening Baru</label>
+                <input id="update-acc-number" type="text" minlength="4" maxlength="20" pattern="[0-9]+" required class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
               <div id="bank-update-feedback" class="hidden p-3 rounded-xl border text-xs font-mono"></div>
-              <button id="bank-update-btn" type="submit" class="w-full py-2.5 rounded-xl bg-white/10 hover:bg-amber-500/25 border border-white/15 text-soft-white text-xs font-bold uppercase transition-all">
+              <button id="bank-update-btn" type="submit" class="w-full py-2.5 rounded-xl bg-neutral-100 hover:bg-amber-50 border border-neutral-300 text-neutral-900 dark:bg-white/10 dark:hover:bg-amber-500/25 dark:border-white/15 dark:text-soft-white text-xs font-bold uppercase transition-all">
                 Perbarui Rekening Bank
               </button>
             </form>
@@ -319,12 +424,12 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         </div>
 
         <!-- Payout History -->
-        <div class="p-6 sm:p-8 rounded-3xl bg-dark-plum/85 border border-white/15">
-          <h3 class="font-display text-2xl text-soft-white mb-4">RIWAYAT PENGAJUAN PAYOUT</h3>
+        <div class="p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none">
+          <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-4">RIWAYAT PENGAJUAN PAYOUT</h3>
           <div class="overflow-x-auto">
             <table class="w-full text-xs font-mono">
               <thead>
-                <tr class="text-left text-muted-gray border-b border-white/10">
+                <tr class="text-left text-neutral-500 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
                   <th class="pb-3">TANGGAL</th>
                   <th class="pb-3">EVENT</th>
                   <th class="pb-3">NOMINAL</th>
@@ -332,7 +437,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
                   <th class="pb-3">CATATAN</th>
                 </tr>
               </thead>
-              <tbody id="payout-history-tbody" class="divide-y divide-white/5"></tbody>
+              <tbody id="payout-history-tbody" class="divide-y divide-neutral-200 dark:divide-white/5"></tbody>
             </table>
           </div>
         </div>
@@ -341,34 +446,34 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
   </div>
 
   <!-- EVENT STUDIO MODAL (CREATE / EDIT / POSTER / CATEGORIES / VOUCHERS) -->
-  <div id="event-studio-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
-    <div class="w-full max-w-4xl rounded-3xl bg-dark-plum border border-white/15 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-white/10 shrink-0">
+  <div id="event-studio-modal" class="fixed inset-0 z-[70] hidden items-center justify-center p-3 sm:p-6 bg-black/65 dark:bg-black/80 backdrop-blur-md">
+    <div class="w-full max-w-4xl rounded-3xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 shadow-2xl overflow-hidden flex flex-col max-h-[92vh]">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-neutral-200 dark:border-white/10 shrink-0 bg-white dark:bg-dark-plum">
         <div>
           <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">EVENT STUDIO</span>
-          <h2 id="ev-modal-title" class="font-display text-2xl text-soft-white">BUAT KONSER BARU</h2>
+          <h2 id="ev-modal-title" class="font-display text-2xl text-neutral-950 dark:text-soft-white">BUAT KONSER BARU</h2>
         </div>
-        <button id="close-ev-modal-btn" type="button" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-soft-white">✕</button>
+        <button id="close-ev-modal-btn" type="button" aria-label="Tutup modal" class="w-9 h-9 rounded-full bg-neutral-100 hover:bg-neutral-200 dark:bg-white/10 dark:hover:bg-white/20 flex items-center justify-center text-neutral-700 dark:text-soft-white transition-colors">✕</button>
       </div>
 
       <!-- Subtabs inside modal (only active when event exists) -->
-      <div id="ev-modal-subtabs" class="hidden flex gap-2 px-6 py-3 bg-void-black/60 border-b border-white/10 shrink-0 text-xs font-mono">
-        <button data-subtab="info" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg bg-electric-magenta text-soft-white font-bold">1. Detail & Poster</button>
-        <button data-subtab="categories" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-muted-gray hover:text-soft-white">2. Kategori Tiket</button>
-        <button data-subtab="vouchers" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-muted-gray hover:text-soft-white">3. Voucher Promo</button>
+      <div id="ev-modal-subtabs" class="hidden flex gap-2 px-6 py-3 bg-neutral-100 dark:bg-void-black/60 border-b border-neutral-200 dark:border-white/10 shrink-0 text-xs font-mono">
+        <button data-subtab="info" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg bg-electric-magenta text-white font-bold">1. Detail &amp; Poster</button>
+        <button data-subtab="categories" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">2. Kategori Tiket</button>
+        <button data-subtab="vouchers" class="ev-subtab-btn px-3.5 py-1.5 rounded-lg text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">3. Voucher Promo</button>
       </div>
 
-      <div class="p-6 overflow-y-auto space-y-6 flex-1">
+      <div class="p-5 sm:p-6 overflow-y-auto space-y-6 flex-1" data-lenis-prevent>
         <!-- SUBTAB 1: BASIC INFO + POSTER -->
         <div id="ev-subpanel-info" class="ev-subpanel space-y-6">
           <!-- Poster Upload Box (only when editing existing event) -->
-          <div id="ev-poster-upload-box" class="hidden p-4 rounded-2xl bg-void-black/60 border border-white/10 flex flex-col sm:flex-row items-center gap-4">
-            <img id="ev-poster-preview" src="" alt="Poster Preview" class="w-24 h-24 rounded-xl object-cover bg-dark-plum border border-white/10 shrink-0" />
+          <div id="ev-poster-upload-box" class="hidden p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 flex flex-col sm:flex-row items-center gap-4">
+            <img id="ev-poster-preview" src="" alt="Poster Preview" class="w-24 h-24 rounded-xl object-cover bg-neutral-100 dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shrink-0" />
             <div class="flex-1 space-y-2">
-              <span class="text-xs font-bold text-soft-white block">Unggah Poster Resmi Konser (JPG/PNG/WEBP, Maks 2MB)</span>
+              <span class="text-xs font-bold text-neutral-950 dark:text-soft-white block">Unggah Poster Resmi Konser (JPG/PNG/WEBP, Maks 2MB)</span>
               <div class="flex flex-wrap items-center gap-2">
-                <input id="ev-poster-file-input" type="file" accept="image/jpeg,image/png,image/webp" class="text-xs text-muted-gray file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-electric-magenta file:text-soft-white file:text-xs file:font-bold" />
-                <button id="ev-poster-upload-btn" type="button" class="px-4 py-1.5 rounded-lg bg-white/10 hover:bg-electric-magenta text-xs font-bold uppercase text-soft-white transition-all">
+                <input id="ev-poster-file-input" type="file" accept="image/jpeg,image/png,image/webp" class="text-xs text-neutral-600 dark:text-muted-gray file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-electric-magenta file:text-white file:text-xs file:font-bold" />
+                <button id="ev-poster-upload-btn" type="button" class="px-4 py-1.5 rounded-lg bg-neutral-900 hover:bg-electric-magenta dark:bg-white/10 dark:hover:bg-electric-magenta text-xs font-bold uppercase text-white dark:text-soft-white transition-all">
                   Upload Poster
                 </button>
               </div>
@@ -376,90 +481,112 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
             </div>
           </div>
 
-          <form id="ev-info-form" class="space-y-4">
+          <form id="ev-info-form" class="space-y-5">
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Nama Event Konser *</label>
-                <input id="ev-f-name" type="text" minlength="3" maxlength="100" required class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
+                <label for="ev-f-name" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Nama Event Konser *</label>
+                <input id="ev-f-name" type="text" minlength="3" maxlength="100" required placeholder="Afterglow Live Arena 2026" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
               </div>
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Headliner / Daftar Artis *</label>
-                <input id="ev-f-artis" type="text" required placeholder="Tulus, Hindia, .Feast" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
+                <label for="ev-f-artis" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Headliner / Daftar Artis *</label>
+                <input id="ev-f-artis" type="text" required placeholder="Tulus, Hindia, .Feast" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
               </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Alamat Lengkap Venue *</label>
-                <input id="ev-f-alamat" type="text" required placeholder="GBK Senayan, Jakarta" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
-              </div>
-              <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Koordinat GPS Venue (lat,lng) *</label>
-                <input id="ev-f-lokasi" type="text" required value="-6.2186,106.8026" placeholder="-6.2186,106.8026" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              </div>
-            </div>
+            <VenueMapPicker />
 
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Mulai Konser *</label>
-                <input id="ev-f-start" type="datetime-local" required class="w-full px-3 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
+                <label for="ev-f-start" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Mulai Konser *</label>
+                <input id="ev-f-start" type="datetime-local" required class="w-full px-3 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Selesai Konser *</label>
-                <input id="ev-f-end" type="datetime-local" required class="w-full px-3 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
+                <label for="ev-f-end" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Selesai Konser *</label>
+                <input id="ev-f-end" type="datetime-local" required class="w-full px-3 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Kapasitas Venue</label>
-                <input id="ev-f-cap" type="number" min="1" value="5000" required class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+                <label for="ev-f-cap" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Kapasitas Venue</label>
+                <input id="ev-f-cap" type="number" min="1" value="5000" required class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">PIN Gate Scanner</label>
-                <input id="ev-f-pin" type="text" minlength="4" maxlength="20" placeholder="888999" class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+                <label for="ev-f-pin" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">PIN Gate Scanner</label>
+                <input id="ev-f-pin" type="text" minlength="4" maxlength="20" placeholder="888999" class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta" />
               </div>
             </div>
 
             <div>
-              <label class="text-[11px] font-mono text-muted-gray block mb-1">Deskripsi Konser *</label>
-              <textarea id="ev-f-desc" rows="3" required class="w-full px-3.5 py-2.5 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white"></textarea>
+              <label for="ev-f-desc" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Deskripsi Konser *</label>
+              <textarea id="ev-f-desc" rows="3" required class="w-full px-3.5 py-2.5 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta"></textarea>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Fasilitas Venue (1 baris per fasilitas)</label>
-                <textarea id="ev-f-facilities" rows="3" placeholder="Musholla&#10;Tim Medis&#10;Parkir Luas" class="w-full px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white"></textarea>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray">Lineup Pengisi Acara (Opsional)</label>
+                  <button id="ev-add-lineup-btn" type="button" class="text-[10px] font-mono font-bold text-electric-magenta hover:underline">+ Tambah Artis</button>
+                </div>
+                <div id="ev-lineup-rows" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
               </div>
               <div>
-                <label class="text-[11px] font-mono text-muted-gray block mb-1">Syarat & Ketentuan (1 baris per poin)</label>
-                <textarea id="ev-f-rules" rows="3" placeholder="Wajib bawa KTP asli&#10;Dilarang bawa kamera DSLR" class="w-full px-3.5 py-2 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white"></textarea>
+                <div class="flex items-center justify-between mb-1.5">
+                  <label class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray">Rundown Jadwal Panggung (Opsional)</label>
+                  <button id="ev-add-rundown-btn" type="button" class="text-[10px] font-mono font-bold text-electric-magenta hover:underline">+ Tambah Sesi</button>
+                </div>
+                <div id="ev-rundown-rows" class="space-y-2 max-h-48 overflow-y-auto pr-1"></div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label for="ev-f-facilities" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Fasilitas Venue (1 baris per fasilitas)</label>
+                <textarea id="ev-f-facilities" rows="3" placeholder="Musholla&#10;Tim Medis&#10;Parkir Luas" class="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta"></textarea>
+              </div>
+              <div>
+                <label for="ev-f-rules" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray block mb-1">Syarat &amp; Ketentuan (1 baris per poin)</label>
+                <textarea id="ev-f-rules" rows="3" placeholder="Wajib bawa KTP asli&#10;Dilarang bawa kamera DSLR" class="w-full px-3.5 py-2 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white placeholder:text-neutral-400 focus:outline-none focus:border-electric-magenta"></textarea>
               </div>
             </div>
 
             <div id="ev-info-feedback" class="hidden p-3 rounded-xl border text-xs font-mono"></div>
-
-            <div class="flex flex-wrap gap-3">
-              <button id="ev-info-save-btn" type="submit" class="px-6 py-2.5 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
-                Simpan Konser
-              </button>
-              <button id="ev-submit-review-btn" type="button" class="hidden px-6 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
-                Ajukan Review ke Admin
-              </button>
-            </div>
           </form>
         </div>
 
         <!-- SUBTAB 2: CATEGORIES -->
         <div id="ev-subpanel-categories" class="ev-subpanel hidden space-y-5">
           <div id="ev-categories-list" class="space-y-3"></div>
-          <form id="ev-add-cat-form" class="p-4 rounded-2xl bg-void-black/60 border border-white/10 space-y-3">
-            <h4 class="font-display text-xl text-soft-white">TAMBAH KATEGORI TIKET BARU</h4>
+
+          <!-- Inline Edit Category Form -->
+          <form id="ev-edit-cat-form" class="hidden p-4 rounded-2xl bg-electric-magenta/5 dark:bg-electric-magenta/10 border border-electric-magenta/35 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">EDIT KATEGORI #<span id="edit-cat-id-label"></span></h4>
+              <button id="edit-cat-cancel-btn" type="button" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">Batal Edit</button>
+            </div>
+            <p id="edit-cat-price-lock-note" class="hidden text-[11px] font-mono text-amber-700 dark:text-amber-300">
+              Immutable Pricing Guard: Harga terkunci karena event sudah diajukan / dipublikasikan. Kuota & nama tetap dapat disesuaikan.
+            </p>
             <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
-              <input id="cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="Nama (mis. VIP)" class="sm:col-span-2 px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
-              <input id="cat-f-price" type="number" min="0" required placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <input id="cat-f-quota" type="number" min="1" required placeholder="Kuota" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <input id="cat-f-max" type="number" min="1" max="10" value="4" placeholder="Maks/Akun" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+              <input id="edit-cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="Nama Kategori" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
+              <input id="edit-cat-f-price" type="number" min="0" required placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white disabled:opacity-50" />
+              <input id="edit-cat-f-quota" type="number" min="1" required placeholder="Kuota Total" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="edit-cat-f-compliment" type="number" min="0" value="0" placeholder="Komplimen" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="edit-cat-f-max" type="number" min="1" max="10" value="4" placeholder="Maks/Akun" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+            </div>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
+              Simpan Perubahan Kategori
+            </button>
+          </form>
+
+          <form id="ev-add-cat-form" class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-3">
+            <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">TAMBAH KATEGORI TIKET BARU</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+              <input id="cat-f-name" type="text" minlength="2" maxlength="50" required placeholder="Nama (mis. VIP)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
+              <input id="cat-f-price" type="number" min="0" required placeholder="Harga (Rp)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="cat-f-quota" type="number" min="1" required placeholder="Kuota" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="cat-f-compliment" type="number" min="0" value="0" placeholder="Komplimen" title="Kuota Undangan / Media (Non-Publik)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="cat-f-max" type="number" min="1" max="10" value="4" placeholder="Maks/Akun" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
             </div>
             <div id="cat-feedback" class="hidden p-2.5 rounded-xl border text-xs font-mono"></div>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
               + Tambah Kategori
             </button>
           </form>
@@ -468,27 +595,76 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         <!-- SUBTAB 3: VOUCHERS -->
         <div id="ev-subpanel-vouchers" class="ev-subpanel hidden space-y-5">
           <div id="ev-vouchers-list" class="space-y-3"></div>
-          <form id="ev-add-voucher-form" class="p-4 rounded-2xl bg-void-black/60 border border-white/10 space-y-3">
-            <h4 class="font-display text-xl text-soft-white">BUAT VOUCHER DISKON BARU</h4>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input id="vch-f-code" type="text" minlength="3" maxlength="50" required placeholder="KODE (mis. WAR20)" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono uppercase text-soft-white" />
-              <select id="vch-f-type" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white">
+
+          <!-- Inline Edit Voucher Form -->
+          <form id="ev-edit-voucher-form" class="hidden p-4 rounded-2xl bg-electric-magenta/5 dark:bg-electric-magenta/10 border border-electric-magenta/35 space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">EDIT VOUCHER <span id="edit-vch-code-label" class="text-electric-magenta"></span></h4>
+              <button id="edit-vch-cancel-btn" type="button" class="text-[11px] font-mono text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">Batal Edit</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <div>
+                <label class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mb-1">Kuota Klaim</label>
+                <input id="edit-vch-f-quota" type="number" min="1" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mb-1">Min Transaksi (Rp)</label>
+                <input id="edit-vch-f-min" type="number" min="0" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mb-1">Maks Potongan (Rp, 0=Tanpa Batas)</label>
+                <input id="edit-vch-f-max-disc" type="number" min="0" class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              </div>
+              <div>
+                <label class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block mb-1">Berlaku Sampai</label>
+                <input id="edit-vch-f-end" type="datetime-local" required class="w-full px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
+              </div>
+            </div>
+            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
+              Simpan Perubahan Voucher
+            </button>
+          </form>
+
+          <form id="ev-add-voucher-form" class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/60 border border-neutral-200 dark:border-white/10 space-y-3">
+            <h4 class="font-display text-xl text-neutral-950 dark:text-soft-white">BUAT VOUCHER DISKON BARU</h4>
+            <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+              <input id="vch-f-code" type="text" minlength="3" maxlength="50" required placeholder="KODE (mis. WAR20)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono uppercase text-neutral-950 dark:text-soft-white" />
+              <select id="vch-f-type" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white">
                 <option value="persen">Persen (%)</option>
                 <option value="nominal">Nominal Tetap (Rp)</option>
               </select>
-              <input id="vch-f-val" type="number" min="1" required placeholder="Nilai (mis. 20 / 50000)" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
+              <input id="vch-f-val" type="number" min="1" required placeholder="Nilai (mis. 20 / 50000)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="vch-f-max-disc" type="number" min="0" placeholder="Maks Diskon (Rp, opsional)" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
-              <input id="vch-f-quota" type="number" min="1" value="50" required placeholder="Kuota Klaim" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <input id="vch-f-min" type="number" min="0" value="0" placeholder="Min Transaksi" class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs font-mono text-soft-white" />
-              <input id="vch-f-start" type="datetime-local" required class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
-              <input id="vch-f-end" type="datetime-local" required class="px-3 py-2 rounded-xl bg-void-black border border-white/15 text-xs text-soft-white" />
+              <input id="vch-f-quota" type="number" min="1" value="50" required placeholder="Kuota Klaim" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="vch-f-min" type="number" min="0" value="0" placeholder="Min Transaksi" class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs font-mono text-neutral-950 dark:text-soft-white" />
+              <input id="vch-f-start" type="datetime-local" required class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
+              <input id="vch-f-end" type="datetime-local" required class="px-3 py-2 rounded-xl bg-white dark:bg-void-black border border-neutral-300 dark:border-white/15 text-xs text-neutral-950 dark:text-soft-white" />
             </div>
             <div id="vch-feedback" class="hidden p-2.5 rounded-xl border text-xs font-mono"></div>
-            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+            <button type="submit" class="px-5 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
               + Simpan Voucher Promo
             </button>
           </form>
+        </div>
+      </div>
+
+      <!-- Sticky Footer for Detail & Poster -->
+      <div id="ev-modal-footer" class="px-6 py-4 border-t border-neutral-200 dark:border-white/10 bg-neutral-50/90 dark:bg-void-black/70 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">
+          Koordinat tersinkron: <code id="ev-footer-coord-readout" class="text-neutral-900 dark:text-soft-white font-bold">-6.2186,106.8026</code>
+        </span>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <button id="cancel-ev-modal-btn" type="button" class="px-4 py-2.5 rounded-xl bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/15 text-xs font-bold uppercase text-neutral-700 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white transition-colors">
+            Tutup
+          </button>
+          <button id="ev-submit-review-btn" type="button" class="hidden px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-500/30 text-xs font-bold uppercase tracking-wider transition-all">
+            Ajukan Review ke Admin
+          </button>
+          <button id="ev-info-save-btn" type="submit" form="ev-info-form" class="px-6 py-2.5 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+            Simpan Konser
+          </button>
         </div>
       </div>
     </div>
@@ -503,8 +679,10 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
 
 <script>
   import { api, resolveAssetUrl } from '../../lib/api';
+  import { renderDailyRevenueChartSvg } from '../../lib/charts';
   import { fetchCurrentUser, isAdmin, isAuthenticated } from '../../lib/auth';
   import { escapeHtml, formatDateIndo, formatRupiah } from '../../lib/formatters';
+  import { mountVenueMapPicker } from '../../scripts/venueMapPicker';
 
   function toLocalInputValue(iso?: string): string {
     if (!iso) return '';
@@ -518,7 +696,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     if (!el) return;
     el.textContent = msg;
     el.className = `p-3 rounded-xl border text-xs font-mono ${
-      isErr ? 'bg-red-500/10 border-red-500/30 text-red-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+      isErr ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300' : 'bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-700 dark:text-emerald-300'
     }`;
     el.classList.remove('hidden');
   }
@@ -540,14 +718,28 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     const panels = document.querySelectorAll<HTMLElement>('.org-panel');
 
     const kpiGrid = document.getElementById('org-kpi-grid');
+    const revenueSummaryEl = document.getElementById('org-revenue-summary');
+    const revenueChartWrap = document.getElementById('org-revenue-chart-wrap');
+    const eventFinancialsTbody = document.getElementById('org-event-financials-tbody');
     const recentTbody = document.getElementById('org-recent-events-tbody');
     const eventsListEl = document.getElementById('org-events-list');
     const evStatusFilterBtns = document.querySelectorAll<HTMLButtonElement>('.org-ev-filter');
+
+    const ordersFilterForm = document.getElementById('org-orders-filter-form') as HTMLFormElement | null;
+    const ordersEventFilter = document.getElementById('org-orders-event-filter') as HTMLSelectElement | null;
+    const ordersStatusFilter = document.getElementById('org-orders-status-filter') as HTMLSelectElement | null;
+    const ordersSearchInput = document.getElementById('org-orders-search') as HTMLInputElement | null;
+    const ordersTbody = document.getElementById('org-orders-tbody');
 
     const gateEventSelect = document.getElementById('gate-event-select') as HTMLSelectElement | null;
     const gateAttendanceBox = document.getElementById('gate-attendance-container');
     const gateExportBtn = document.getElementById('gate-export-csv-btn') as HTMLButtonElement | null;
     const gateScannerLink = document.getElementById('gate-open-scanner-link') as HTMLAnchorElement | null;
+    const gateCurrentPinEl = document.getElementById('gate-current-pin');
+    const gateTogglePinBtn = document.getElementById('gate-toggle-pin-btn');
+    const gatePinForm = document.getElementById('gate-pin-update-form') as HTMLFormElement | null;
+    const gateNewPinInput = document.getElementById('gate-new-pin-input') as HTMLInputElement | null;
+    const gatePinFeedback = document.getElementById('gate-pin-feedback');
 
     const finWithdrawable = document.getElementById('fin-withdrawable');
     const finPending = document.getElementById('fin-pending');
@@ -558,6 +750,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     const payoutForm = document.getElementById('payout-request-form') as HTMLFormElement | null;
     const payoutEventSelect = document.getElementById('payout-event-select') as HTMLSelectElement | null;
     const payoutAmountInput = document.getElementById('payout-amount-input') as HTMLInputElement | null;
+    const payoutEventHint = document.getElementById('payout-event-hint');
     const payoutSubmitBtn = document.getElementById('payout-submit-btn') as HTMLButtonElement | null;
     const payoutHistoryTbody = document.getElementById('payout-history-tbody');
     const bankUpdateForm = document.getElementById('bank-update-form') as HTMLFormElement | null;
@@ -566,8 +759,10 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     const evModal = document.getElementById('event-studio-modal');
     const openCreateBtn = document.getElementById('open-create-event-btn');
     const closeEvModalBtn = document.getElementById('close-ev-modal-btn');
+    const cancelEvModalBtn = document.getElementById('cancel-ev-modal-btn');
     const evModalTitle = document.getElementById('ev-modal-title');
     const evModalSubtabs = document.getElementById('ev-modal-subtabs');
+    const evModalFooter = document.getElementById('ev-modal-footer');
     const evSubtabBtns = document.querySelectorAll<HTMLButtonElement>('.ev-subtab-btn');
     const evSubpanels = document.querySelectorAll<HTMLElement>('.ev-subpanel');
     const posterBox = document.getElementById('ev-poster-upload-box');
@@ -576,17 +771,30 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     const posterUploadBtn = document.getElementById('ev-poster-upload-btn') as HTMLButtonElement | null;
     const evInfoForm = document.getElementById('ev-info-form') as HTMLFormElement | null;
     const evSubmitReviewBtn = document.getElementById('ev-submit-review-btn') as HTMLButtonElement | null;
+    const venueMap = mountVenueMapPicker();
+    const evLineupRowsEl = document.getElementById('ev-lineup-rows');
+    const evAddLineupBtn = document.getElementById('ev-add-lineup-btn');
+    const evRundownRowsEl = document.getElementById('ev-rundown-rows');
+    const evAddRundownBtn = document.getElementById('ev-add-rundown-btn');
     const evCategoriesList = document.getElementById('ev-categories-list');
+    const evEditCatForm = document.getElementById('ev-edit-cat-form') as HTMLFormElement | null;
     const evAddCatForm = document.getElementById('ev-add-cat-form') as HTMLFormElement | null;
     const evVouchersList = document.getElementById('ev-vouchers-list');
+    const evEditVoucherForm = document.getElementById('ev-edit-voucher-form') as HTMLFormElement | null;
     const evAddVoucherForm = document.getElementById('ev-add-voucher-form') as HTMLFormElement | null;
 
     let currentTab: string = (window as any).__orgInitialTab || 'overview';
     let currentEvFilter = '';
     let myProfile: any = null;
     let myEvents: any[] = [];
+    let eventFinancialsMap = new Map<number, any>();
+    let currentBankCooldown = false;
+    let currentGatePinValue = '';
+    let isGatePinVisible = false;
     let editingEventId: number | null = null;
     let editingEventDetail: any = null;
+    let editingCategoryId: number | null = null;
+    let editingVoucherId: number | null = null;
     let payoutIdempotencyKey = crypto.randomUUID();
     let isDisposed = false;
 
@@ -601,14 +809,16 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       tabBtns.forEach((b) => {
         const active = b.dataset.tab === tab;
         b.classList.toggle('bg-electric-magenta', active);
-        b.classList.toggle('text-soft-white', active);
+        b.classList.toggle('text-white', active);
         b.classList.toggle('shadow-magenta-glow', active);
-        b.classList.toggle('text-muted-gray', !active);
+        b.classList.toggle('text-neutral-600', !active);
+        b.classList.toggle('dark:text-muted-gray', !active);
       });
       panels.forEach((p) => p.classList.toggle('hidden', p.id !== `org-panel-${tab}`));
 
       if (tab === 'overview') loadOverview();
       if (tab === 'events') loadOrganizerEvents();
+      if (tab === 'orders') loadOrganizerOrdersTab();
       if (tab === 'gate') loadGateTab();
       if (tab === 'finance') loadFinanceTab();
     }
@@ -626,30 +836,40 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     }
 
     async function bootstrapOrganizer() {
-      hideAllRootStates();
       if (!isAuthenticated()) {
+        myProfile = null;
+        hideAllRootStates();
         authGuard?.classList.remove('hidden');
         return;
       }
 
       if (isAdmin()) {
+        hideAllRootStates();
         adminNotice?.classList.remove('hidden');
         return;
       }
 
-      loadingEl?.classList.remove('hidden');
+      const workspaceAlreadyOpen = Boolean(myProfile && studioWorkspace && !studioWorkspace.classList.contains('hidden'));
+      if (!workspaceAlreadyOpen) {
+        hideAllRootStates();
+        loadingEl?.classList.remove('hidden');
+      }
+
       try {
         myProfile = await api.get('/organizer/me');
         if (isDisposed) return;
         loadingEl?.classList.add('hidden');
 
         if (!myProfile) {
+          hideAllRootStates();
           applyState?.classList.remove('hidden');
           return;
         }
 
         if (myProfile.verification_status === 'verified') {
           await fetchCurrentUser(); // ensure role_id === 2 synced in localStorage
+          if (isDisposed) return;
+          hideAllRootStates();
           studioWorkspace?.classList.remove('hidden');
           const titleEl = document.getElementById('studio-org-title');
           const idBadge = document.getElementById('studio-org-id-badge');
@@ -657,10 +877,14 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           if (idBadge) idBadge.textContent = `ORGANIZER #${myProfile.id}`;
           activateTab(currentTab);
         } else {
+          hideAllRootStates();
           renderPendingOrRejectedState(myProfile);
         }
       } catch (err: any) {
+        if (isDisposed) return;
         loadingEl?.classList.add('hidden');
+        if (workspaceAlreadyOpen) return;
+        hideAllRootStates();
         applyState?.classList.remove('hidden');
         showInlineMsg(document.getElementById('apply-feedback'), err?.message || 'Gagal mengecek profil organizer.', true);
       }
@@ -675,7 +899,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
 
       if (profile.verification_status === 'rejected') {
         if (badge) {
-          badge.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-red-500/20 border border-red-500/40 text-red-300';
+          badge.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-red-50 dark:bg-red-500/20 border border-red-200 dark:border-red-500/40 text-red-700 dark:text-red-300';
           badge.textContent = 'PENGAJUAN DITOLAK';
         }
         if (headline) headline.textContent = 'PERLU PERBAIKAN DATA PROMOTOR';
@@ -690,7 +914,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         (document.getElementById('resubmit-acc-number') as HTMLInputElement).value = profile.account_number || '';
       } else {
         if (badge) {
-          badge.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-amber-500/20 border border-amber-500/40 text-amber-300';
+          badge.className = 'px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase bg-amber-50 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/40 text-amber-700 dark:text-amber-300';
           badge.textContent = 'MENUNGGU VERIFIKASI ADMIN';
         }
         if (headline) headline.textContent = 'PENGAJUAN SEDANG DITINJAU';
@@ -759,6 +983,11 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         const f = dash.financials || {};
         const ev = dash.events_summary || {};
         const tk = dash.tickets_summary || {};
+        const series = Array.isArray(dash.revenue_series) ? dash.revenue_series : [];
+        const financials = Array.isArray(dash.event_financials) ? dash.event_financials : [];
+
+        eventFinancialsMap.clear();
+        financials.forEach((ef: any) => eventFinancialsMap.set(Number(ef.event_id), ef));
 
         kpiGrid.innerHTML = [
           { label: 'Omzet Kotor Tiket', val: formatRupiah(f.total_revenue || 0), sub: `Fee platform: ${formatRupiah(f.platform_fee || 0)}` },
@@ -768,40 +997,166 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         ]
           .map(
             (k) => `
-            <div class="p-5 rounded-3xl bg-dark-plum/85 border ${k.highlight ? 'border-electric-magenta/40' : 'border-white/12'}">
-              <span class="text-[10px] font-mono uppercase tracking-wider text-muted-gray block">${escapeHtml(k.label)}</span>
-              <strong class="font-display text-3xl text-soft-white mt-1 block">${escapeHtml(k.val)}</strong>
+            <div class="p-5 rounded-3xl bg-white dark:bg-dark-plum/85 border ${k.highlight ? 'border-electric-magenta/40' : 'border-neutral-200 dark:border-white/12'} shadow-sm dark:shadow-none">
+              <span class="text-[10px] font-mono uppercase tracking-wider text-neutral-500 dark:text-muted-gray block">${escapeHtml(k.label)}</span>
+              <strong class="font-display text-3xl text-neutral-950 dark:text-soft-white mt-1 block">${escapeHtml(k.val)}</strong>
               <span class="text-[11px] font-mono text-electric-magenta mt-1 block">${escapeHtml(k.sub)}</span>
             </div>
           `
           )
           .join('');
 
+        if (revenueChartWrap) {
+          const totalNet14 = series.reduce((sum: number, d: any) => sum + Number(d.net_revenue || 0), 0);
+          const totalOrders14 = series.reduce((sum: number, d: any) => sum + Number(d.orders_count || 0), 0);
+          if (revenueSummaryEl) {
+            revenueSummaryEl.textContent = `14 Hari Terakhir: ${totalOrders14} order lunas • Net ${formatRupiah(totalNet14)}`;
+          }
+          revenueChartWrap.innerHTML = renderDailyRevenueChartSvg(
+            series.map((d: any) => ({
+              label: d.label || String(d.date || '').slice(5),
+              primary: Number(d.net_revenue || 0),
+              count: Number(d.orders_count || 0),
+            })),
+            { primaryLabel: 'Net Revenue Promotor' }
+          );
+        }
+
+        if (eventFinancialsTbody) {
+          eventFinancialsTbody.innerHTML =
+            financials.length === 0
+              ? `<tr><td colspan="6" class="py-6 text-center text-neutral-500 dark:text-muted-gray font-mono">Belum ada data finansial konser.</td></tr>`
+              : financials
+                  .map(
+                    (ef: any) => `
+                  <tr>
+                    <td class="py-3">
+                      <span class="font-bold text-neutral-950 dark:text-soft-white block">${escapeHtml(ef.nama_event)}</span>
+                      <span class="text-[10px] font-mono uppercase ${ef.escrow_settled_at ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-300'}">${escapeHtml(ef.status)} • ${ef.escrow_settled_at ? 'Settled H+1' : 'Escrow Hold'}</span>
+                    </td>
+                    <td class="py-3 text-right font-mono text-neutral-950 dark:text-soft-white">${Number(ef.sold_tickets || 0)} / ${Number(ef.total_capacity || 0)}</td>
+                    <td class="py-3 text-right font-mono font-bold text-neutral-950 dark:text-soft-white">${escapeHtml(formatRupiah(ef.net_revenue || 0))}</td>
+                    <td class="py-3 text-right font-mono text-amber-600 dark:text-amber-300">${escapeHtml(formatRupiah(ef.unsettled_net || 0))}</td>
+                    <td class="py-3 text-right font-mono font-bold text-emerald-600 dark:text-emerald-400">${escapeHtml(formatRupiah(ef.payout_available || 0))}</td>
+                    <td class="py-3 text-right font-mono text-neutral-600 dark:text-muted-gray">${escapeHtml(formatRupiah(ef.payout_used || 0))}</td>
+                  </tr>
+                `
+                  )
+                  .join('');
+        }
+
         const recents = Array.isArray(dash.recent_events) ? dash.recent_events : [];
         recentTbody.innerHTML =
           recents.length === 0
-            ? `<tr><td colspan="4" class="py-6 text-center text-muted-gray font-mono">Belum ada konser yang dibuat.</td></tr>`
+            ? `<tr><td colspan="4" class="py-6 text-center text-neutral-500 dark:text-muted-gray font-mono">Belum ada konser yang dibuat.</td></tr>`
             : recents
                 .map(
                   (r: any) => `
                 <tr>
-                  <td class="py-3 font-bold text-soft-white">${escapeHtml(r.nama_event)}</td>
+                  <td class="py-3 font-bold text-neutral-950 dark:text-soft-white">${escapeHtml(r.nama_event)}</td>
                   <td class="py-3 font-mono text-[11px] uppercase text-electric-magenta">${escapeHtml(r.status)}</td>
-                  <td class="py-3 text-muted-gray font-mono">${escapeHtml(formatDateIndo(r.tanggal_mulai, { showTime: false }))}</td>
-                  <td class="py-3 text-right font-mono text-soft-white">${Number(r.total_sold || 0)} / ${Number(r.total_capacity || r.kapasitas_venue || 0)}</td>
+                  <td class="py-3 text-neutral-600 dark:text-muted-gray font-mono">${escapeHtml(formatDateIndo(r.tanggal_mulai, { showTime: false }))}</td>
+                  <td class="py-3 text-right font-mono text-neutral-950 dark:text-soft-white">${Number(r.total_sold || 0)} / ${Number(r.total_capacity || r.kapasitas_venue || 0)}</td>
                 </tr>
               `
                 )
                 .join('');
       } catch (err: any) {
-        kpiGrid.innerHTML = `<div class="col-span-full p-5 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat dashboard organizer.')}</div>`;
+        kpiGrid.innerHTML = `<div class="col-span-full p-5 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat dashboard organizer.')}</div>`;
       }
     }
+
+    // TAB 3: ORGANIZER ORDERS MONITOR
+    async function loadOrganizerOrdersTab() {
+      if (ordersEventFilter && ordersEventFilter.options.length <= 1) {
+        try {
+          const evs = myEvents.length > 0 ? myEvents : await api.get<any[]>('/events');
+          if (isDisposed) return;
+          if (Array.isArray(evs)) {
+            myEvents = evs;
+            ordersEventFilter.innerHTML =
+              `<option value="">Semua Konser</option>` +
+              evs.map((ev) => `<option value="${ev.id}">#${ev.id} — ${escapeHtml(ev.nama_event)}</option>`).join('');
+          }
+        } catch {}
+      }
+      await loadOrganizerOrders();
+    }
+
+    async function loadOrganizerOrders() {
+      if (!ordersTbody) return;
+      const params = new URLSearchParams({ limit: '50', offset: '0' });
+      const evId = ordersEventFilter?.value || '';
+      const status = ordersStatusFilter?.value || '';
+      const q = ordersSearchInput?.value.trim() || '';
+      if (evId) params.set('event_id', evId);
+      if (status) params.set('status', status);
+      if (q) params.set('q', q);
+
+      ordersTbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-neutral-500 dark:text-muted-gray">Memuat daftar transaksi pembeli...</td></tr>`;
+      try {
+        const rows = await api.get<any[]>(`/organizer/orders?${params.toString()}`);
+        if (isDisposed) return;
+        const list = Array.isArray(rows) ? rows : [];
+        if (list.length === 0) {
+          ordersTbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-neutral-500 dark:text-muted-gray">Belum ada order masuk sesuai filter.</td></tr>`;
+          return;
+        }
+        ordersTbody.innerHTML = list
+          .map((o: any) => {
+            const stCls =
+              o.status === 'paid'
+                ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300'
+                : o.status === 'pending'
+                ? 'bg-amber-50 dark:bg-amber-500/20 text-amber-700 dark:text-amber-300'
+                : o.status === 'refunded'
+                ? 'bg-cyan-50 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-300'
+                : 'bg-neutral-100 dark:bg-white/10 text-neutral-600 dark:text-muted-gray';
+
+            return `
+              <tr>
+                <td class="py-3">
+                  <strong class="text-neutral-950 dark:text-soft-white block">${escapeHtml(o.order_code)}</strong>
+                  <span class="text-[11px] text-neutral-600 dark:text-muted-gray block">${escapeHtml(o.item_summary || '-')}</span>
+                  ${o.kode_voucher ? `<span class="text-[10px] text-electric-magenta">Voucher: ${escapeHtml(o.kode_voucher)} (-${escapeHtml(formatRupiah(o.diskon_amount || 0))})</span>` : ''}
+                </td>
+                <td class="py-3 text-neutral-950 dark:text-soft-white">${escapeHtml(o.nama_event || '-')}</td>
+                <td class="py-3">
+                  <span class="text-neutral-950 dark:text-soft-white block">${escapeHtml(o.buyer_name || '-')}</span>
+                  <span class="text-[11px] text-neutral-500 dark:text-muted-gray">${escapeHtml(o.buyer_email || '-')}</span>
+                </td>
+                <td class="py-3 text-neutral-600 dark:text-muted-gray">
+                  <span class="block">${escapeHtml((o.payment_channel || o.payment_method || 'ONLINE').toUpperCase())}</span>
+                  <span class="text-[10px]">${escapeHtml(o.paid_at ? formatDateIndo(o.paid_at) : formatDateIndo(o.created_at))}</span>
+                </td>
+                <td class="py-3 text-right">
+                  <strong class="text-emerald-600 dark:text-emerald-400 block">${escapeHtml(formatRupiah(o.organizer_net || 0))}</strong>
+                  <span class="text-[10px] text-neutral-500 dark:text-muted-gray">Gross: ${escapeHtml(formatRupiah(o.final_amount || 0))}</span>
+                </td>
+                <td class="py-3 text-right">
+                  <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${stCls}">${escapeHtml(o.status)}</span>
+                  ${o.status === 'paid' ? `<span class="block text-[10px] mt-1 ${o.escrow_settled_at ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-300'}">${o.escrow_settled_at ? 'Settled H+1' : 'Escrow Hold'}</span>` : ''}
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      } catch (err: any) {
+        ordersTbody.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-red-600 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat order masuk.')}</td></tr>`;
+      }
+    }
+
+    ordersFilterForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      loadOrganizerOrders();
+    });
+    ordersEventFilter?.addEventListener('change', loadOrganizerOrders);
+    ordersStatusFilter?.addEventListener('change', loadOrganizerOrders);
 
     // TAB 2: EVENTS CRUD
     async function loadOrganizerEvents() {
       if (!eventsListEl) return;
-      eventsListEl.innerHTML = `<div class="p-8 rounded-2xl bg-dark-plum/60 border border-white/10 text-xs font-mono text-muted-gray">Memuat daftar konser...</div>`;
+      eventsListEl.innerHTML = `<div class="p-8 rounded-2xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none text-xs font-mono text-neutral-600 dark:text-muted-gray">Memuat daftar konser...</div>`;
       const q = currentEvFilter ? `?status=${encodeURIComponent(currentEvFilter)}` : '';
       try {
         const list = await api.get<any[]>(`/events${q}`);
@@ -809,7 +1164,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         myEvents = Array.isArray(list) ? list : [];
 
         if (myEvents.length === 0) {
-          eventsListEl.innerHTML = `<div class="p-10 rounded-3xl bg-dark-plum/50 border border-white/10 text-center text-sm text-muted-gray">Tidak ada event pada filter status ini.</div>`;
+          eventsListEl.innerHTML = `<div class="p-10 rounded-3xl bg-white dark:bg-dark-plum/50 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none text-center text-sm text-neutral-600 dark:text-muted-gray">Tidak ada event pada filter status ini.</div>`;
           return;
         }
 
@@ -820,30 +1175,34 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
             const canCancel = ev.status === 'published' || ev.status === 'ongoing';
 
             return `
-              <div class="p-5 sm:p-6 rounded-3xl bg-dark-plum/85 border border-white/12 flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+              <div class="p-5 sm:p-6 rounded-3xl bg-white dark:bg-dark-plum/85 border border-neutral-200 dark:border-white/12 shadow-sm dark:shadow-none flex flex-col lg:flex-row lg:items-center justify-between gap-5">
                 <div class="flex items-start gap-4">
-                  <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-20 h-20 rounded-2xl object-cover bg-void-black border border-white/10 shrink-0" />
+                  <img src="${escapeHtml(resolveAssetUrl(ev.poster_url))}" alt="${escapeHtml(ev.nama_event)}" class="w-20 h-20 rounded-2xl object-cover bg-neutral-100 dark:bg-void-black border border-neutral-200 dark:border-white/10 shrink-0" />
                   <div class="space-y-1">
                     <div class="flex flex-wrap items-center gap-2">
-                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-white/10 text-soft-white">${escapeHtml(ev.status)}</span>
-                      <span class="text-[11px] font-mono text-muted-gray">ID #${ev.id}</span>
+                      <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-neutral-100 dark:bg-white/10 text-neutral-800 dark:text-soft-white">${escapeHtml(ev.status)}</span>
+                      <span class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray">ID #${ev.id}</span>
+                      ${ev.escrow_settled_at ? `<span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300">Escrow H+1 Settled</span>` : ''}
                     </div>
-                    <h3 class="font-display text-2xl text-soft-white">${escapeHtml(ev.nama_event)}</h3>
-                    <p class="text-xs text-muted-gray">${escapeHtml(formatDateIndo(ev.tanggal_mulai))} • ${escapeHtml(ev.alamat)}</p>
-                    ${ev.rejection_reason ? `<p class="text-[11px] font-mono text-red-300">Catatan Admin: ${escapeHtml(ev.rejection_reason)}</p>` : ''}
+                    <h3 class="font-display text-2xl text-neutral-950 dark:text-soft-white">${escapeHtml(ev.nama_event)}</h3>
+                    <p class="text-xs text-neutral-600 dark:text-muted-gray">${escapeHtml(formatDateIndo(ev.tanggal_mulai))} • ${escapeHtml(ev.alamat)}</p>
+                    ${ev.rejection_reason ? `<p class="text-[11px] font-mono text-red-700 dark:text-red-300">Catatan Admin: ${escapeHtml(ev.rejection_reason)}</p>` : ''}
                     <p class="text-xs font-mono text-electric-magenta">Terjual: ${Number(ev.sold_quota || 0)} / ${Number(ev.total_quota || 0)} • Mulai ${escapeHtml(formatRupiah(ev.min_price || 0))}</p>
                   </div>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2 shrink-0">
-                  <button type="button" data-manage-ev="${ev.id}" class="px-4 py-2 rounded-xl bg-electric-magenta text-soft-white text-xs font-bold uppercase">
+                  <a href="/events/${ev.id}" target="_blank" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-mono uppercase transition-colors">
+                    Preview Publik
+                  </a>
+                  <button type="button" data-manage-ev="${ev.id}" class="px-4 py-2 rounded-xl bg-electric-magenta text-white text-xs font-bold uppercase">
                     Kelola / Kategori / Voucher
                   </button>
-                  ${canSubmit ? `<button type="button" data-submit-ev="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold uppercase">Ajukan Review</button>` : ''}
-                  ${canDelete ? `<button type="button" data-delete-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Hapus</button>` : ''}
+                  ${canSubmit ? `<button type="button" data-submit-ev="${ev.id}" class="px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 text-xs font-bold uppercase">Ajukan Review</button>` : ''}
+                  ${canDelete ? `<button type="button" data-delete-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Hapus</button>` : ''}
                   ${canCancel ? `
-                    <a href="/scanner?event_id=${ev.id}" class="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-soft-white text-xs font-bold uppercase">Scanner</a>
-                    <button type="button" data-cancel-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs font-bold uppercase">Batalkan Konser</button>
+                    <a href="/scanner?event_id=${ev.id}" class="px-3.5 py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white text-xs font-bold uppercase">Scanner</a>
+                    <button type="button" data-cancel-ev="${ev.id}" class="px-3.5 py-2 rounded-xl bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 text-xs font-bold uppercase">Batalkan Konser</button>
                   ` : ''}
                 </div>
               </div>
@@ -851,7 +1210,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           })
           .join('');
       } catch (err: any) {
-        eventsListEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-500/10 border border-red-500/30 text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar konser.')}</div>`;
+        eventsListEl.innerHTML = `<div class="p-6 rounded-2xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30 text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat daftar konser.')}</div>`;
       }
     }
 
@@ -861,7 +1220,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         evStatusFilterBtns.forEach((b) => {
           const active = (b.dataset.status || '') === currentEvFilter;
           b.className = `org-ev-filter px-3.5 py-1.5 rounded-full text-[11px] font-mono uppercase transition-all ${
-            active ? 'bg-electric-magenta text-soft-white font-bold' : 'bg-dark-plum border border-white/10 text-muted-gray hover:text-soft-white'
+            active ? 'bg-electric-magenta text-white font-bold' : 'bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white'
           }`;
         });
         loadOrganizerEvents();
@@ -920,33 +1279,123 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     });
 
     // MODAL MANAGEMENT
+    function parseJsonArrayField(val: any): any[] {
+      if (Array.isArray(val)) return val;
+      if (typeof val === 'string' && val.trim()) {
+        try {
+          const parsed = JSON.parse(val);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+      return [];
+    }
+
+    function appendLineupRow(item: any = { name: '', role: '', time: '' }) {
+      if (!evLineupRowsEl) return;
+      const row = document.createElement('div');
+      row.className = 'lineup-item-row grid grid-cols-12 gap-1.5 items-center';
+      row.innerHTML = `
+        <input type="text" data-f="name" value="${escapeHtml(item.name || '')}" placeholder="Artis / Band" class="col-span-5 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] text-neutral-950 dark:text-soft-white" />
+        <input type="text" data-f="role" value="${escapeHtml(item.role || '')}" placeholder="Role (Headliner)" class="col-span-4 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] text-neutral-950 dark:text-soft-white" />
+        <input type="text" data-f="time" value="${escapeHtml(item.time || '')}" placeholder="21:00" class="col-span-2 px-2 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] font-mono text-neutral-950 dark:text-soft-white" />
+        <button type="button" class="remove-dyn-row col-span-1 h-7 rounded-lg bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 text-xs font-bold">✕</button>
+      `;
+      row.querySelector('.remove-dyn-row')?.addEventListener('click', () => row.remove());
+      evLineupRowsEl.appendChild(row);
+    }
+
+    function appendRundownRow(item: any = { time: '', title: '', description: '' }) {
+      if (!evRundownRowsEl) return;
+      const row = document.createElement('div');
+      row.className = 'rundown-item-row grid grid-cols-12 gap-1.5 items-center';
+      row.innerHTML = `
+        <input type="text" data-f="time" value="${escapeHtml(item.time || '')}" placeholder="19:00" class="col-span-3 px-2 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] font-mono text-neutral-950 dark:text-soft-white" />
+        <input type="text" data-f="title" value="${escapeHtml(item.title || '')}" placeholder="Sesi Panggung" class="col-span-4 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] text-neutral-950 dark:text-soft-white" />
+        <input type="text" data-f="description" value="${escapeHtml(item.description || '')}" placeholder="Keterangan" class="col-span-4 px-2.5 py-1.5 rounded-lg bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-[11px] text-neutral-950 dark:text-soft-white" />
+        <button type="button" class="remove-dyn-row col-span-1 h-7 rounded-lg bg-red-50 dark:bg-red-500/15 text-red-600 dark:text-red-300 text-xs font-bold">✕</button>
+      `;
+      row.querySelector('.remove-dyn-row')?.addEventListener('click', () => row.remove());
+      evRundownRowsEl.appendChild(row);
+    }
+
+    function readLineupRows() {
+      if (!evLineupRowsEl) return [];
+      return Array.from(evLineupRowsEl.querySelectorAll<HTMLElement>('.lineup-item-row'))
+        .map((row) => ({
+          name: (row.querySelector('[data-f="name"]') as HTMLInputElement)?.value.trim() || '',
+          role: (row.querySelector('[data-f="role"]') as HTMLInputElement)?.value.trim() || 'Guest Performer',
+          time: (row.querySelector('[data-f="time"]') as HTMLInputElement)?.value.trim() || '-',
+        }))
+        .filter((x) => x.name.length > 0);
+    }
+
+    function readRundownRows() {
+      if (!evRundownRowsEl) return [];
+      return Array.from(evRundownRowsEl.querySelectorAll<HTMLElement>('.rundown-item-row'))
+        .map((row) => ({
+          time: (row.querySelector('[data-f="time"]') as HTMLInputElement)?.value.trim() || '-',
+          title: (row.querySelector('[data-f="title"]') as HTMLInputElement)?.value.trim() || '',
+          description: (row.querySelector('[data-f="description"]') as HTMLInputElement)?.value.trim() || '',
+        }))
+        .filter((x) => x.title.length > 0);
+    }
+
+    evAddLineupBtn?.addEventListener('click', () => appendLineupRow());
+    evAddRundownBtn?.addEventListener('click', () => appendRundownRow());
+
     function activateModalSubtab(subtab: string) {
       evSubtabBtns.forEach((b) => {
         const active = b.dataset.subtab === subtab;
         b.classList.toggle('bg-electric-magenta', active);
-        b.classList.toggle('text-soft-white', active);
+        b.classList.toggle('text-white', active);
         b.classList.toggle('font-bold', active);
-        b.classList.toggle('text-muted-gray', !active);
+        b.classList.toggle('text-neutral-600', !active);
+        b.classList.toggle('dark:text-muted-gray', !active);
       });
       evSubpanels.forEach((p) => p.classList.toggle('hidden', p.id !== `ev-subpanel-${subtab}`));
+      evModalFooter?.classList.toggle('hidden', subtab !== 'info');
+      if (subtab === 'info') venueMap.resize();
     }
     evSubtabBtns.forEach((b) => b.addEventListener('click', () => activateModalSubtab(b.dataset.subtab || 'info')));
 
     function closeEventModal() {
       evModal?.classList.add('hidden');
       evModal?.classList.remove('flex');
+      editingCategoryId = null;
+      editingVoucherId = null;
+      evEditCatForm?.classList.add('hidden');
+      evEditVoucherForm?.classList.add('hidden');
     }
     closeEvModalBtn?.addEventListener('click', closeEventModal);
+    cancelEvModalBtn?.addEventListener('click', closeEventModal);
+    evModal?.addEventListener('click', (e) => {
+      if (e.target === evModal) closeEventModal();
+    });
+
+    const onEscClose = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && evModal && !evModal.classList.contains('hidden')) {
+        closeEventModal();
+      }
+    };
+    document.addEventListener('keydown', onEscClose);
 
     openCreateBtn?.addEventListener('click', () => openEventModal(null));
 
     async function openEventModal(evId: number | null) {
       editingEventId = evId;
       editingEventDetail = null;
+      editingCategoryId = null;
+      editingVoucherId = null;
+      evEditCatForm?.classList.add('hidden');
+      evEditVoucherForm?.classList.add('hidden');
       evModal?.classList.remove('hidden');
       evModal?.classList.add('flex');
       document.getElementById('ev-info-feedback')?.classList.add('hidden');
       document.getElementById('ev-poster-msg')?.classList.add('hidden');
+      document.getElementById('cat-feedback')?.classList.add('hidden');
+      document.getElementById('vch-feedback')?.classList.add('hidden');
       activateModalSubtab('info');
 
       if (!evId) {
@@ -955,18 +1404,24 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         posterBox?.classList.add('hidden');
         evSubmitReviewBtn?.classList.add('hidden');
         evInfoForm?.reset();
+        if (evLineupRowsEl) evLineupRowsEl.innerHTML = '';
+        if (evRundownRowsEl) evRundownRowsEl.innerHTML = '';
+        appendLineupRow();
+        appendRundownRow({ time: '18:00 WIB', title: 'Open Gate', description: 'Penukaran gelang digital & akses arena' });
         (document.getElementById('ev-f-lokasi') as HTMLInputElement).value = '-6.2186,106.8026';
         (document.getElementById('ev-f-cap') as HTMLInputElement).value = '5000';
         const d1 = new Date(Date.now() + 14 * 86400000);
         const d2 = new Date(d1.getTime() + 4 * 3600000);
         (document.getElementById('ev-f-start') as HTMLInputElement).value = toLocalInputValue(d1.toISOString());
         (document.getElementById('ev-f-end') as HTMLInputElement).value = toLocalInputValue(d2.toISOString());
+        venueMap.syncFromInput(false);
         return;
       }
 
       if (evModalTitle) evModalTitle.textContent = `STUDIO KONSER #${evId}`;
       evModalSubtabs?.classList.remove('hidden');
       posterBox?.classList.remove('hidden');
+      venueMap.resize();
       await hydrateModalEventDetail(evId);
     }
 
@@ -980,13 +1435,27 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         (document.getElementById('ev-f-artis') as HTMLInputElement).value = detail.artis || '';
         (document.getElementById('ev-f-alamat') as HTMLInputElement).value = detail.alamat || '';
         (document.getElementById('ev-f-lokasi') as HTMLInputElement).value = detail.lat && detail.lng ? `${detail.lat},${detail.lng}` : '-6.2186,106.8026';
+        venueMap.syncFromInput(true);
         (document.getElementById('ev-f-start') as HTMLInputElement).value = toLocalInputValue(detail.tanggal_mulai);
         (document.getElementById('ev-f-end') as HTMLInputElement).value = toLocalInputValue(detail.tanggal_selesai);
         (document.getElementById('ev-f-cap') as HTMLInputElement).value = String(detail.kapasitas_venue || 5000);
         (document.getElementById('ev-f-pin') as HTMLInputElement).value = detail.scanner_pin || '';
         (document.getElementById('ev-f-desc') as HTMLTextAreaElement).value = detail.deskripsi || '';
-        (document.getElementById('ev-f-facilities') as HTMLTextAreaElement).value = Array.isArray(detail.facilities) ? detail.facilities.join('\n') : '';
-        (document.getElementById('ev-f-rules') as HTMLTextAreaElement).value = Array.isArray(detail.rules) ? detail.rules.join('\n') : '';
+        (document.getElementById('ev-f-facilities') as HTMLTextAreaElement).value = parseJsonArrayField(detail.facilities).join('\n');
+        (document.getElementById('ev-f-rules') as HTMLTextAreaElement).value = parseJsonArrayField(detail.rules).join('\n');
+
+        if (evLineupRowsEl) {
+          evLineupRowsEl.innerHTML = '';
+          const lineups = parseJsonArrayField(detail.lineup);
+          if (lineups.length > 0) lineups.forEach((l: any) => appendLineupRow(l));
+          else appendLineupRow();
+        }
+        if (evRundownRowsEl) {
+          evRundownRowsEl.innerHTML = '';
+          const rundowns = parseJsonArrayField(detail.rundown);
+          if (rundowns.length > 0) rundowns.forEach((r: any) => appendRundownRow(r));
+          else appendRundownRow();
+        }
 
         const canSubmit = detail.status === 'draft' || detail.status === 'rejected';
         evSubmitReviewBtn?.classList.toggle('hidden', !canSubmit);
@@ -1010,6 +1479,8 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         .split('\n').map((s) => s.trim()).filter(Boolean);
       const rules = (document.getElementById('ev-f-rules') as HTMLTextAreaElement).value
         .split('\n').map((s) => s.trim()).filter(Boolean);
+      const lineup = readLineupRows();
+      const rundown = readRundownRows();
 
       const payload: any = {
         nama_event: (document.getElementById('ev-f-name') as HTMLInputElement).value.trim(),
@@ -1021,8 +1492,10 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         kapasitas_venue: Number((document.getElementById('ev-f-cap') as HTMLInputElement).value || 5000),
         deskripsi: (document.getElementById('ev-f-desc') as HTMLTextAreaElement).value.trim(),
         ...(pinVal ? { scanner_pin: pinVal } : {}),
-        ...(facilities.length > 0 ? { facilities } : {}),
-        ...(rules.length > 0 ? { rules } : {}),
+        ...(editingEventId || lineup.length > 0 ? { lineup } : {}),
+        ...(editingEventId || rundown.length > 0 ? { rundown } : {}),
+        ...(editingEventId || facilities.length > 0 ? { facilities } : {}),
+        ...(editingEventId || rules.length > 0 ? { rules } : {}),
       };
 
       if (btn) btn.disabled = true;
@@ -1090,21 +1563,24 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       if (!evCategoriesList) return;
       const cats = Array.isArray(detail.categories) ? detail.categories : [];
       if (cats.length === 0) {
-        evCategoriesList.innerHTML = `<p class="text-xs font-mono text-muted-gray">Belum ada kategori tiket. Tambahkan di formulir bawah.</p>`;
+        evCategoriesList.innerHTML = `<p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Belum ada kategori tiket. Tambahkan di formulir bawah.</p>`;
         return;
       }
       evCategoriesList.innerHTML = cats
         .map(
           (c: any) => `
-          <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs">
             <div>
-              <strong class="text-soft-white text-sm">${escapeHtml(c.nama_kategori)}</strong>
-              <span class="block font-mono text-muted-gray mt-0.5">
-                ${escapeHtml(formatRupiah(c.harga))} • Sisa ${Number(c.kuota_tersedia)} / ${Number(c.kuota_total)} • Maks ${Number(c.max_per_transaksi ?? 4)}/akun
+              <strong class="text-neutral-950 dark:text-soft-white text-sm">${escapeHtml(c.nama_kategori)}</strong>
+              <span class="block font-mono text-neutral-600 dark:text-muted-gray mt-0.5">
+                ${escapeHtml(formatRupiah(c.harga))} • Sisa ${Number(c.kuota_tersedia)} / ${Number(c.kuota_total)} • Komplimen ${Number(c.kuota_komplimen || 0)} • Maks ${Number(c.max_per_transaksi ?? 4)}/akun
               </span>
             </div>
             <div class="flex items-center gap-2">
-              <button type="button" data-del-cat="${c.id}" class="px-3 py-1.5 rounded-lg bg-red-500/15 border border-red-500/30 text-red-300 font-mono text-[11px]">
+              <button type="button" data-edit-cat="${c.id}" class="px-3 py-1.5 rounded-lg bg-white dark:bg-white/10 border border-neutral-200 dark:border-transparent text-neutral-800 dark:text-soft-white font-mono text-[11px]">
+                Edit
+              </button>
+              <button type="button" data-del-cat="${c.id}" class="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-500/15 border border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300 font-mono text-[11px]">
                 Hapus
               </button>
             </div>
@@ -1114,16 +1590,70 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         .join('');
     }
 
+    document.getElementById('edit-cat-cancel-btn')?.addEventListener('click', () => {
+      editingCategoryId = null;
+      evEditCatForm?.classList.add('hidden');
+    });
+
     evCategoriesList?.addEventListener('click', async (e) => {
-      const btn = (e.target as HTMLElement).closest('[data-del-cat]') as HTMLButtonElement | null;
+      const target = e.target as HTMLElement;
+      const editBtn = target.closest('[data-edit-cat]') as HTMLButtonElement | null;
+      if (editBtn && editingEventDetail) {
+        const catId = Number(editBtn.dataset.editCat);
+        const cat = (editingEventDetail.categories || []).find((x: any) => Number(x.id) === catId);
+        if (!cat) return;
+        editingCategoryId = catId;
+        const label = document.getElementById('edit-cat-id-label');
+        if (label) label.textContent = String(catId);
+        (document.getElementById('edit-cat-f-name') as HTMLInputElement).value = cat.nama_kategori || '';
+        const priceEl = document.getElementById('edit-cat-f-price') as HTMLInputElement;
+        priceEl.value = String(Number(cat.harga || 0));
+        const priceLocked = editingEventDetail.status !== 'draft' && editingEventDetail.status !== 'rejected';
+        priceEl.disabled = priceLocked;
+        document.getElementById('edit-cat-price-lock-note')?.classList.toggle('hidden', !priceLocked);
+        (document.getElementById('edit-cat-f-quota') as HTMLInputElement).value = String(Number(cat.kuota_total || 1));
+        (document.getElementById('edit-cat-f-compliment') as HTMLInputElement).value = String(Number(cat.kuota_komplimen || 0));
+        (document.getElementById('edit-cat-f-max') as HTMLInputElement).value = String(Number(cat.max_per_transaksi ?? 4));
+        evEditCatForm?.classList.remove('hidden');
+        return;
+      }
+
+      const btn = target.closest('[data-del-cat]') as HTMLButtonElement | null;
       if (!btn || !editingEventId) return;
       const catId = Number(btn.dataset.delCat);
       if (!confirm('Hapus kategori tiket ini?')) return;
       try {
         await api.delete(`/events/${editingEventId}/categories/${catId}`);
         await hydrateModalEventDetail(editingEventId);
+        await loadOrganizerEvents();
       } catch (err: any) {
         showInlineMsg(document.getElementById('cat-feedback'), err?.message || 'Gagal menghapus kategori.', true);
+      }
+    });
+
+    evEditCatForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!editingEventId || !editingCategoryId) return;
+      const fb = document.getElementById('cat-feedback');
+      const priceEl = document.getElementById('edit-cat-f-price') as HTMLInputElement;
+      const payload: any = {
+        nama_kategori: (document.getElementById('edit-cat-f-name') as HTMLInputElement).value.trim(),
+        kuota_total: Number((document.getElementById('edit-cat-f-quota') as HTMLInputElement).value),
+        kuota_komplimen: Number((document.getElementById('edit-cat-f-compliment') as HTMLInputElement).value || 0),
+        max_per_transaksi: Number((document.getElementById('edit-cat-f-max') as HTMLInputElement).value || 4),
+      };
+      if (!priceEl.disabled) {
+        payload.harga = Number(priceEl.value);
+      }
+      try {
+        await api.patch(`/events/${editingEventId}/categories/${editingCategoryId}`, payload);
+        editingCategoryId = null;
+        evEditCatForm.classList.add('hidden');
+        showInlineMsg(fb, 'Kategori tiket berhasil diperbarui!');
+        await hydrateModalEventDetail(editingEventId);
+        await loadOrganizerEvents();
+      } catch (err: any) {
+        showInlineMsg(fb, err?.message || 'Gagal memperbarui kategori.', true);
       }
     });
 
@@ -1136,9 +1666,11 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           nama_kategori: (document.getElementById('cat-f-name') as HTMLInputElement).value.trim(),
           harga: Number((document.getElementById('cat-f-price') as HTMLInputElement).value),
           kuota_total: Number((document.getElementById('cat-f-quota') as HTMLInputElement).value),
+          kuota_komplimen: Number((document.getElementById('cat-f-compliment') as HTMLInputElement).value || 0),
           max_per_transaksi: Number((document.getElementById('cat-f-max') as HTMLInputElement).value || 4),
         });
         evAddCatForm.reset();
+        (document.getElementById('cat-f-compliment') as HTMLInputElement).value = '0';
         (document.getElementById('cat-f-max') as HTMLInputElement).value = '4';
         showInlineMsg(fb, 'Kategori tiket ditambahkan!');
         await hydrateModalEventDetail(editingEventId);
@@ -1148,30 +1680,38 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       }
     });
 
+    let modalVouchersCache: any[] = [];
     async function loadModalVouchers(evId: number) {
       if (!evVouchersList) return;
       try {
         const list = await api.get<any[]>(`/events/${evId}/vouchers`);
         const rows = Array.isArray(list) ? list : [];
+        modalVouchersCache = rows;
         if (rows.length === 0) {
-          evVouchersList.innerHTML = `<p class="text-xs font-mono text-muted-gray">Belum ada voucher diskon untuk event ini.</p>`;
+          evVouchersList.innerHTML = `<p class="text-xs font-mono text-neutral-600 dark:text-muted-gray">Belum ada voucher diskon untuk event ini.</p>`;
           return;
         }
         evVouchersList.innerHTML = rows
           .map((v) => {
             const discText = v.diskon_persen ? `${v.diskon_persen}%` : formatRupiah(v.diskon_nominal || 0);
+            const maxCap = Number(v.max_diskon || 0) > 0 ? ` • Maks ${formatRupiah(v.max_diskon)}` : '';
             return `
-              <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+              <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
                 <div>
                   <strong class="text-electric-magenta text-sm">${escapeHtml(v.kode_voucher)}</strong>
-                  <span class="ml-2 px-2 py-0.5 rounded text-[10px] ${v.is_active ? 'bg-emerald-500/20 text-emerald-300' : 'bg-white/10 text-muted-gray'}">${v.is_active ? 'AKTIF' : 'NONAKTIF'}</span>
-                  <span class="block text-muted-gray mt-1">Potongan: ${escapeHtml(discText)} • Terpakai ${Number(v.kuota_terpakai || 0)}/${Number(v.kuota_total)}</span>
+                  <span class="ml-2 px-2 py-0.5 rounded text-[10px] ${v.is_active ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300' : 'bg-neutral-200 dark:bg-white/10 text-neutral-600 dark:text-muted-gray'}">${v.is_active ? 'AKTIF' : 'NONAKTIF'}</span>
+                  <span class="block text-neutral-600 dark:text-muted-gray mt-1">
+                    Potongan: ${escapeHtml(discText)}${escapeHtml(maxCap)} • Terpakai ${Number(v.kuota_terpakai || 0)}/${Number(v.kuota_total)} • s.d. ${escapeHtml(formatDateIndo(v.berlaku_sampai, { showTime: false }))}
+                  </span>
                 </div>
                 <div class="flex items-center gap-2">
-                  <button type="button" data-toggle-vch="${v.id}" data-active="${v.is_active ? '1' : '0'}" class="px-3 py-1.5 rounded-lg bg-white/10 text-soft-white">
+                  <button type="button" data-edit-vch="${v.id}" class="px-3 py-1.5 rounded-lg bg-white dark:bg-white/10 border border-neutral-200 dark:border-transparent text-neutral-800 dark:text-soft-white">
+                    Edit
+                  </button>
+                  <button type="button" data-toggle-vch="${v.id}" data-active="${v.is_active ? '1' : '0'}" class="px-3 py-1.5 rounded-lg bg-white dark:bg-white/10 border border-neutral-200 dark:border-transparent text-neutral-800 dark:text-soft-white">
                     ${v.is_active ? 'Nonaktifkan' : 'Aktifkan'}
                   </button>
-                  <button type="button" data-del-vch="${v.id}" class="px-3 py-1.5 rounded-lg bg-red-500/15 text-red-300">
+                  <button type="button" data-del-vch="${v.id}" class="px-3 py-1.5 rounded-lg bg-red-50 dark:bg-red-500/15 text-red-700 dark:text-red-300">
                     Hapus
                   </button>
                 </div>
@@ -1182,9 +1722,31 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       } catch {}
     }
 
+    document.getElementById('edit-vch-cancel-btn')?.addEventListener('click', () => {
+      editingVoucherId = null;
+      evEditVoucherForm?.classList.add('hidden');
+    });
+
     evVouchersList?.addEventListener('click', async (e) => {
       if (!editingEventId) return;
-      const toggleBtn = (e.target as HTMLElement).closest('[data-toggle-vch]') as HTMLButtonElement | null;
+      const target = e.target as HTMLElement;
+      const editBtn = target.closest('[data-edit-vch]') as HTMLButtonElement | null;
+      if (editBtn) {
+        const vid = Number(editBtn.dataset.editVch);
+        const v = modalVouchersCache.find((item) => Number(item.id) === vid);
+        if (!v) return;
+        editingVoucherId = vid;
+        const lbl = document.getElementById('edit-vch-code-label');
+        if (lbl) lbl.textContent = String(v.kode_voucher || '');
+        (document.getElementById('edit-vch-f-quota') as HTMLInputElement).value = String(Number(v.kuota_total || 1));
+        (document.getElementById('edit-vch-f-min') as HTMLInputElement).value = String(Number(v.min_transaksi || 0));
+        (document.getElementById('edit-vch-f-max-disc') as HTMLInputElement).value = String(Number(v.max_diskon || 0));
+        (document.getElementById('edit-vch-f-end') as HTMLInputElement).value = toLocalInputValue(v.berlaku_sampai);
+        evEditVoucherForm?.classList.remove('hidden');
+        return;
+      }
+
+      const toggleBtn = target.closest('[data-toggle-vch]') as HTMLButtonElement | null;
       if (toggleBtn) {
         const vid = Number(toggleBtn.dataset.toggleVch);
         const curActive = toggleBtn.dataset.active === '1';
@@ -1197,7 +1759,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         return;
       }
 
-      const delBtn = (e.target as HTMLElement).closest('[data-del-vch]') as HTMLButtonElement | null;
+      const delBtn = target.closest('[data-del-vch]') as HTMLButtonElement | null;
       if (delBtn) {
         const vid = Number(delBtn.dataset.delVch);
         if (!confirm('Hapus voucher ini? (Hanya bisa dihapus bila pemakaian 0)')) return;
@@ -1210,12 +1772,34 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       }
     });
 
+    evEditVoucherForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!editingEventId || !editingVoucherId) return;
+      const fb = document.getElementById('vch-feedback');
+      const endVal = (document.getElementById('edit-vch-f-end') as HTMLInputElement).value;
+      try {
+        await api.patch(`/events/${editingEventId}/vouchers/${editingVoucherId}`, {
+          kuota_total: Number((document.getElementById('edit-vch-f-quota') as HTMLInputElement).value),
+          min_transaksi: Number((document.getElementById('edit-vch-f-min') as HTMLInputElement).value || 0),
+          max_diskon: Number((document.getElementById('edit-vch-f-max-disc') as HTMLInputElement).value || 0),
+          berlaku_sampai: new Date(endVal).toISOString(),
+        });
+        editingVoucherId = null;
+        evEditVoucherForm.classList.add('hidden');
+        showInlineMsg(fb, 'Voucher berhasil diperbarui!');
+        await loadModalVouchers(editingEventId);
+      } catch (err: any) {
+        showInlineMsg(fb, err?.message || 'Gagal memperbarui voucher.', true);
+      }
+    });
+
     evAddVoucherForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!editingEventId) return;
       const fb = document.getElementById('vch-feedback');
       const vType = (document.getElementById('vch-f-type') as HTMLSelectElement).value;
       const vVal = Number((document.getElementById('vch-f-val') as HTMLInputElement).value);
+      const maxDiscVal = Number((document.getElementById('vch-f-max-disc') as HTMLInputElement).value || 0);
       const startVal = (document.getElementById('vch-f-start') as HTMLInputElement).value;
       const endVal = (document.getElementById('vch-f-end') as HTMLInputElement).value;
 
@@ -1225,9 +1809,13 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           ...(vType === 'persen' ? { diskon_persen: vVal } : { diskon_nominal: vVal }),
           kuota_total: Number((document.getElementById('vch-f-quota') as HTMLInputElement).value),
           min_transaksi: Number((document.getElementById('vch-f-min') as HTMLInputElement).value || 0),
+          ...(maxDiscVal > 0 ? { max_diskon: maxDiscVal } : {}),
           berlaku_mulai: new Date(startVal).toISOString(),
           berlaku_sampai: new Date(endVal).toISOString(),
         });
+        evAddVoucherForm.reset();
+        (document.getElementById('vch-f-quota') as HTMLInputElement).value = '50';
+        (document.getElementById('vch-f-min') as HTMLInputElement).value = '0';
         showInlineMsg(fb, 'Voucher diskon berhasil dibuat!');
         await loadModalVouchers(editingEventId);
       } catch (err: any) {
@@ -1235,7 +1823,45 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       }
     });
 
-    // TAB 3: GATE & ATTENDANCE
+    // TAB 4: GATE & ATTENDANCE
+    function paintGatePinUi() {
+      if (!gateCurrentPinEl || !gateTogglePinBtn) return;
+      if (!currentGatePinValue) {
+        gateCurrentPinEl.textContent = '(Belum diatur / Default)';
+        gateTogglePinBtn.classList.add('hidden');
+        return;
+      }
+      gateTogglePinBtn.classList.remove('hidden');
+      gateCurrentPinEl.textContent = isGatePinVisible ? currentGatePinValue : '••••••';
+      gateTogglePinBtn.textContent = isGatePinVisible ? 'Sembunyikan' : 'Tampilkan';
+    }
+
+    gateTogglePinBtn?.addEventListener('click', () => {
+      isGatePinVisible = !isGatePinVisible;
+      paintGatePinUi();
+    });
+
+    gatePinForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const evId = Number(gateEventSelect?.value || 0);
+      const nextPin = gateNewPinInput?.value.trim() || '';
+      if (!evId || nextPin.length < 4) return;
+      const saveBtn = document.getElementById('gate-pin-save-btn') as HTMLButtonElement | null;
+      if (saveBtn) saveBtn.disabled = true;
+      try {
+        await api.patch(`/events/${evId}`, { scanner_pin: nextPin });
+        currentGatePinValue = nextPin;
+        isGatePinVisible = true;
+        paintGatePinUi();
+        if (gateNewPinInput) gateNewPinInput.value = '';
+        showInlineMsg(gatePinFeedback, `PIN Gate Scanner Event #${evId} diperbarui!`);
+      } catch (err: any) {
+        showInlineMsg(gatePinFeedback, err?.message || 'Gagal memperbarui PIN Gate.', true);
+      } finally {
+        if (saveBtn) saveBtn.disabled = false;
+      }
+    });
+
     async function loadGateTab() {
       if (!gateEventSelect) return;
       try {
@@ -1244,6 +1870,8 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         const rows = Array.isArray(events) ? events : [];
         if (rows.length === 0) {
           gateEventSelect.innerHTML = `<option value="">Belum ada konser</option>`;
+          currentGatePinValue = '';
+          paintGatePinUi();
           return;
         }
         gateEventSelect.innerHTML = rows
@@ -1256,53 +1884,92 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     async function renderGateAttendance(evId: number) {
       if (!evId || !gateAttendanceBox) return;
       if (gateScannerLink) gateScannerLink.href = `/scanner?event_id=${evId}`;
+      gatePinFeedback?.classList.add('hidden');
       try {
-        const data = await api.get<any>(`/organizer/events/${evId}/attendance`);
+        const [data, evDetail] = await Promise.all([
+          api.get<any>(`/organizer/events/${evId}/attendance`),
+          api.get<any>(`/events/${evId}`).catch(() => null),
+        ]);
         if (isDisposed) return;
+        currentGatePinValue = evDetail?.scanner_pin || '';
+        isGatePinVisible = false;
+        paintGatePinUi();
+
         const s = data.summary || {};
+        const breakdown = Array.isArray(data.gate_breakdown) ? data.gate_breakdown : [];
         const checkins = Array.isArray(data.recent_checkins) ? data.recent_checkins : [];
+        const totalScannedForBars = Math.max(1, breakdown.reduce((acc: number, g: any) => acc + Number(g.count || 0), 0));
+
+        const breakdownHtml =
+          breakdown.length === 0
+            ? `<p class="text-xs font-mono text-neutral-500 dark:text-muted-gray">Belum ada log masuk per gate untuk event ini.</p>`
+            : breakdown
+                .map((g: any) => {
+                  const pct = Math.min(100, Math.round((Number(g.count || 0) / totalScannedForBars) * 100));
+                  return `
+                  <div class="space-y-1">
+                    <div class="flex justify-between text-[11px] font-mono">
+                      <span class="text-neutral-900 dark:text-soft-white font-bold">${escapeHtml(g.gate || 'Main Gate')}</span>
+                      <span class="text-electric-magenta">${Number(g.count || 0)} tiket (${pct}%)</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-neutral-200 dark:bg-void-black overflow-hidden">
+                      <div class="h-full bg-electric-magenta rounded-full" style="width: ${pct}%;"></div>
+                    </div>
+                  </div>
+                `;
+                })
+                .join('');
 
         gateAttendanceBox.innerHTML = `
           <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10">
-              <span class="text-[10px] font-mono text-muted-gray block">TOTAL TIKET</span>
-              <strong class="font-display text-3xl text-soft-white">${Number(s.total_tickets || 0)}</strong>
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10">
+              <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block">TOTAL TIKET</span>
+              <strong class="font-display text-3xl text-neutral-950 dark:text-soft-white">${Number(s.total_tickets || 0)}</strong>
             </div>
-            <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10">
-              <span class="text-[10px] font-mono text-muted-gray block">CHECK-IN</span>
-              <strong class="font-display text-3xl text-emerald-400">${Number(s.checked_in || 0)}</strong>
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10">
+              <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block">CHECK-IN</span>
+              <strong class="font-display text-3xl text-emerald-600 dark:text-emerald-400">${Number(s.checked_in || 0)}</strong>
             </div>
-            <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10">
-              <span class="text-[10px] font-mono text-muted-gray block">BELUM MASUK</span>
-              <strong class="font-display text-3xl text-soft-white">${Number(s.remaining || 0)}</strong>
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10">
+              <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block">BELUM MASUK</span>
+              <strong class="font-display text-3xl text-neutral-950 dark:text-soft-white">${Number(s.remaining || 0)}</strong>
             </div>
-            <div class="p-4 rounded-2xl bg-void-black/70 border border-white/10">
-              <span class="text-[10px] font-mono text-muted-gray block">KEHADIRAN</span>
+            <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/70 border border-neutral-200 dark:border-white/10">
+              <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray block">KEHADIRAN</span>
               <strong class="font-display text-3xl text-electric-magenta">${Number(s.checkin_percentage || 0)}%</strong>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/50 border border-neutral-200 dark:border-white/10 space-y-3">
+            <span class="text-[10px] font-mono uppercase tracking-wider text-electric-magenta font-bold block">DISTRIBUSI CHECK-IN PER GATE PINTU</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              ${breakdownHtml}
             </div>
           </div>
 
           <div class="overflow-x-auto pt-2">
             <table class="w-full text-xs font-mono">
               <thead>
-                <tr class="text-left text-muted-gray border-b border-white/10">
+                <tr class="text-left text-neutral-500 dark:text-muted-gray border-b border-neutral-200 dark:border-white/10">
                   <th class="pb-2">WAKTU</th>
                   <th class="pb-2">KODE TIKET</th>
                   <th class="pb-2">PEMEGANG</th>
                   <th class="pb-2">KATEGORI</th>
                   <th class="pb-2">GATE</th>
+                  <th class="pb-2">PETUGAS</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-white/5">
+              <tbody class="divide-y divide-neutral-200 dark:divide-white/5">
                 ${checkins.length === 0
-                  ? `<tr><td colspan="5" class="py-5 text-center text-muted-gray">Belum ada penonton yang dipindai pada konser ini.</td></tr>`
+                  ? `<tr><td colspan="6" class="py-5 text-center text-neutral-500 dark:text-muted-gray">Belum ada penonton yang dipindai pada konser ini.</td></tr>`
                   : checkins.map((c: any) => `
                     <tr>
-                      <td class="py-2.5 text-muted-gray">${escapeHtml(formatDateIndo(c.scanned_at))}</td>
-                      <td class="py-2.5 text-soft-white font-bold">${escapeHtml(c.ticket_code)}</td>
-                      <td class="py-2.5 text-soft-white">${escapeHtml(c.owner_name)}</td>
+                      <td class="py-2.5 text-neutral-600 dark:text-muted-gray">${escapeHtml(formatDateIndo(c.scanned_at))}</td>
+                      <td class="py-2.5 text-neutral-950 dark:text-soft-white font-bold">${escapeHtml(c.ticket_code)}</td>
+                      <td class="py-2.5 text-neutral-950 dark:text-soft-white">${escapeHtml(c.owner_name)}</td>
                       <td class="py-2.5 text-electric-magenta">${escapeHtml(c.nama_kategori)}</td>
-                      <td class="py-2.5 text-muted-gray">${escapeHtml(c.gate || 'Main Gate')}</td>
+                      <td class="py-2.5 text-neutral-600 dark:text-muted-gray">${escapeHtml(c.gate || 'Main Gate')}</td>
+                      <td class="py-2.5 text-neutral-700 dark:text-soft-white">${escapeHtml(c.scanned_by_name || '-')}</td>
                     </tr>
                   `).join('')}
               </tbody>
@@ -1310,7 +1977,7 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           </div>
         `;
       } catch (err: any) {
-        gateAttendanceBox.innerHTML = `<p class="text-xs font-mono text-red-300">${escapeHtml(err?.message || 'Gagal memuat absensi gate.')}</p>`;
+        gateAttendanceBox.innerHTML = `<p class="text-xs font-mono text-red-700 dark:text-red-300">${escapeHtml(err?.message || 'Gagal memuat absensi gate.')}</p>`;
       }
     }
 
@@ -1328,14 +1995,46 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
       }
     });
 
-    // TAB 4: FINANCE & PAYOUTS
+    // TAB 5: FINANCE & PAYOUTS
+    function updatePayoutEventHint() {
+      if (!payoutEventSelect || !payoutEventHint || !payoutSubmitBtn) return;
+      const evId = Number(payoutEventSelect.value || 0);
+      const fin = eventFinancialsMap.get(evId);
+      if (!fin) {
+        payoutEventHint.classList.add('hidden');
+        payoutSubmitBtn.disabled = currentBankCooldown;
+        return;
+      }
+      const avail = Number(fin.payout_available || 0);
+      const eligible = Boolean(fin.is_payout_eligible);
+      payoutEventHint.classList.remove('hidden');
+      if (!eligible) {
+        payoutEventHint.innerHTML = `
+          <span class="text-amber-700 dark:text-amber-300">Status event "${escapeHtml(fin.status)}" belum dirilis escrow H+1. Payout terbuka setelah konser selesai & settle.</span>
+        `;
+        payoutSubmitBtn.disabled = true;
+      } else {
+        payoutEventHint.innerHTML = `
+          <span class="text-neutral-700 dark:text-soft-white">Dana siap cair untuk event ini: <strong class="text-emerald-600 dark:text-emerald-400">${escapeHtml(formatRupiah(avail))}</strong></span>
+          ${avail >= 50000 ? `<button type="button" id="payout-fill-max-btn" class="px-2.5 py-1 rounded-lg bg-electric-magenta/10 text-electric-magenta font-bold hover:bg-electric-magenta hover:text-white transition-colors">Isi Maksimal</button>` : ''}
+        `;
+        document.getElementById('payout-fill-max-btn')?.addEventListener('click', () => {
+          if (payoutAmountInput) payoutAmountInput.value = String(Math.floor(avail));
+        });
+        payoutSubmitBtn.disabled = currentBankCooldown || avail < 50000;
+      }
+    }
+
+    payoutEventSelect?.addEventListener('change', updatePayoutEventHint);
+
     async function loadFinanceTab() {
       try {
-        const [profile, bal, events, payouts] = await Promise.all([
+        const [profile, bal, events, payouts, dash] = await Promise.all([
           api.get<any>('/organizer/me'),
           api.get<any>('/organizer/balance'),
           api.get<any[]>('/events'),
           api.get<any[]>('/organizer/payouts'),
+          api.get<any>('/organizer/dashboard').catch(() => null),
         ]);
         if (isDisposed) return;
 
@@ -1349,7 +2048,8 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
         (document.getElementById('update-acc-number') as HTMLInputElement).value = profile?.account_number || '';
 
         const cooldown = profile?.bank_cooldown;
-        if (cooldown?.in_cooldown && finCooldownBanner && payoutSubmitBtn) {
+        currentBankCooldown = Boolean(cooldown?.in_cooldown);
+        if (currentBankCooldown && finCooldownBanner && payoutSubmitBtn) {
           finCooldownBanner.textContent = `Keamanan Akun Aktif: Penarikan dana dikunci sementara selama ${cooldown.hours_remaining} jam setelah perubahan rekening terakhir.`;
           finCooldownBanner.classList.remove('hidden');
           payoutSubmitBtn.disabled = true;
@@ -1358,27 +2058,39 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
           if (payoutSubmitBtn) payoutSubmitBtn.disabled = false;
         }
 
-        if (payoutEventSelect && Array.isArray(events)) {
+        eventFinancialsMap.clear();
+        const financials = Array.isArray(dash?.event_financials) ? dash.event_financials : [];
+        financials.forEach((ef: any) => eventFinancialsMap.set(Number(ef.event_id), ef));
+
+        if (payoutEventSelect) {
+          const evOptionsSource = financials.length > 0 ? financials : Array.isArray(events) ? events : [];
           payoutEventSelect.innerHTML =
-            events.length === 0
+            evOptionsSource.length === 0
               ? `<option value="">Belum ada event</option>`
-              : events.map((ev) => `<option value="${ev.id}">#${ev.id} — ${escapeHtml(ev.nama_event)} (${escapeHtml(ev.status)})</option>`).join('');
+              : evOptionsSource
+                  .map((ev: any) => {
+                    const id = ev.event_id ?? ev.id;
+                    const availStr = ev.payout_available !== undefined ? ` • Tersedia ${formatRupiah(ev.payout_available)}` : '';
+                    return `<option value="${id}">#${id} — ${escapeHtml(ev.nama_event)} (${escapeHtml(ev.status)})${escapeHtml(availStr)}</option>`;
+                  })
+                  .join('');
+          updatePayoutEventHint();
         }
 
         if (payoutHistoryTbody) {
           const rows = Array.isArray(payouts) ? payouts : [];
           payoutHistoryTbody.innerHTML =
             rows.length === 0
-              ? `<tr><td colspan="5" class="py-6 text-center text-muted-gray">Belum ada riwayat penarikan dana.</td></tr>`
+              ? `<tr><td colspan="5" class="py-6 text-center text-neutral-500 dark:text-muted-gray">Belum ada riwayat penarikan dana.</td></tr>`
               : rows
                   .map(
                     (p: any) => `
                   <tr>
-                    <td class="py-3 text-muted-gray">${escapeHtml(formatDateIndo(p.created_at))}</td>
-                    <td class="py-3 text-soft-white">${escapeHtml(p.nama_event || `Event #${p.event_id}`)}</td>
-                    <td class="py-3 font-bold text-soft-white">${escapeHtml(formatRupiah(p.amount))}</td>
-                    <td class="py-3 uppercase font-bold ${p.status === 'completed' ? 'text-emerald-400' : p.status === 'failed' ? 'text-red-400' : 'text-amber-300'}">${escapeHtml(p.status)}</td>
-                    <td class="py-3 text-muted-gray">${escapeHtml(p.rejection_reason || p.reference_code || '-')}</td>
+                    <td class="py-3 text-neutral-600 dark:text-muted-gray">${escapeHtml(formatDateIndo(p.created_at))}</td>
+                    <td class="py-3 text-neutral-950 dark:text-soft-white">${escapeHtml(p.nama_event || `Event #${p.event_id}`)}</td>
+                    <td class="py-3 font-bold text-neutral-950 dark:text-soft-white">${escapeHtml(formatRupiah(p.amount))}</td>
+                    <td class="py-3 uppercase font-bold ${p.status === 'completed' ? 'text-emerald-600 dark:text-emerald-400' : p.status === 'failed' ? 'text-red-600 dark:text-red-400' : 'text-amber-600 dark:text-amber-300'}">${escapeHtml(p.status)}</td>
+                    <td class="py-3 text-neutral-600 dark:text-muted-gray">${escapeHtml(p.rejection_reason || p.reference_code || '-')}</td>
                   </tr>
                 `
                   )
@@ -1442,10 +2154,18 @@ const initialTab = ['overview', 'events', 'gate', 'finance'].includes(rawTab) ? 
     return () => {
       isDisposed = true;
       window.removeEventListener('afterglow-auth-changed', onAuthChanged);
+      document.removeEventListener('keydown', onEscClose);
+      venueMap.destroy();
     };
   }
 
   let orgCleanup: (() => void) | undefined;
+  document.addEventListener('astro:before-swap', () => {
+    if (orgCleanup) {
+      orgCleanup();
+      orgCleanup = undefined;
+    }
+  });
   document.addEventListener('astro:page-load', () => {
     if (orgCleanup) orgCleanup();
     orgCleanup = initOrganizerStudio();
