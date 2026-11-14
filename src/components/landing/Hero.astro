@@ -158,9 +158,9 @@
         <!-- 4. BACK COLLECTIBLE CARD (Click to Swap with Front Card) -->
         <div 
           id="hero-back-card"
-          class="absolute right-0 sm:right-4 lg:right-6 top-6 sm:top-8 w-[230px] sm:w-[270px] md:w-[300px] rounded-3xl bg-neutral-900 dark:bg-[#181119] border border-neutral-800 dark:border-white/15 shadow-2xl p-3 sm:p-4 rotate-6 hover:rotate-3 hover:scale-[1.02] transition-all duration-300 cursor-pointer z-10 group hover:shadow-magenta-glow"
+          class="absolute right-0 sm:right-4 lg:right-6 top-6 sm:top-8 w-[230px] sm:w-[270px] md:w-[300px] rounded-3xl bg-white dark:bg-[#181119] border border-neutral-200 dark:border-white/15 shadow-[0_20px_50px_-12px_rgba(18,12,17,0.16)] dark:shadow-2xl p-3 sm:p-4 rotate-6 hover:rotate-3 hover:scale-[1.02] transition-all duration-300 cursor-pointer z-10 group hover:shadow-magenta-glow"
         >
-          <div class="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-neutral-950 mb-3.5">
+          <div class="relative w-full aspect-[4/4.8] rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-950 mb-3.5">
             <img 
               id="back-card-img"
               src="https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1000&q=85" 
@@ -168,11 +168,11 @@
               class="w-full h-full object-cover filter brightness-95 contrast-110 group-hover:scale-105 transition-transform duration-500"
               loading="eager"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 dark:from-black/80 via-transparent to-transparent"></div>
           </div>
 
           <div class="flex flex-col gap-2">
-            <h3 id="back-card-title" class="text-sm sm:text-base font-bold text-soft-white tracking-tight truncate">
+            <h3 id="back-card-title" class="text-sm sm:text-base font-bold text-neutral-950 dark:text-soft-white tracking-tight truncate">
               Chroma Distortion: Hideout
             </h3>
 
@@ -181,17 +181,17 @@
                 <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-electric-magenta to-deep-magenta flex items-center justify-center text-[9px] text-white font-bold">
                   N
                 </div>
-                <span id="back-card-creator" class="text-xs text-muted-gray">@nocturne</span>
+                <span id="back-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray">@nocturne</span>
               </div>
 
-              <div class="flex items-center gap-1 text-soft-white text-xs font-semibold">
+              <div class="flex items-center gap-1 text-neutral-950 dark:text-soft-white text-xs font-semibold">
                 <span id="back-card-price">3 BNB</span>
               </div>
             </div>
 
-            <div class="flex items-center justify-between pt-1 border-t border-white/10 mt-1">
-              <span data-i18n="hero.stagePass" class="text-[10px] text-muted-gray uppercase font-mono">TIKET PANGGUNG</span>
-              <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/10 text-soft-white text-[11px] font-semibold">
+            <div class="flex items-center justify-between pt-1 border-t border-neutral-200 dark:border-white/10 mt-1">
+              <span data-i18n="hero.stagePass" class="text-[10px] text-neutral-500 dark:text-muted-gray uppercase font-mono">TIKET PANGGUNG</span>
+              <div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-neutral-100 dark:bg-white/10 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-soft-white text-[11px] font-semibold">
                 <svg class="w-3.5 h-3.5 text-electric-magenta" fill="currentColor" viewBox="0 0 20 20">
                   <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
                 </svg>
@@ -207,14 +207,14 @@
           <!-- Inner Flipper Container with Dedicated Pure CSS 3D Rotation -->
           <div 
             id="hero-card-flipper"
-            class="flipper-card relative w-full rounded-3xl shadow-[0_30px_70px_-15px_rgba(0,0,0,0.6)] dark:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.95)] cursor-pointer"
+            class="flipper-card relative w-full rounded-3xl shadow-[0_24px_60px_-15px_rgba(18,12,17,0.2)] dark:shadow-[0_30px_80px_-15px_rgba(0,0,0,0.95)] cursor-pointer"
           >
             
             <!-- A. FRONT FACE: Collectible Artwork & Clean Minimal Metadata (No Spoiler Hints) -->
-            <div class="face-front w-full rounded-3xl bg-neutral-950 dark:bg-[#0E080F] border border-neutral-800 dark:border-white/20 p-3.5 sm:p-4">
+            <div class="face-front w-full rounded-3xl bg-white dark:bg-[#0E080F] border border-neutral-200 dark:border-white/20 p-3.5 sm:p-4">
               
               <!-- Card Image Container -->
-              <div class="relative w-full aspect-[4/4.5] rounded-2xl overflow-hidden bg-neutral-900 mb-3.5">
+              <div class="relative w-full aspect-[4/4.5] rounded-2xl overflow-hidden bg-neutral-100 dark:bg-neutral-900 mb-3.5">
                 <img 
                   id="front-card-img"
                   src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=85" 
@@ -222,18 +222,18 @@
                   class="w-full h-full object-cover filter contrast-105"
                   loading="eager"
                 />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/45 dark:from-black/80 via-transparent to-transparent"></div>
                 
                 <!-- Live Authentic Badge Tag (Top Right) -->
-                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-md border border-white/20 flex items-center gap-1.5 pointer-events-none">
+                <div class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/85 dark:bg-black/60 backdrop-blur-md border border-white/60 dark:border-white/20 shadow-sm flex items-center gap-1.5 pointer-events-none">
                   <span class="w-1.5 h-1.5 rounded-full bg-electric-magenta animate-ping"></span>
-                  <span data-i18n="hero.authenticBadge" class="text-[10px] font-mono uppercase tracking-wider text-white">100% RESMI</span>
+                  <span data-i18n="hero.authenticBadge" class="text-[10px] font-mono uppercase tracking-wider text-neutral-950 dark:text-white font-semibold">100% RESMI</span>
                 </div>
               </div>
 
               <!-- Card Metadata Tray -->
               <div class="flex flex-col gap-2">
-                <h3 id="front-card-title" class="text-base sm:text-lg font-bold text-soft-white tracking-tight">
+                <h3 id="front-card-title" class="text-base sm:text-lg font-bold text-neutral-950 dark:text-soft-white tracking-tight">
                   Deadzone 13 Hideout
                 </h3>
 
@@ -245,15 +245,15 @@
                       class="w-full h-full object-cover"
                     />
                   </div>
-                  <span id="front-card-creator" class="text-xs text-muted-gray font-medium">@morteluns</span>
+                  <span id="front-card-creator" class="text-xs text-neutral-600 dark:text-muted-gray font-medium">@morteluns</span>
                 </div>
 
-                <div class="flex items-center justify-between pt-2 border-t border-white/10 mt-1">
+                <div class="flex items-center justify-between pt-2 border-t border-neutral-200 dark:border-white/10 mt-1">
                   <div>
-                    <span id="front-card-price" class="block text-sm sm:text-base font-extrabold text-soft-white tracking-tight">
+                    <span id="front-card-price" class="block text-sm sm:text-base font-extrabold text-neutral-950 dark:text-soft-white tracking-tight">
                       $ 0.49 BNB
                     </span>
-                    <span class="block text-[11px] font-mono text-muted-gray">
+                    <span class="block text-[11px] font-mono text-neutral-500 dark:text-muted-gray">
                       ~$140.05
                     </span>
                   </div>
@@ -263,7 +263,7 @@
                     type="button"
                     id="hero-card-like-btn" 
                     aria-label="Like Stage Pass" 
-                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-soft-white text-xs font-semibold transition-all duration-200 active:scale-95"
+                    class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-neutral-100 hover:bg-neutral-200/80 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-white/15 dark:text-soft-white text-xs font-semibold transition-all duration-200 active:scale-95"
                   >
                     <svg id="hero-card-heart-icon" class="w-4 h-4 text-electric-magenta transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -276,31 +276,31 @@
             </div>
 
             <!-- B. BACK FACE (REVEALED ON CLICK FLIP): Technical VIP Gate QR Stub -->
-            <div class="face-back absolute inset-0 w-full h-full rounded-3xl bg-[#140C15] border-2 border-electric-magenta/70 shadow-magenta-glow p-5 flex flex-col justify-between overflow-hidden">
+            <div class="face-back absolute inset-0 w-full h-full rounded-3xl bg-white dark:bg-[#140C15] border-2 border-electric-magenta/70 shadow-xl dark:shadow-magenta-glow p-5 flex flex-col justify-between overflow-hidden">
               
               <!-- Ambient Holographic Foil Sheen Line -->
-              <div class="absolute -inset-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent transform rotate-45 pointer-events-none animate-[pulse_3s_infinite]"></div>
+              <div class="absolute -inset-full bg-gradient-to-r from-transparent via-electric-magenta/[0.06] dark:via-white/[0.08] to-transparent transform rotate-45 pointer-events-none animate-[pulse_3s_infinite]"></div>
 
               <!-- Stub Top Bar -->
-              <div class="relative z-10 flex items-center justify-between pb-3 border-b border-white/10">
+              <div class="relative z-10 flex items-center justify-between pb-3 border-b border-neutral-200 dark:border-white/10">
                 <div class="flex items-center gap-2">
                   <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta shadow-magenta-glow animate-ping"></span>
-                  <span data-i18n="hero.vipPassTitle" class="font-display text-xl text-soft-white tracking-wider">TIKET MASUK VIP</span>
+                  <span data-i18n="hero.vipPassTitle" class="font-display text-xl text-neutral-950 dark:text-soft-white tracking-wider">TIKET MASUK VIP</span>
                 </div>
-                <span data-i18n="hero.vipBarricade" class="px-2 py-0.5 rounded-full bg-electric-magenta/20 border border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase">
+                <span data-i18n="hero.vipBarricade" class="px-2 py-0.5 rounded-full bg-electric-magenta/10 dark:bg-electric-magenta/20 border border-electric-magenta/30 dark:border-electric-magenta/40 text-[10px] font-mono font-bold text-electric-magenta uppercase">
                   VIP FESTIVAL PIT
                 </span>
               </div>
 
               <!-- Animated Dynamic QR Code Container with Laser Scanning Line -->
-              <div class="relative z-10 my-auto flex flex-col items-center justify-center p-4 rounded-2xl bg-black/60 border border-white/10 backdrop-blur-sm">
+              <div class="relative z-10 my-auto flex flex-col items-center justify-center p-4 rounded-2xl bg-neutral-50 dark:bg-black/60 border border-neutral-200 dark:border-white/10 backdrop-blur-sm">
                 <!-- QR Code SVG -->
                 <div class="relative w-32 h-32 flex items-center justify-center">
                   <!-- Laser Scan Beam Line -->
                   <div class="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-electric-magenta to-transparent shadow-[0_0_12px_#D14D91] animate-[bounce_2s_infinite]"></div>
                   
                   <!-- Technical QR Vector -->
-                  <svg class="w-full h-full text-soft-white" viewBox="0 0 100 100" fill="currentColor">
+                  <svg class="w-full h-full text-neutral-950 dark:text-soft-white" viewBox="0 0 100 100" fill="currentColor">
                     <!-- Corner anchors -->
                     <rect x="5" y="5" width="25" height="25" rx="3" fill="none" stroke="currentColor" stroke-width="4"/>
                     <rect x="11" y="11" width="13" height="13" fill="#D14D91"/>
@@ -332,31 +332,31 @@
 
                 <!-- Dynamic Security Hash -->
                 <div class="mt-2 text-center">
-                  <span class="block font-mono text-[9px] text-muted-gray tracking-widest uppercase">
+                  <span class="block font-mono text-[9px] text-neutral-500 dark:text-muted-gray tracking-widest uppercase">
                     HASH: AG#2026-9481-BARRICADE
                   </span>
-                  <span class="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-400 font-bold mt-0.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                  <span class="inline-flex items-center gap-1 font-mono text-[10px] text-emerald-600 dark:text-emerald-400 font-bold mt-0.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse"></span>
                     <span data-i18n="hero.scanLaserHint">Scan di Gate Pintu Masuk</span>
                   </span>
                 </div>
               </div>
 
               <!-- Stub Bottom Details -->
-              <div class="relative z-10 pt-3 border-t border-white/10 space-y-2">
+              <div class="relative z-10 pt-3 border-t border-neutral-200 dark:border-white/10 space-y-2">
                 <div class="flex items-center justify-between text-xs">
-                  <span class="text-muted-gray uppercase font-mono text-[10px]">SECTION</span>
-                  <span class="font-bold text-soft-white tracking-wide">FESTIVAL A - ROW 01</span>
+                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">SECTION</span>
+                  <span class="font-bold text-neutral-950 dark:text-soft-white tracking-wide">FESTIVAL A - ROW 01</span>
                 </div>
                 <div class="flex items-center justify-between text-xs">
-                  <span class="text-muted-gray uppercase font-mono text-[10px]">DOORS OPEN</span>
+                  <span class="text-neutral-500 dark:text-muted-gray uppercase font-mono text-[10px]">DOORS OPEN</span>
                   <span class="font-mono text-electric-magenta font-semibold">18:00 WIB</span>
                 </div>
 
                 <!-- War Tiket Fast Action Button -->
                 <a 
                   href="/events" 
-                  class="w-full mt-2 py-2.5 rounded-xl bg-electric-magenta hover:bg-electric-magenta/90 text-soft-white font-bold text-xs tracking-wider uppercase text-center block shadow-magenta-glow transition-all active:scale-95"
+                  class="w-full mt-2 py-2.5 rounded-xl bg-electric-magenta hover:bg-electric-magenta/90 text-white dark:text-soft-white font-bold text-xs tracking-wider uppercase text-center block shadow-magenta-glow transition-all active:scale-95"
                 >
                   WAR TIKET SEKARANG →
                 </a>
