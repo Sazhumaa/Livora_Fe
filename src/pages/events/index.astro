@@ -9,7 +9,8 @@ import { formatRupiah, formatDateIndo } from '../../lib/formatters';
 
 const searchParams = Astro.url.searchParams;
 const initialQuery = searchParams.get('q') || '';
-const initialCity = searchParams.get('city') || '';
+const initialKota = searchParams.get('kota') || searchParams.get('city') || '';
+const initialGenre = searchParams.get('genre') || '';
 const rawSort = searchParams.get('sort') || 'terdekat';
 const initialSort: 'terdekat' | 'terbaru' | 'termurah' =
   rawSort === 'terbaru' || rawSort === 'termurah' ? rawSort : 'terdekat';
@@ -19,13 +20,16 @@ const effectiveInitialQuery =
   initialQuery.trim() ||
   (initialCategory !== 'all' ? (CATEGORY_SEARCH_MAP[initialCategory] || '') : '');
 
-const CITY_PRESETS = ['Jakarta', 'Bandung', 'Surabaya', 'Bali', 'Yogyakarta', 'Medan'];
-const hasCustomCity = Boolean(initialCity && !CITY_PRESETS.some((c) => c.toLowerCase() === initialCity.toLowerCase()));
+const GENRE_PRESETS = ['Festival', 'Pop', 'Rock', 'Electronic', 'Jazz', 'Indie', 'R&B', 'Hip-Hop'];
+const CITY_PRESETS = ['Jakarta', 'Bandung', 'Surabaya', 'Bali', 'Yogyakarta', 'Medan', 'Semarang', 'Makassar'];
+const hasCustomCity = Boolean(initialKota && !CITY_PRESETS.some((c) => c.toLowerCase() === initialKota.toLowerCase()));
+const hasCustomGenre = Boolean(initialGenre && !GENRE_PRESETS.some((g) => g.toLowerCase() === initialGenre.toLowerCase()));
 
 // Initial SSR data matching query string
 const initialEvents = await fetchEvents({
   q: effectiveInitialQuery || undefined,
-  city: initialCity || undefined,
+  kota: initialKota || undefined,
+  genre: initialGenre || undefined,
   sort: initialSort,
   scope: 'public',
   limit: 24,
@@ -33,8 +37,9 @@ const initialEvents = await fetchEvents({
 
 function getEventStatus(event: BackendEvent) {
   const isSoldOut = Boolean(event.is_sold_out || Number(event.available_quota) <= 0);
-  const isAlmostSold = !isSoldOut && Number(event.occupancy_percent || 0) >= 80;
-  return { isSoldOut, isAlmostSold };
+  const isPaused = Boolean(event.is_paused);
+  const isAlmostSold = !isSoldOut && !isPaused && Number(event.occupancy_percent || 0) >= 80;
+  return { isSoldOut, isPaused, isAlmostSold };
 }
 ---
 
@@ -46,13 +51,13 @@ function getEventStatus(event: BackendEvent) {
     <!-- Header Banner -->
     <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
       <div>
-        <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2 font-mono">
+        <span data-i18n="eventsPage.badge" class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2 font-mono">
           KATALOG RESMI // JADWAL TUR
         </span>
-        <h1 class="font-display text-5xl sm:text-7xl text-neutral-950 dark:text-soft-white tracking-wide">
+        <h1 data-i18n="eventsPage.title" class="font-display text-5xl sm:text-7xl text-neutral-950 dark:text-soft-white tracking-wide">
           JADWAL & TIKET KONSER
         </h1>
-        <p class="text-neutral-600 dark:text-muted-gray text-base mt-2 max-w-xl">
+        <p data-i18n="eventsPage.subtitle" class="text-neutral-600 dark:text-muted-gray text-base mt-2 max-w-xl">
           Amankan tiket konser resmi dari promotor terpercaya. Tanpa calo, transaksi transparan, dan garansi masuk venue 100%.
         </p>
       </div>
@@ -63,6 +68,7 @@ function getEventStatus(event: BackendEvent) {
           type="text" 
           id="events-search-input"
           value={initialQuery}
+          data-i18n-placeholder="eventsPage.searchPlaceholder"
           placeholder="Cari artis, konser, atau kota..." 
           class="w-full px-5 py-3.5 pl-12 rounded-full bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white placeholder-neutral-400 dark:placeholder-muted-gray focus:outline-none focus:border-electric-magenta focus:ring-1 focus:ring-electric-magenta focus:shadow-magenta-glow transition-all shadow-sm dark:shadow-none"
         />
@@ -103,18 +109,32 @@ function getEventStatus(event: BackendEvent) {
         })}
       </div>
 
-      <!-- City & Sort Selection -->
+      <!-- Genre, City & Sort Selection -->
       <div class="flex flex-wrap items-center gap-3 shrink-0">
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-neutral-500 dark:text-muted-gray font-mono uppercase">Genre:</span>
+          <select
+            id="events-genre-select"
+            class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs text-neutral-900 dark:text-soft-white focus:outline-none focus:border-electric-magenta font-medium"
+          >
+            <option value="" selected={!initialGenre}>Semua Genre</option>
+            {hasCustomGenre && <option value={initialGenre} selected>{initialGenre}</option>}
+            {GENRE_PRESETS.map((g) => (
+              <option value={g} selected={initialGenre.toLowerCase() === g.toLowerCase()}>{g}</option>
+            ))}
+          </select>
+        </div>
+
         <div class="flex items-center gap-2">
           <span class="text-xs text-neutral-500 dark:text-muted-gray font-mono uppercase">Kota:</span>
           <select 
             id="events-city-select" 
             class="px-3.5 py-1.5 rounded-xl bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 text-xs text-neutral-900 dark:text-soft-white focus:outline-none focus:border-electric-magenta font-medium"
           >
-            <option value="" selected={!initialCity}>Semua Kota</option>
-            {hasCustomCity && <option value={initialCity} selected>{initialCity}</option>}
+            <option value="" selected={!initialKota}>Semua Kota</option>
+            {hasCustomCity && <option value={initialKota} selected>{initialKota}</option>}
             {CITY_PRESETS.map((city) => (
-              <option value={city} selected={initialCity.toLowerCase() === city.toLowerCase()}>{city}</option>
+              <option value={city} selected={initialKota.toLowerCase() === city.toLowerCase()}>{city}</option>
             ))}
           </select>
         </div>
@@ -136,13 +156,14 @@ function getEventStatus(event: BackendEvent) {
     <!-- Catalog Grid Container -->
     <div id="events-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {initialEvents.map((event) => {
-        const { isSoldOut, isAlmostSold } = getEventStatus(event);
+        const { isSoldOut, isPaused, isAlmostSold } = getEventStatus(event);
+        const displayCity = event.kota || event.alamat.split(',')[1]?.trim() || event.alamat.split(',')[0];
 
         return (
           <article 
             class="event-card rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/[0.08] shadow-sm dark:shadow-none overflow-hidden flex flex-col group hover:border-electric-magenta/50 hover:shadow-magenta-glow transition-all duration-300"
             data-event-id={event.id}
-            data-search-text={`${event.nama_event} ${event.artis} ${event.alamat}`.toLowerCase()}
+            data-search-text={`${event.nama_event} ${event.artis} ${event.alamat} ${event.kota || ''} ${event.genre || ''}`.toLowerCase()}
           >
             <a href={`/events/${event.id}`} class="relative w-full aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-void-black block">
               <img 
@@ -159,6 +180,10 @@ function getEventStatus(event: BackendEvent) {
                   <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-white/80 border border-white/15 font-mono">
                     HABIS TERJUAL
                   </span>
+                ) : isPaused ? (
+                  <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-500/90 text-void-black border border-amber-300 font-mono">
+                    DIJEDA
+                  </span>
                 ) : isAlmostSold ? (
                   <span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-white shadow-magenta-glow font-mono">
                     HAMPIR HABIS
@@ -171,10 +196,15 @@ function getEventStatus(event: BackendEvent) {
               </div>
 
               <!-- Top Left Promotor / Quota Badge -->
-              <div class="absolute top-4 left-4">
+              <div class="absolute top-4 left-4 flex items-center gap-1.5">
                 <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-black/65 backdrop-blur-md text-white/90 border border-white/15">
                   {event.organization_name || 'AFTERGLOW'}
                 </span>
+                {event.genre && (
+                  <span class="px-2 py-1 rounded-md text-[10px] font-mono font-semibold uppercase bg-electric-magenta/85 text-white border border-white/15">
+                    {event.genre}
+                  </span>
+                )}
               </div>
             </a>
 
@@ -183,7 +213,7 @@ function getEventStatus(event: BackendEvent) {
                 <div class="flex items-center gap-2 text-xs text-electric-magenta font-semibold tracking-wider uppercase mb-2">
                   <span>{formatDateIndo(event.tanggal_mulai, { showTime: false })}</span>
                   <span>•</span>
-                  <span class="truncate">{event.alamat.split(',')[1] || event.alamat.split(',')[0]}</span>
+                  <span class="truncate">{displayCity}</span>
                 </div>
 
                 <a href={`/events/${event.id}`} class="block group-hover:text-electric-magenta transition-colors">
@@ -294,29 +324,35 @@ function getEventStatus(event: BackendEvent) {
 
   function renderCatalogCard(event: BackendEvent, isSaved: boolean): string {
     const isSoldOut = Boolean(event.is_sold_out || Number(event.available_quota) <= 0);
-    const isAlmostSold = !isSoldOut && Number(event.occupancy_percent || 0) >= 80;
+    const isPaused = Boolean(event.is_paused);
+    const isAlmostSold = !isSoldOut && !isPaused && Number(event.occupancy_percent || 0) >= 80;
 
     const statusBadge = isSoldOut
       ? `<span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/80 text-white/80 border border-white/15 font-mono">HABIS TERJUAL</span>`
+      : isPaused
+      ? `<span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-amber-500/90 text-void-black border border-amber-300 font-mono">DIJEDA</span>`
       : isAlmostSold
       ? `<span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-electric-magenta text-white shadow-magenta-glow font-mono">HAMPIR HABIS</span>`
       : `<span class="px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase bg-black/55 backdrop-blur-md text-white border border-white/25 font-mono">TERSEDIA</span>`;
 
-    const cityLabel = event.alamat.split(',')[1]?.trim() || event.alamat.split(',')[0] || '-';
+    const cityLabel = event.kota || event.alamat.split(',')[1]?.trim() || event.alamat.split(',')[0] || '-';
     const bookmarkCls = isSaved
       ? 'text-electric-magenta border-electric-magenta'
       : 'text-neutral-500 dark:text-muted-gray border-neutral-200 dark:border-white/10';
     const bookmarkFill = isSaved ? 'currentColor' : 'none';
+    const genreBadge = event.genre
+      ? `<span class="px-2 py-1 rounded-md text-[10px] font-mono font-semibold uppercase bg-electric-magenta/85 text-white border border-white/15">${escapeHtml(event.genre)}</span>`
+      : '';
 
     const actionCta = isSoldOut
       ? `<button disabled class="px-5 py-2.5 rounded-full bg-neutral-100 dark:bg-white/5 text-neutral-400 dark:text-muted-gray text-xs font-semibold uppercase tracking-wider cursor-not-allowed">HABIS</button>`
-      : `<a href="/events/${event.id}" class="px-5 py-2.5 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-white text-xs font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all">WAR TIKET</a>`;
+      : `<a href="/events/${event.id}" class="px-5 py-2.5 rounded-full bg-electric-magenta hover:shadow-magenta-glow text-white text-xs font-bold uppercase tracking-wider hover:scale-105 active:scale-95 transition-all">${isPaused ? 'LIHAT' : 'WAR TIKET'}</a>`;
 
     return `
       <article
         class="event-card rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/[0.08] shadow-sm dark:shadow-none overflow-hidden flex flex-col group hover:border-electric-magenta/50 hover:shadow-magenta-glow transition-all duration-300"
         data-event-id="${event.id}"
-        data-search-text="${escapeHtml(`${event.nama_event} ${event.artis} ${event.alamat}`.toLowerCase())}"
+        data-search-text="${escapeHtml(`${event.nama_event} ${event.artis} ${event.alamat} ${event.kota || ''} ${event.genre || ''}`.toLowerCase())}"
       >
         <a href="/events/${event.id}" class="relative w-full aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-void-black block">
           <img
@@ -327,10 +363,11 @@ function getEventStatus(event: BackendEvent) {
           />
           <div class="absolute inset-0 bg-gradient-to-t from-black/50 dark:from-dark-plum via-transparent to-transparent"></div>
           <div class="absolute top-4 right-4">${statusBadge}</div>
-          <div class="absolute top-4 left-4">
+          <div class="absolute top-4 left-4 flex items-center gap-1.5">
             <span class="px-2.5 py-1 rounded-md text-[10px] font-semibold tracking-wider uppercase bg-black/65 backdrop-blur-md text-white/90 border border-white/15">
               ${escapeHtml(event.organization_name || 'AFTERGLOW')}
             </span>
+            ${genreBadge}
           </div>
         </a>
 
@@ -384,6 +421,7 @@ function getEventStatus(event: BackendEvent) {
 
   function initEventsCatalog() {
     const searchInput = document.getElementById('events-search-input') as HTMLInputElement | null;
+    const genreSelect = document.getElementById('events-genre-select') as HTMLSelectElement | null;
     const citySelect = document.getElementById('events-city-select') as HTMLSelectElement | null;
     const sortSelect = document.getElementById('events-sort-select') as HTMLSelectElement | null;
     const catBtns = document.querySelectorAll<HTMLButtonElement>('.cat-filter-btn');
@@ -437,10 +475,12 @@ function getEventStatus(event: BackendEvent) {
     function updateUrlParams() {
       const nextParams = new URLSearchParams();
       const qVal = searchInput?.value.trim() || '';
-      const cityVal = citySelect?.value.trim() || '';
+      const genreVal = genreSelect?.value.trim() || '';
+      const kotaVal = citySelect?.value.trim() || '';
       const sortVal = sortSelect?.value || 'terdekat';
       if (qVal) nextParams.set('q', qVal);
-      if (cityVal) nextParams.set('city', cityVal);
+      if (genreVal) nextParams.set('genre', genreVal);
+      if (kotaVal) nextParams.set('kota', kotaVal);
       if (sortVal && sortVal !== 'terdekat') nextParams.set('sort', sortVal);
       if (activeCategory && activeCategory !== 'all') nextParams.set('category', activeCategory);
       const nextUrl = `${window.location.pathname}${nextParams.toString() ? `?${nextParams.toString()}` : ''}`;
@@ -452,7 +492,8 @@ function getEventStatus(event: BackendEvent) {
       const rawQ = searchInput?.value.trim() || '';
       const catTerm = activeCategory !== 'all' ? (CATEGORY_SEARCH_MAP[activeCategory] || '') : '';
       const effectiveQ = rawQ || catTerm;
-      const city = citySelect?.value.trim() || '';
+      const genre = genreSelect?.value.trim() || '';
+      const kota = citySelect?.value.trim() || '';
       const sort = (sortSelect?.value || 'terdekat') as 'terdekat' | 'terbaru' | 'termurah';
 
       const requestOffset = append ? currentOffset : 0;
@@ -466,7 +507,8 @@ function getEventStatus(event: BackendEvent) {
       try {
         const events = await fetchEvents({
           q: effectiveQ || undefined,
-          city: city || undefined,
+          genre: genre || undefined,
+          kota: kota || undefined,
           sort,
           scope: 'public',
           limit: PAGE_LIMIT,
@@ -498,13 +540,15 @@ function getEventStatus(event: BackendEvent) {
         // Fallback client-side filter over currently rendered cards if backend unreachable
         if (isDisposed) return;
         const term = effectiveQ.toLowerCase();
-        const cityTerm = city.toLowerCase();
+        const genreTerm = genre.toLowerCase();
+        const cityTerm = kota.toLowerCase();
         let visible = 0;
         grid!.querySelectorAll<HTMLElement>('.event-card').forEach((card) => {
           const text = card.dataset.searchText || '';
           const okQ = !term || text.includes(term);
+          const okG = !genreTerm || text.includes(genreTerm);
           const okC = !cityTerm || text.includes(cityTerm);
-          if (okQ && okC) {
+          if (okQ && okG && okC) {
             card.classList.remove('hidden');
             visible++;
           } else {
@@ -532,6 +576,7 @@ function getEventStatus(event: BackendEvent) {
       debounceTimer = setTimeout(() => reloadCatalog(false), 300);
     });
 
+    genreSelect?.addEventListener('change', () => reloadCatalog(false));
     citySelect?.addEventListener('change', () => reloadCatalog(false));
     sortSelect?.addEventListener('change', () => reloadCatalog(false));
 
@@ -553,6 +598,7 @@ function getEventStatus(event: BackendEvent) {
 
     resetBtn?.addEventListener('click', () => {
       if (searchInput) searchInput.value = '';
+      if (genreSelect) genreSelect.value = '';
       if (citySelect) citySelect.value = '';
       if (sortSelect) sortSelect.value = 'terdekat';
       activeCategory = 'all';

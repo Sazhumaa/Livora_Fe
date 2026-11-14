@@ -19,6 +19,9 @@ export interface BackendEvent {
   tanggal_mulai: string;
   tanggal_selesai: string;
   status: string;
+  is_paused?: boolean;
+  genre?: string | null;
+  kota?: string | null;
   rejection_reason?: string;
   organizer_id: number;
   lineup?: Array<{
@@ -63,6 +66,9 @@ export interface BackendTicketCategory {
 export interface EventQueryOptions {
   q?: string;
   city?: string;
+  kota?: string;
+  genre?: string;
+  organizer_id?: number;
   sort?: 'terdekat' | 'terbaru' | 'termurah';
   status?: string;
   scope?: string;
@@ -75,6 +81,8 @@ export interface VoucherValidationResult {
   voucher_id: number;
   kode_voucher: string;
   diskon_amount: number;
+  platform_fee?: number;
+  net_ticket_amount?: number;
   final_amount: number;
 }
 
@@ -125,6 +133,9 @@ export async function fetchEvents(options: EventQueryOptions = {}): Promise<Back
   const params = new URLSearchParams();
   if (options.q) params.set('q', options.q);
   if (options.city) params.set('city', options.city);
+  if (options.kota) params.set('kota', options.kota);
+  if (options.genre) params.set('genre', options.genre);
+  if (options.organizer_id) params.set('organizer_id', String(options.organizer_id));
   if (options.sort) params.set('sort', options.sort);
   if (options.status) params.set('status', options.status);
   if (options.scope) params.set('scope', options.scope);
@@ -136,7 +147,16 @@ export async function fetchEvents(options: EventQueryOptions = {}): Promise<Back
   try {
     const events = await api.get<BackendEvent[]>(`/events${queryStr}`);
     if (Array.isArray(events)) {
-      if (events.length > 0 || options.strict || options.q || options.city || options.status) {
+      if (
+        events.length > 0 ||
+        options.strict ||
+        options.q ||
+        options.city ||
+        options.kota ||
+        options.genre ||
+        options.organizer_id ||
+        options.status
+      ) {
         return events.map(normalizeEvent);
       }
       return mapMockEventsToBackend();
