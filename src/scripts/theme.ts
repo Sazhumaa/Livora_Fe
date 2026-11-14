@@ -7,27 +7,39 @@ export type Theme = 'dark' | 'light';
 
 export function getPreferredTheme(): Theme {
   if (typeof window === 'undefined') return 'dark';
-  const storedTheme = localStorage.getItem('theme') as Theme | null;
+  const storedTheme = localStorage.getItem('theme');
   if (storedTheme === 'dark' || storedTheme === 'light') {
     return storedTheme;
   }
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-export function setTheme(theme: Theme): void {
+function applyThemeToRoot(root: HTMLElement, theme: Theme, doc: Document = document): void {
+  root.classList.toggle('dark', theme === 'dark');
+  root.classList.toggle('light', theme !== 'dark');
+  const themeMeta = doc.querySelector('meta[name="theme-color"]');
+  if (themeMeta) {
+    themeMeta.setAttribute('content', theme === 'dark' ? '#0B090B' : '#FAF7F9');
+  }
+}
+
+export function setTheme(theme: Theme, options: { suppressTransition?: boolean } = {}): void {
   if (typeof document === 'undefined') return;
   const root = document.documentElement;
-  
-  if (theme === 'dark') {
-    root.classList.add('dark');
-    root.classList.remove('light');
-  } else {
-    root.classList.remove('dark');
-    root.classList.add('light');
+
+  if (options.suppressTransition) {
+    root.classList.add('theme-switching');
   }
 
+  applyThemeToRoot(root, theme, document);
   localStorage.setItem('theme', theme);
   updateThemeToggleButtons(theme);
+
+  if (options.suppressTransition) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => root.classList.remove('theme-switching'));
+    });
+  }
 
   // Dispatch custom event for reactive canvas / particle adjustment
   window.dispatchEvent(new CustomEvent('afterglow-theme-changed', { detail: { theme } }));
@@ -36,12 +48,12 @@ export function setTheme(theme: Theme): void {
 export function toggleTheme(): Theme {
   const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
   const next: Theme = current === 'dark' ? 'light' : 'dark';
-  setTheme(next);
+  setTheme(next, { suppressTransition: true });
   return next;
 }
 
-export function updateThemeToggleButtons(theme: Theme): void {
-  const toggleButtons = document.querySelectorAll<HTMLElement>('[data-theme-toggle]');
+export function updateThemeToggleButtons(theme: Theme, root: ParentNode = document): void {
+  const toggleButtons = root.querySelectorAll<HTMLElement>('[data-theme-toggle]');
   toggleButtons.forEach((btn) => {
     btn.setAttribute('data-current-theme', theme);
     btn.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`);
@@ -81,10 +93,12 @@ export function initThemeToggle(): void {
 
 // Bind to Astro client-side navigation lifecycle
 if (typeof document !== 'undefined') {
-  document.addEventListener('astro:page-load', initThemeToggle);
-  document.addEventListener('astro:after-swap', () => {
+  document.addEventListener('astro:before-swap', (ev: any) => {
+    const newDoc: Document | undefined = ev?.newDocument;
+    if (!newDoc) return;
     const theme = getPreferredTheme();
-    setTheme(theme);
-    initThemeToggle();
+    applyThemeToRoot(newDoc.documentElement, theme, newDoc);
+    updateThemeToggleButtons(theme, newDoc);
   });
+  document.addEventListener('astro:page-load', initThemeToggle);
 }

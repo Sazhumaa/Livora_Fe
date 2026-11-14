@@ -2,13 +2,26 @@
  * AFTERGLOW Floating HUD Collision Observer
  * Automatically shifts floating action elements when approaching the footer
  */
+let activeHudObserver: IntersectionObserver | null = null;
+
+export function disconnectHudObserver(): void {
+  if (activeHudObserver) {
+    activeHudObserver.disconnect();
+    activeHudObserver = null;
+  }
+}
+
 export function initHudObserver(): void {
+  disconnectHudObserver();
+
   const hudElement = document.querySelector('[data-element="floating-hud"]');
   const footerElement = document.querySelector('[data-element="footer"]');
 
-  if (!hudElement || !footerElement) return;
+  if (!hudElement) return;
+  hudElement.classList.remove('is-intersecting-footer');
+  if (!footerElement) return;
 
-  const observer = new IntersectionObserver(
+  activeHudObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -25,9 +38,10 @@ export function initHudObserver(): void {
     }
   );
 
-  observer.observe(footerElement);
+  activeHudObserver.observe(footerElement);
 }
 
 if (typeof window !== 'undefined') {
+  document.addEventListener('astro:before-swap', disconnectHudObserver);
   document.addEventListener('astro:page-load', initHudObserver);
 }

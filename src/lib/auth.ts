@@ -107,6 +107,7 @@ export async function verifyOtp(email: string, otp: string, username?: string): 
     localStorage.setItem('afterglow_access_token', data.tokens.access_token);
     localStorage.setItem('afterglow_refresh_token', data.tokens.refresh_token);
     localStorage.setItem('afterglow_user', JSON.stringify(data.user));
+    document.documentElement.setAttribute('data-auth', 'true');
 
     // Dispatch global event for reactive UI updates across all components
     window.dispatchEvent(
@@ -119,20 +120,38 @@ export async function verifyOtp(email: string, otp: string, username?: string): 
   return data;
 }
 
+function hasUserChanged(prev: UserProfile | null, next: UserProfile): boolean {
+  if (!prev) return true;
+  return (
+    prev.id !== next.id ||
+    prev.email !== next.email ||
+    prev.username !== next.username ||
+    prev.role_id !== next.role_id ||
+    Boolean(prev.is_verified) !== Boolean(next.is_verified) ||
+    (prev.no_hp || '') !== (next.no_hp || '')
+  );
+}
+
 /**
- * Fetch latest user profile from server
+ * Fetch latest user profile from server.
+ * Only broadcasts 'afterglow-auth-changed' if identity or profile fields actually changed,
+ * preventing redundant double-fetch skeleton flickers across pages.
  */
 export async function fetchCurrentUser(): Promise<UserProfile | null> {
   if (!isAuthenticated()) return null;
   try {
+    const prev = getStoredUser();
     const profile = await api.get<UserProfile>('/users/me');
     if (typeof window !== 'undefined' && profile) {
       localStorage.setItem('afterglow_user', JSON.stringify(profile));
-      window.dispatchEvent(
-        new CustomEvent('afterglow-auth-changed', {
-          detail: { user: profile, isAuthenticated: true },
-        })
-      );
+      document.documentElement.setAttribute('data-auth', 'true');
+      if (hasUserChanged(prev, profile)) {
+        window.dispatchEvent(
+          new CustomEvent('afterglow-auth-changed', {
+            detail: { user: profile, isAuthenticated: true },
+          })
+        );
+      }
     }
     return profile;
   } catch {
@@ -155,6 +174,7 @@ export async function logout(): Promise<void> {
     localStorage.removeItem('afterglow_access_token');
     localStorage.removeItem('afterglow_refresh_token');
     localStorage.removeItem('afterglow_user');
+    document.documentElement.setAttribute('data-auth', 'false');
 
     window.dispatchEvent(
       new CustomEvent('afterglow-auth-changed', {

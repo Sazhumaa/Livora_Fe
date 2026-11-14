@@ -16,16 +16,16 @@ export function getStoredLanguage(): Language {
   return DEFAULT_LANG;
 }
 
-export function applyLanguage(lang: Language): void {
+export function applyLanguage(lang: Language, targetDoc: Document = document): void {
   if (typeof document === 'undefined') return;
 
-  document.documentElement.lang = lang;
-  document.documentElement.setAttribute('data-lang', lang);
+  targetDoc.documentElement.lang = lang;
+  targetDoc.documentElement.setAttribute('data-lang', lang);
 
   const dict = translations[lang] || translations[DEFAULT_LANG];
 
   // 1. Text content replacement
-  const textElements = document.querySelectorAll<HTMLElement>('[data-i18n]');
+  const textElements = targetDoc.querySelectorAll<HTMLElement>('[data-i18n]');
   textElements.forEach((el) => {
     const key = el.getAttribute('data-i18n') as TranslationKey | null;
     if (key && dict[key]) {
@@ -34,7 +34,7 @@ export function applyLanguage(lang: Language): void {
   });
 
   // 2. HTML content replacement (for tags with line breaks <br /> or special styling)
-  const htmlElements = document.querySelectorAll<HTMLElement>('[data-i18n-html]');
+  const htmlElements = targetDoc.querySelectorAll<HTMLElement>('[data-i18n-html]');
   htmlElements.forEach((el) => {
     const key = el.getAttribute('data-i18n-html') as TranslationKey | null;
     if (key && dict[key]) {
@@ -43,7 +43,7 @@ export function applyLanguage(lang: Language): void {
   });
 
   // 3. Placeholder replacement
-  const placeholderElements = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-i18n-placeholder]');
+  const placeholderElements = targetDoc.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('[data-i18n-placeholder]');
   placeholderElements.forEach((el) => {
     const key = el.getAttribute('data-i18n-placeholder') as TranslationKey | null;
     if (key && dict[key]) {
@@ -52,7 +52,7 @@ export function applyLanguage(lang: Language): void {
   });
 
   // 4. Aria label replacement
-  const ariaElements = document.querySelectorAll<HTMLElement>('[data-i18n-aria]');
+  const ariaElements = targetDoc.querySelectorAll<HTMLElement>('[data-i18n-aria]');
   ariaElements.forEach((el) => {
     const key = el.getAttribute('data-i18n-aria') as TranslationKey | null;
     if (key && dict[key]) {
@@ -61,7 +61,7 @@ export function applyLanguage(lang: Language): void {
   });
 
   // 5. Update Switcher Buttons UI state
-  const langButtons = document.querySelectorAll<HTMLElement>('[data-lang-btn]');
+  const langButtons = targetDoc.querySelectorAll<HTMLElement>('[data-lang-btn]');
   langButtons.forEach((btn) => {
     const targetLang = btn.getAttribute('data-lang-btn');
     const isActive = targetLang === lang;
@@ -76,12 +76,14 @@ export function applyLanguage(lang: Language): void {
     }
   });
 
-  // Dispatch custom event for custom components (like SVG ticket pass)
-  window.dispatchEvent(
-    new CustomEvent('afterglow:langchange', {
-      detail: { lang, dict },
-    })
-  );
+  if (targetDoc === document) {
+    // Dispatch custom event for custom components (like SVG ticket pass)
+    window.dispatchEvent(
+      new CustomEvent('afterglow:langchange', {
+        detail: { lang, dict },
+      })
+    );
+  }
 }
 
 export function setLanguage(lang: Language): void {
@@ -95,11 +97,13 @@ export function setLanguage(lang: Language): void {
 
 export function setupI18n(): void {
   const currentLang = getStoredLanguage();
-  applyLanguage(currentLang);
+  applyLanguage(currentLang, document);
 
-  // Wire up all click handlers on language buttons
+  // Wire up all click handlers on language buttons (idempotent)
   const switchButtons = document.querySelectorAll<HTMLElement>('[data-lang-btn]');
   switchButtons.forEach((btn) => {
+    if (btn.dataset.langBound === '1') return;
+    btn.dataset.langBound = '1';
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const targetLang = btn.getAttribute('data-lang-btn') as Language | null;
@@ -112,6 +116,10 @@ export function setupI18n(): void {
 
 // Lifecycle listeners
 if (typeof document !== 'undefined') {
-  document.addEventListener('DOMContentLoaded', setupI18n);
+  document.addEventListener('astro:before-swap', (ev: any) => {
+    const newDoc: Document | undefined = ev?.newDocument;
+    if (!newDoc) return;
+    applyLanguage(getStoredLanguage(), newDoc);
+  });
   document.addEventListener('astro:page-load', setupI18n);
 }

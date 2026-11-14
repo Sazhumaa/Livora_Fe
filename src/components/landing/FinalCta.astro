@@ -5,7 +5,7 @@
 
 <section 
   id="final-cta-section"
-  class="relative w-full py-20 sm:py-28 px-6 lg:px-12 overflow-hidden border-t border-neutral-200/80 dark:border-white/[0.06] bg-[#FAF7F9] dark:bg-void-black transition-colors duration-300"
+  class="relative w-full py-20 sm:py-28 px-6 lg:px-12 overflow-hidden border-t border-neutral-200/80 dark:border-white/[0.06] bg-[#FAF7F9] dark:bg-void-black"
 >
   
   <!-- ======================================================================== -->
@@ -130,29 +130,41 @@
 <!-- INTERACTIVE STAGE SPOTLIGHT SCRIPT (Cursor Tracking) -->
 <!-- ======================================================================== -->
 <script>
+  let spotlightAnimId: number | null = null;
+
+  function stopStageSpotlight() {
+    if (spotlightAnimId !== null) {
+      cancelAnimationFrame(spotlightAnimId);
+      spotlightAnimId = null;
+    }
+  }
+
   function initStageSpotlight() {
     const section = document.getElementById('final-cta-section');
     const spotlight = document.getElementById('stage-spotlight-beam');
 
     if (!section || !spotlight) return;
+    if (section.dataset.spotlightBound === '1') return;
+    section.dataset.spotlightBound = '1';
+
+    stopStageSpotlight();
 
     let targetX = 50;
     let targetY = 50;
     let currentX = 50;
     let currentY = 50;
-    let animId: number | null = null;
 
     function renderLoop() {
       currentX += (targetX - currentX) * 0.1;
       currentY += (targetY - currentY) * 0.1;
 
-      spotlight.style.setProperty('--spotlight-x', `${currentX.toFixed(1)}%`);
-      spotlight.style.setProperty('--spotlight-y', `${currentY.toFixed(1)}%`);
+      spotlight!.style.setProperty('--spotlight-x', `${currentX.toFixed(1)}%`);
+      spotlight!.style.setProperty('--spotlight-y', `${currentY.toFixed(1)}%`);
 
-      animId = requestAnimationFrame(renderLoop);
+      spotlightAnimId = requestAnimationFrame(renderLoop);
     }
 
-    animId = requestAnimationFrame(renderLoop);
+    spotlightAnimId = requestAnimationFrame(renderLoop);
 
     section.addEventListener('mousemove', (e) => {
       const rect = section.getBoundingClientRect();
@@ -166,6 +178,6 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', initStageSpotlight);
+  document.addEventListener('astro:before-swap', stopStageSpotlight);
   document.addEventListener('astro:page-load', initStageSpotlight);
 </script>

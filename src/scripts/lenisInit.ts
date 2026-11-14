@@ -7,21 +7,26 @@ import Lenis from 'lenis';
 let lenisInstance: Lenis | null = null;
 let rafId: number | null = null;
 
+export function destroyLenis(): void {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+  if (lenisInstance) {
+    lenisInstance.destroy();
+    lenisInstance = null;
+  }
+}
+
 export function initLenis(): void {
   // Only enable on desktop screens and when reduced motion is not requested
   const isDesktop = window.matchMedia('(min-width: 768px)').matches;
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (!isDesktop || prefersReduced) {
-    if (lenisInstance) {
-      lenisInstance.destroy();
-      lenisInstance = null;
-    }
-    return;
-  }
+  destroyLenis();
 
-  if (lenisInstance) {
-    lenisInstance.destroy();
+  if (!isDesktop || prefersReduced) {
+    return;
   }
 
   lenisInstance = new Lenis({
@@ -36,10 +41,10 @@ export function initLenis(): void {
     rafId = requestAnimationFrame(raf);
   }
 
-  if (rafId) cancelAnimationFrame(rafId);
   rafId = requestAnimationFrame(raf);
 }
 
 if (typeof window !== 'undefined') {
+  document.addEventListener('astro:before-swap', destroyLenis);
   document.addEventListener('astro:page-load', initLenis);
 }

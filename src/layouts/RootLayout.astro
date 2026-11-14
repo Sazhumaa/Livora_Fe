@@ -50,23 +50,27 @@ const {
       }
     </script>
 
-    <!-- Theme & Language Flash Prevention -->
+    <!-- Theme, Language & Auth Pre-Paint Flash Prevention -->
     <script is:inline>
       (function() {
         try {
+          const root = document.documentElement;
           const stored = localStorage.getItem('theme');
-          const isDark = stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches);
-          if (isDark) {
-            document.documentElement.classList.add('dark');
-            document.documentElement.classList.remove('light');
-          } else {
-            document.documentElement.classList.remove('dark');
-            document.documentElement.classList.add('light');
+          const isDark = stored === 'dark' || (stored !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+          root.classList.toggle('dark', isDark);
+          root.classList.toggle('light', !isDark);
+
+          const themeMeta = document.querySelector('meta[name="theme-color"]');
+          if (themeMeta) {
+            themeMeta.setAttribute('content', isDark ? '#0B090B' : '#FAF7F9');
           }
 
-          const storedLang = localStorage.getItem('afterglow_lang') || 'id';
-          document.documentElement.lang = storedLang;
-          document.documentElement.setAttribute('data-lang', storedLang);
+          const storedLang = localStorage.getItem('afterglow_lang') === 'en' ? 'en' : 'id';
+          root.lang = storedLang;
+          root.setAttribute('data-lang', storedLang);
+
+          const hasAuth = Boolean(localStorage.getItem('afterglow_access_token') && localStorage.getItem('afterglow_user'));
+          root.setAttribute('data-auth', hasAuth ? 'true' : 'false');
         } catch (e) {}
       })();
     </script>
@@ -74,18 +78,19 @@ const {
     <!-- Astro View Transitions Engine -->
     <ClientRouter />
   </head>
-  <body class="bg-[#FAF7F9] dark:bg-void-black text-neutral-900 dark:text-soft-white antialiased selection:bg-electric-magenta selection:text-white transition-colors duration-300">
-    <!-- Ambient Concert Embers Canvas (Background) -->
+  <body class="bg-[#FAF7F9] dark:bg-void-black text-neutral-900 dark:text-soft-white antialiased selection:bg-electric-magenta selection:text-white">
+    <!-- Ambient Concert Embers Canvas (Persisted Background) -->
     <canvas 
-      id="stage-embers-canvas" 
-      class="fixed inset-0 pointer-events-none z-0 opacity-20 dark:opacity-60 w-full h-full transition-opacity duration-500"
+      id="stage-embers-canvas"
+      transition:persist="stage-embers"
+      class="fixed inset-0 pointer-events-none z-0 opacity-20 dark:opacity-60 w-full h-full"
     ></canvas>
 
     <!-- Global Persistent Navigation -->
     <Navbar />
 
-    <!-- Main Content Area -->
-    <main class="relative z-10 flex flex-col min-h-screen">
+    <!-- Main Content Area (no z-index stacking context so page modals can layer cleanly above Navbar) -->
+    <main class="relative flex flex-col min-h-screen">
       <slot />
     </main>
 

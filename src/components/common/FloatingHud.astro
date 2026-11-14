@@ -3,7 +3,8 @@
 ---
 
 <div 
-  data-element="floating-hud" 
+  data-element="floating-hud"
+  transition:persist="floating-hud"
   class="fixed right-6 bottom-8 z-40 flex flex-col items-end gap-5 transition-all duration-500 pointer-events-none select-none [&.is-intersecting-footer]:translate-y-[-70px]"
 >
   <!-- Ambient Audio Toggle Pill -->
@@ -59,7 +60,8 @@
 <script>
   function setupAudioToggle() {
     const audioBtn = document.getElementById('hud-audio-toggle');
-    if (!audioBtn) return;
+    if (!audioBtn || audioBtn.dataset.audioBound === '1') return;
+    audioBtn.dataset.audioBound = '1';
 
     let isPlaying = false;
     audioBtn.addEventListener('click', () => {

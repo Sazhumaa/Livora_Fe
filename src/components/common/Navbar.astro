@@ -3,7 +3,7 @@
 const pathname = Astro.url.pathname;
 ---
 
-<header class="fixed top-0 left-0 right-0 z-50 bg-white/85 dark:bg-void-black/85 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.06] transition-colors duration-300">
+<header class="fixed top-0 left-0 right-0 z-40 bg-white/85 dark:bg-void-black/85 backdrop-blur-md border-b border-black/[0.06] dark:border-white/[0.06]">
   <div class="max-w-7xl mx-auto px-6 lg:px-12 h-20 flex items-center justify-between">
     <!-- Brand Logo -->
     <a href="/" class="flex items-center gap-2 group tracking-wider">
@@ -118,7 +118,7 @@ const pathname = Astro.url.pathname;
             <span id="nav-user-name" class="font-medium text-neutral-800 dark:text-soft-white max-w-[100px] truncate">
               User
             </span>
-            <svg class="w-3.5 h-3.5 text-muted-gray transition-transform duration-200 arrow-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg class="w-3.5 h-3.5 text-neutral-500 dark:text-muted-gray transition-transform duration-200 arrow-icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -130,7 +130,7 @@ const pathname = Astro.url.pathname;
           >
             <div class="px-3 py-2 border-b border-neutral-100 dark:border-white/10 mb-2">
               <p id="nav-popover-fullname" class="font-bold text-sm text-neutral-900 dark:text-soft-white truncate"></p>
-              <p id="nav-popover-email" class="text-xs text-muted-gray truncate font-mono"></p>
+              <p id="nav-popover-email" class="text-xs text-neutral-600 dark:text-muted-gray truncate font-mono"></p>
               <span id="nav-popover-role" class="mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30">
                 PENONTON
               </span>
@@ -311,7 +311,7 @@ const pathname = Astro.url.pathname;
           </div>
           <div class="truncate">
             <p id="mobile-user-fullname" class="font-bold text-sm text-neutral-900 dark:text-soft-white truncate"></p>
-            <p id="mobile-user-email" class="text-xs text-muted-gray truncate font-mono"></p>
+            <p id="mobile-user-email" class="text-xs text-neutral-600 dark:text-muted-gray truncate font-mono"></p>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
@@ -333,16 +333,107 @@ const pathname = Astro.url.pathname;
   </div>
 </header>
 
+<style>
+  :global(html[data-auth="true"]) #nav-signin-btn,
+  :global(html[data-auth="true"]) #mobile-signin-btn {
+    display: none;
+  }
+  :global(html[data-auth="true"]) #nav-user-menu.hidden {
+    display: block;
+  }
+  :global(html[data-auth="true"]) #mobile-user-card.hidden {
+    display: flex;
+  }
+</style>
+
 <script>
   import { fetchCurrentUser, getStoredUser, isAuthenticated, logout, USER_ROLES } from '../../lib/auth';
 
   let navbarDocListenerBound = false;
 
+  // Sync Navbar DOM against a Document (used both pre-swap on newDocument and on live document)
+  function syncNavbarAuthState(targetDoc: Document = document) {
+    const user = getStoredUser();
+    const authed = Boolean(user && isAuthenticated());
+    targetDoc.documentElement.setAttribute('data-auth', authed ? 'true' : 'false');
+
+    const signinBtn = targetDoc.getElementById('nav-signin-btn');
+    const userMenu = targetDoc.getElementById('nav-user-menu');
+    const userPopover = targetDoc.getElementById('nav-user-popover');
+    const avatarDisc = targetDoc.getElementById('nav-avatar-disc');
+    const userName = targetDoc.getElementById('nav-user-name');
+    const popoverFullname = targetDoc.getElementById('nav-popover-fullname');
+    const popoverEmail = targetDoc.getElementById('nav-popover-email');
+    const popoverRole = targetDoc.getElementById('nav-popover-role');
+    const scannerLink = targetDoc.getElementById('nav-scanner-link');
+    const adminLink = targetDoc.getElementById('nav-admin-link');
+
+    const mobSigninBtn = targetDoc.getElementById('mobile-signin-btn');
+    const mobUserCard = targetDoc.getElementById('mobile-user-card');
+    const mobAvatarDisc = targetDoc.getElementById('mobile-avatar-disc');
+    const mobFullname = targetDoc.getElementById('mobile-user-fullname');
+    const mobEmail = targetDoc.getElementById('mobile-user-email');
+    const mobScannerLink = targetDoc.getElementById('mobile-scanner-link');
+    const mobAdminLink = targetDoc.getElementById('mobile-admin-link');
+
+    if (authed && user) {
+      signinBtn?.classList.add('hidden');
+      userMenu?.classList.remove('hidden');
+
+      const initial = (user.username || user.email || 'U').charAt(0).toUpperCase();
+      if (avatarDisc) avatarDisc.textContent = initial;
+      if (userName) userName.textContent = user.username || user.email.split('@')[0];
+      if (popoverFullname) popoverFullname.textContent = user.username || user.email.split('@')[0];
+      if (popoverEmail) popoverEmail.textContent = user.email;
+
+      const isScannerAllowed =
+        user.role_id === USER_ROLES.ADMIN ||
+        user.role_id === USER_ROLES.ORGANIZER ||
+        user.email.toLowerCase().includes('gatecrew');
+
+      scannerLink?.classList.toggle('hidden', !isScannerAllowed);
+      mobScannerLink?.classList.toggle('hidden', !isScannerAllowed);
+      adminLink?.classList.toggle('hidden', user.role_id !== USER_ROLES.ADMIN);
+      mobAdminLink?.classList.toggle('hidden', user.role_id !== USER_ROLES.ADMIN);
+
+      if (popoverRole) {
+        if (user.role_id === USER_ROLES.ADMIN) {
+          popoverRole.textContent = 'ADMIN PLATFORM';
+          popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-amber-500/15 text-amber-500 dark:text-amber-400 border border-amber-500/30';
+        } else if (user.role_id === USER_ROLES.ORGANIZER) {
+          popoverRole.textContent = 'PROMOTOR EVENT';
+          popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-purple-500/15 text-purple-600 dark:text-purple-400 border border-purple-500/30';
+        } else {
+          popoverRole.textContent = 'PENONTON RESMI';
+          popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30';
+        }
+      }
+
+      mobSigninBtn?.classList.add('hidden');
+      mobUserCard?.classList.remove('hidden');
+      if (mobAvatarDisc) mobAvatarDisc.textContent = initial;
+      if (mobFullname) mobFullname.textContent = user.username || user.email.split('@')[0];
+      if (mobEmail) mobEmail.textContent = user.email;
+    } else {
+      signinBtn?.classList.remove('hidden');
+      userMenu?.classList.add('hidden');
+      userPopover?.classList.add('hidden');
+      scannerLink?.classList.add('hidden');
+      adminLink?.classList.add('hidden');
+      mobScannerLink?.classList.add('hidden');
+      mobAdminLink?.classList.add('hidden');
+
+      mobSigninBtn?.classList.remove('hidden');
+      mobUserCard?.classList.add('hidden');
+    }
+  }
+
   function setupNavbar() {
     // Mobile Drawer Setup
     const menuBtn = document.getElementById('mobile-menu-btn');
     const drawer = document.getElementById('mobile-menu-drawer');
-    if (menuBtn && drawer) {
+    if (menuBtn && drawer && menuBtn.dataset.navBound !== '1') {
+      menuBtn.dataset.navBound = '1';
       menuBtn.addEventListener('click', () => {
         const isHidden = drawer.classList.contains('hidden');
         if (isHidden) {
@@ -369,38 +460,47 @@ const pathname = Astro.url.pathname;
     const navSigninBtn = document.getElementById('nav-signin-btn');
     const mobileSigninBtn = document.getElementById('mobile-signin-btn');
 
-    navSigninBtn?.addEventListener('click', () => {
-      if (typeof window.openAuthModal === 'function') {
-        window.openAuthModal();
-      }
-    });
+    if (navSigninBtn && navSigninBtn.dataset.navBound !== '1') {
+      navSigninBtn.dataset.navBound = '1';
+      navSigninBtn.addEventListener('click', () => {
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal();
+        }
+      });
+    }
 
-    mobileSigninBtn?.addEventListener('click', () => {
-      if (drawer) {
-        drawer.classList.add('hidden');
-        drawer.classList.remove('flex');
-        document.body.style.overflow = '';
-      }
-      if (typeof window.openAuthModal === 'function') {
-        window.openAuthModal();
-      }
-    });
+    if (mobileSigninBtn && mobileSigninBtn.dataset.navBound !== '1') {
+      mobileSigninBtn.dataset.navBound = '1';
+      mobileSigninBtn.addEventListener('click', () => {
+        if (drawer) {
+          drawer.classList.add('hidden');
+          drawer.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+        if (typeof window.openAuthModal === 'function') {
+          window.openAuthModal();
+        }
+      });
+    }
 
     // User Dropdown Popover
     const userToggleBtn = document.getElementById('nav-user-toggle-btn');
     const userPopover = document.getElementById('nav-user-popover');
 
-    userToggleBtn?.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isClosed = userPopover?.classList.contains('hidden');
-      if (isClosed) {
-        userPopover?.classList.remove('hidden');
-        userToggleBtn.setAttribute('aria-expanded', 'true');
-      } else {
-        userPopover?.classList.add('hidden');
-        userToggleBtn.setAttribute('aria-expanded', 'false');
-      }
-    });
+    if (userToggleBtn && userToggleBtn.dataset.navBound !== '1') {
+      userToggleBtn.dataset.navBound = '1';
+      userToggleBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isClosed = userPopover?.classList.contains('hidden');
+        if (isClosed) {
+          userPopover?.classList.remove('hidden');
+          userToggleBtn.setAttribute('aria-expanded', 'true');
+        } else {
+          userPopover?.classList.add('hidden');
+          userToggleBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
 
     if (!navbarDocListenerBound) {
       navbarDocListenerBound = true;
@@ -412,7 +512,11 @@ const pathname = Astro.url.pathname;
           btn?.setAttribute('aria-expanded', 'false');
         }
       });
-      window.addEventListener('afterglow-auth-changed', syncNavbarAuthState);
+      window.addEventListener('afterglow-auth-changed', () => syncNavbarAuthState(document));
+      document.addEventListener('astro:before-swap', (ev: any) => {
+        if (ev?.newDocument) syncNavbarAuthState(ev.newDocument);
+        document.body.style.overflow = '';
+      });
     }
 
     // Logout Handlers
@@ -421,91 +525,19 @@ const pathname = Astro.url.pathname;
 
     const handleLogout = async () => {
       await logout();
-      syncNavbarAuthState();
+      syncNavbarAuthState(document);
     };
 
-    logoutBtn?.addEventListener('click', handleLogout);
-    mobileLogoutBtn?.addEventListener('click', handleLogout);
-
-    // Sync UI with Auth State
-    function syncNavbarAuthState() {
-      const user = getStoredUser();
-
-      const signinBtn = document.getElementById('nav-signin-btn');
-      const userMenu = document.getElementById('nav-user-menu');
-      const avatarDisc = document.getElementById('nav-avatar-disc');
-      const userName = document.getElementById('nav-user-name');
-      const popoverFullname = document.getElementById('nav-popover-fullname');
-      const popoverEmail = document.getElementById('nav-popover-email');
-      const popoverRole = document.getElementById('nav-popover-role');
-      const scannerLink = document.getElementById('nav-scanner-link');
-      const adminLink = document.getElementById('nav-admin-link');
-
-      const mobSigninBtn = document.getElementById('mobile-signin-btn');
-      const mobUserCard = document.getElementById('mobile-user-card');
-      const mobAvatarDisc = document.getElementById('mobile-avatar-disc');
-      const mobFullname = document.getElementById('mobile-user-fullname');
-      const mobEmail = document.getElementById('mobile-user-email');
-      const mobScannerLink = document.getElementById('mobile-scanner-link');
-      const mobAdminLink = document.getElementById('mobile-admin-link');
-
-      if (user) {
-        // Desktop
-        signinBtn?.classList.add('hidden');
-        userMenu?.classList.remove('hidden');
-
-        const initial = (user.username || user.email || 'U').charAt(0).toUpperCase();
-        if (avatarDisc) avatarDisc.textContent = initial;
-        if (userName) userName.textContent = user.username || user.email.split('@')[0];
-        if (popoverFullname) popoverFullname.textContent = user.username || user.email.split('@')[0];
-        if (popoverEmail) popoverEmail.textContent = user.email;
-
-        // Role badge, Admin & Scanner links
-        const isScannerAllowed =
-          user.role_id === USER_ROLES.ADMIN ||
-          user.role_id === USER_ROLES.ORGANIZER ||
-          user.email.toLowerCase().includes('gatecrew');
-
-        scannerLink?.classList.toggle('hidden', !isScannerAllowed);
-        mobScannerLink?.classList.toggle('hidden', !isScannerAllowed);
-        adminLink?.classList.toggle('hidden', user.role_id !== USER_ROLES.ADMIN);
-        mobAdminLink?.classList.toggle('hidden', user.role_id !== USER_ROLES.ADMIN);
-
-        if (popoverRole) {
-          if (user.role_id === USER_ROLES.ADMIN) {
-            popoverRole.textContent = 'ADMIN PLATFORM';
-            popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-amber-500/15 text-amber-400 border border-amber-500/30';
-          } else if (user.role_id === USER_ROLES.ORGANIZER) {
-            popoverRole.textContent = 'PROMOTOR EVENT';
-            popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-purple-500/15 text-purple-400 border border-purple-500/30';
-          } else {
-            popoverRole.textContent = 'PENONTON RESMI';
-            popoverRole.className = 'mt-1.5 inline-block px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-electric-magenta/15 text-electric-magenta border border-electric-magenta/30';
-          }
-        }
-
-        // Mobile
-        mobSigninBtn?.classList.add('hidden');
-        mobUserCard?.classList.remove('hidden');
-        if (mobAvatarDisc) mobAvatarDisc.textContent = initial;
-        if (mobFullname) mobFullname.textContent = user.username || user.email.split('@')[0];
-        if (mobEmail) mobEmail.textContent = user.email;
-      } else {
-        // Logged out
-        signinBtn?.classList.remove('hidden');
-        userMenu?.classList.add('hidden');
-        userPopover?.classList.add('hidden');
-        scannerLink?.classList.add('hidden');
-        adminLink?.classList.add('hidden');
-        mobScannerLink?.classList.add('hidden');
-        mobAdminLink?.classList.add('hidden');
-
-        mobSigninBtn?.classList.remove('hidden');
-        mobUserCard?.classList.add('hidden');
-      }
+    if (logoutBtn && logoutBtn.dataset.navBound !== '1') {
+      logoutBtn.dataset.navBound = '1';
+      logoutBtn.addEventListener('click', handleLogout);
+    }
+    if (mobileLogoutBtn && mobileLogoutBtn.dataset.navBound !== '1') {
+      mobileLogoutBtn.dataset.navBound = '1';
+      mobileLogoutBtn.addEventListener('click', handleLogout);
     }
 
-    syncNavbarAuthState();
+    syncNavbarAuthState(document);
     if (isAuthenticated()) {
       fetchCurrentUser().catch(() => {});
     }

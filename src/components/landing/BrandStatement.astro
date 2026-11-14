@@ -6,7 +6,7 @@
 // Persistent 3D rotation (stays where dropped, single click snaps back to default). Zero UI clutter.
 ---
 
-<section id="about" class="relative w-full py-16 lg:py-24 px-4 sm:px-6 lg:px-16 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.06] overflow-hidden transition-colors duration-300">
+<section id="about" class="relative w-full py-16 lg:py-24 px-4 sm:px-6 lg:px-16 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.06] overflow-hidden">
   
   <!-- Subtle Background Starlight Dust / Cosmic Atmosphere -->
   <div class="absolute inset-0 pointer-events-none opacity-40 dark:opacity-25" style="background-image: radial-gradient(rgba(209,77,145,0.25) 1px, transparent 1px), radial-gradient(rgba(255,255,255,0.15) 1px, transparent 1px); background-size: 36px 36px, 72px 72px; background-position: 0 0, 18px 18px;"></div>
@@ -478,11 +478,13 @@
 <!-- INTERACTIVE 3D TICKET PHYSICS ENGINE (Persistent Rotation + Click to Reset) -->
 <!-- ======================================================================== -->
 <script>
-  function initInteractiveTicket() {
+  let ticketCleanup: (() => void) | undefined;
+
+  function initInteractiveTicket(): (() => void) | undefined {
     const card = document.getElementById('interactive-ticket-card');
     const viewport = document.getElementById('ticket-stage-viewport');
 
-    if (!card || !viewport) return;
+    if (!card || !viewport) return undefined;
 
     // Default Showcase Resting Orientation
     const defaultRotX = 6;
@@ -502,9 +504,15 @@
     let lastPointerY = 0;
     let hasDragged = false;
     let animationFrameId: number | null = null;
+    let isDisposed = false;
 
     // Continuous 60fps Loop
     function updateCardTransform() {
+      if (isDisposed || !document.body.contains(card)) {
+        animationFrameId = null;
+        return;
+      }
+
       if (!isDragging) {
         // Inertia damping when released
         if (Math.abs(velX) > 0.04 || Math.abs(velY) > 0.04) {
@@ -524,25 +532,24 @@
         currentRotY = targetRotY;
       }
 
-      card.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
+      card!.style.transform = `rotateX(${currentRotX.toFixed(2)}deg) rotateY(${currentRotY.toFixed(2)}deg)`;
 
       // Dynamic Holographic Prism Glare
       const glareX = 50 + (currentRotY * 1.3) % 100;
       const glareY = 50 - (currentRotX * 1.5) % 100;
       const glareOpacity = Math.max(0.25, Math.min(0.9, 0.65 + Math.sin(currentRotY * 0.04) * 0.25));
 
-      card.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
-      card.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
-      card.style.setProperty('--glare-opacity', glareOpacity.toFixed(2));
+      card!.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
+      card!.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
+      card!.style.setProperty('--glare-opacity', glareOpacity.toFixed(2));
 
       animationFrameId = requestAnimationFrame(updateCardTransform);
     }
 
-    // Start 60fps Physics Loop
+    // Start single 60fps Physics Loop
     animationFrameId = requestAnimationFrame(updateCardTransform);
 
-    // Pointer Events for 3D Drag Rotation (Mouse + Touch)
-    card.addEventListener('pointerdown', (e) => {
+    const onPointerDown = (e: PointerEvent) => {
       isDragging = true;
       hasDragged = false;
       card.setPointerCapture(e.pointerId);
@@ -552,9 +559,9 @@
       lastPointerY = e.clientY;
       velX = 0;
       velY = 0;
-    });
+    };
 
-    card.addEventListener('pointermove', (e) => {
+    const onPointerMove = (e: PointerEvent) => {
       if (!isDragging) return;
       const totalDx = e.clientX - startPointerX;
       const totalDy = e.clientY - startPointerY;
@@ -578,7 +585,7 @@
 
       // Restrict extreme flipping on X-axis to keep card pleasant to view
       targetRotX = Math.max(-65, Math.min(65, targetRotX));
-    });
+    };
 
     const stopDragging = (e: PointerEvent) => {
       if (!isDragging) return;
@@ -597,11 +604,32 @@
       // IF USER DRAGGED -> It stays right at the new angle with momentum inertia!
     };
 
+    card.addEventListener('pointerdown', onPointerDown);
+    card.addEventListener('pointermove', onPointerMove);
     card.addEventListener('pointerup', stopDragging);
     card.addEventListener('pointercancel', stopDragging);
+
+    return () => {
+      isDisposed = true;
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+      card.removeEventListener('pointerdown', onPointerDown);
+      card.removeEventListener('pointermove', onPointerMove);
+      card.removeEventListener('pointerup', stopDragging);
+      card.removeEventListener('pointercancel', stopDragging);
+    };
   }
 
-  // Initialize on load and on Astro View Transitions
-  document.addEventListener('DOMContentLoaded', initInteractiveTicket);
-  document.addEventListener('astro:page-load', initInteractiveTicket);
+  document.addEventListener('astro:before-swap', () => {
+    if (ticketCleanup) {
+      ticketCleanup();
+      ticketCleanup = undefined;
+    }
+  });
+  document.addEventListener('astro:page-load', () => {
+    if (ticketCleanup) ticketCleanup();
+    ticketCleanup = initInteractiveTicket();
+  });
 </script>

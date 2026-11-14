@@ -67,15 +67,21 @@
   import { formatCountdown, formatRupiah } from '../../lib/formatters';
 
   let activeBannerTimer: number | undefined;
+  let bannerSyncSeq = 0;
+
+  function clearBannerTimer() {
+    if (activeBannerTimer !== undefined) {
+      window.clearInterval(activeBannerTimer);
+      activeBannerTimer = undefined;
+    }
+  }
 
   async function syncActiveOrderBanner() {
     const banner = document.getElementById('active-order-recovery-banner');
     if (!banner) return;
 
-    if (activeBannerTimer) {
-      window.clearInterval(activeBannerTimer);
-      activeBannerTimer = undefined;
-    }
+    const mySeq = ++bannerSyncSeq;
+    clearBannerTimer();
 
     // Hide on payment screen or receipt screen to avoid redundant UI
     const path = window.location.pathname;
@@ -86,6 +92,7 @@
 
     try {
       const order = await api.get<any>('/users/active-order');
+      if (mySeq !== bannerSyncSeq) return;
       if (!order || !order.order_code) {
         banner.classList.add('hidden');
         return;
@@ -156,6 +163,7 @@
     }
   }
 
+  document.addEventListener('astro:before-swap', clearBannerTimer);
   document.addEventListener('astro:page-load', syncActiveOrderBanner);
   window.addEventListener('afterglow-auth-changed', syncActiveOrderBanner);
   window.addEventListener('afterglow-order-updated', syncActiveOrderBanner);

@@ -20,7 +20,6 @@
 
 html {
   font-family: 'Inter', system-ui, sans-serif;
-  scroll-behavior: smooth;
   overflow-x: hidden;
 }
 
@@ -36,11 +35,16 @@ html:not(.dark) {
   color-scheme: light;
 }
 
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: none !important;
+}
+
 body {
   min-height: 100vh;
   overflow-x: hidden;
   position: relative;
-  transition: background-color 0.35s var(--ease-cinematic), color 0.35s var(--ease-cinematic);
 }
 
 html.dark body {
@@ -88,14 +92,15 @@ html:not(.dark) .ghost-text {
 /* Ultra-lightweight Scroll Reveal Animation */
 [data-animate="reveal"] {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.8s var(--ease-cinematic), transform 0.8s var(--ease-cinematic);
+  transform: translateY(14px);
+  transition: opacity 0.45s var(--ease-cinematic), transform 0.45s var(--ease-cinematic);
   will-change: opacity, transform;
 }
 
 [data-animate="reveal"].is-visible {
   opacity: 1;
   transform: translateY(0);
+  will-change: auto;
 }
 
 /* Stagger delay utility */
@@ -122,22 +127,22 @@ html:not(.dark) .ghost-text {
   background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(209, 77, 145, 0.18) 0%, transparent 80%);
 }
 
-/* Astro View Transition Custom Animations */
+/* Astro View Transition Clean Opacity Cross-Fade (No Full-Viewport Scale Jitter) */
 ::view-transition-old(root) {
-  animation: 300ms var(--ease-cinematic) both fade-out;
+  animation: 150ms ease-out both fade-out;
 }
 ::view-transition-new(root) {
-  animation: 400ms var(--ease-cinematic) both fade-in;
+  animation: 180ms ease-in both fade-in;
 }
 
 @keyframes fade-out {
-  from { opacity: 1; transform: scale(1); }
-  to { opacity: 0; transform: scale(0.98); }
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: scale(1.02); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {

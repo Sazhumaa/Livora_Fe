@@ -17,13 +17,13 @@ interface Particle {
 }
 
 let animationFrameId: number | null = null;
+let activeCanvas: HTMLCanvasElement | null = null;
+let resizeHandler: (() => void) | null = null;
+let visibilityHandler: (() => void) | null = null;
 
 export function initStageEmbers(): void {
   const canvas = document.getElementById('stage-embers-canvas') as HTMLCanvasElement | null;
   if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
 
   // Check reduced motion preference
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -31,18 +31,36 @@ export function initStageEmbers(): void {
     return;
   }
 
-  // Cancel any existing loop
+  // Persisted canvas already running smoothly across ClientRouter navigations
+  if (activeCanvas === canvas && animationFrameId !== null) {
+    return;
+  }
+
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return;
+
+  // Cancel any existing loop and clean up stale global listeners
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
   }
+  if (resizeHandler) {
+    window.removeEventListener('resize', resizeHandler);
+    resizeHandler = null;
+  }
+  if (visibilityHandler) {
+    document.removeEventListener('visibilitychange', visibilityHandler);
+    visibilityHandler = null;
+  }
 
-  const resize = () => {
+  activeCanvas = canvas;
+
+  resizeHandler = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
   };
-  resize();
-  window.addEventListener('resize', resize);
+  resizeHandler();
+  window.addEventListener('resize', resizeHandler);
 
   const colors = [
     'rgba(209, 77, 145, 0.65)',  // Electric Magenta
@@ -68,16 +86,10 @@ export function initStageEmbers(): void {
     });
   }
 
-  let isTabVisible = true;
-  document.addEventListener('visibilitychange', () => {
-    isTabVisible = !document.hidden;
-    if (isTabVisible && animationFrameId === null) {
-      animate();
-    }
-  });
+  let isTabVisible = !document.hidden;
 
   const animate = () => {
-    if (!isTabVisible) {
+    if (!isTabVisible || !document.body.contains(canvas)) {
       animationFrameId = null;
       return;
     }
@@ -106,6 +118,14 @@ export function initStageEmbers(): void {
 
     animationFrameId = requestAnimationFrame(animate);
   };
+
+  visibilityHandler = () => {
+    isTabVisible = !document.hidden;
+    if (isTabVisible && animationFrameId === null) {
+      animate();
+    }
+  };
+  document.addEventListener('visibilitychange', visibilityHandler);
 
   animate();
 }

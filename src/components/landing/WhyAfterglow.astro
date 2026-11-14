@@ -2,7 +2,7 @@
 // Section 05: Why AFTERGLOW (Deconstructed Stage Pass Anatomy — Anti-Bento Architecture)
 ---
 
-<section id="why" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] transition-colors duration-300 overflow-hidden">
+<section id="why" class="relative w-full py-28 px-6 lg:px-12 bg-[#FAF7F9] dark:bg-void-black border-t border-neutral-200/80 dark:border-white/[0.04] overflow-hidden">
   <div class="max-w-7xl mx-auto">
     
     <!-- Section Header (Centered Editorial) -->
@@ -230,7 +230,8 @@
     const node3 = document.getElementById('node-card-3');
     const node4 = document.getElementById('node-card-4');
 
-    if (!passCard) return;
+    if (!passCard || passCard.dataset.whyBound === '1') return;
+    passCard.dataset.whyBound = '1';
 
     node1?.addEventListener('mouseenter', () => {
       passCard.classList.add('border-electric-magenta', 'scale-[1.02]');
@@ -265,6 +266,5 @@
     });
   }
 
-  document.addEventListener('DOMContentLoaded', setupDeconstructedPass);
   document.addEventListener('astro:page-load', setupDeconstructedPass);
 </script>
