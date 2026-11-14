@@ -246,6 +246,18 @@ function getEventStatus(event: BackendEvent) {
       })}
     </div>
 
+    <!-- Pagination: Load More -->
+    <div id="events-load-more-wrap" class={`mt-12 flex flex-col items-center gap-3 ${initialEvents.length < 24 ? 'hidden' : ''}`}>
+      <button
+        id="events-load-more-btn"
+        type="button"
+        class="px-7 py-3 rounded-full bg-white dark:bg-dark-plum border border-neutral-300 dark:border-white/15 hover:border-electric-magenta text-xs font-mono font-bold uppercase tracking-wider text-neutral-900 dark:text-soft-white hover:text-electric-magenta shadow-sm dark:shadow-none transition-all"
+      >
+        Muat Lebih Banyak Konser ↓
+      </button>
+      <span id="events-pagination-info" class="text-[11px] font-mono text-neutral-500 dark:text-muted-gray"></span>
+    </div>
+
     <!-- Empty Search State -->
     <div id="events-empty-state" class={initialEvents.length === 0 ? 'text-center py-20' : 'hidden text-center py-20'}>
       <div class="w-20 h-20 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 flex items-center justify-center mx-auto mb-4 text-neutral-400 dark:text-muted-gray shadow-sm dark:shadow-none">
@@ -378,13 +390,22 @@ function getEventStatus(event: BackendEvent) {
     const emptyState = document.getElementById('events-empty-state');
     const grid = document.getElementById('events-grid-container');
     const resetBtn = document.getElementById('events-reset-filter-btn');
+    const loadMoreWrap = document.getElementById('events-load-more-wrap');
+    const loadMoreBtn = document.getElementById('events-load-more-btn') as HTMLButtonElement | null;
+    const paginationInfo = document.getElementById('events-pagination-info');
 
     if (!grid) return () => {};
 
+    const PAGE_LIMIT = 24;
     let activeCategory: string = (window as any).__catalogInitialCategory || 'all';
+    let currentOffset = grid.querySelectorAll('.event-card').length;
     let debounceTimer: any = null;
     let isDisposed = false;
     const bookmarkedIds = new Set<number>();
+
+    if (paginationInfo && currentOffset > 0) {
+      paginationInfo.textContent = `Menampilkan ${currentOffset} konser`;
+    }
 
     function paintBookmarks() {
       grid!.querySelectorAll<HTMLButtonElement>('.bookmark-btn').forEach((btn) => {
@@ -426,7 +447,7 @@ function getEventStatus(event: BackendEvent) {
       window.history.replaceState(null, '', nextUrl);
     }
 
-    async function reloadCatalog() {
+    async function reloadCatalog(append = false) {
       updateUrlParams();
       const rawQ = searchInput?.value.trim() || '';
       const catTerm = activeCategory !== 'all' ? (CATEGORY_SEARCH_MAP[activeCategory] || '') : '';
@@ -434,22 +455,46 @@ function getEventStatus(event: BackendEvent) {
       const city = citySelect?.value.trim() || '';
       const sort = (sortSelect?.value || 'terdekat') as 'terdekat' | 'terbaru' | 'termurah';
 
-      grid!.classList.add('opacity-60');
+      const requestOffset = append ? currentOffset : 0;
+      if (append && loadMoreBtn) {
+        loadMoreBtn.disabled = true;
+        loadMoreBtn.textContent = 'Memuat Konser...';
+      } else {
+        grid!.classList.add('opacity-60');
+      }
+
       try {
         const events = await fetchEvents({
           q: effectiveQ || undefined,
           city: city || undefined,
           sort,
           scope: 'public',
-          limit: 24,
+          limit: PAGE_LIMIT,
+          offset: requestOffset,
           strict: true,
         });
         if (isDisposed) return;
 
-        grid!.innerHTML = events.map((ev) => renderCatalogCard(ev, bookmarkedIds.has(ev.id))).join('');
-        if (events.length === 0) emptyState?.classList.remove('hidden');
+        const html = events.map((ev) => renderCatalogCard(ev, bookmarkedIds.has(ev.id))).join('');
+        if (append) {
+          grid!.insertAdjacentHTML('beforeend', html);
+          currentOffset += events.length;
+        } else {
+          grid!.innerHTML = html;
+          currentOffset = events.length;
+        }
+
+        if (currentOffset === 0) emptyState?.classList.remove('hidden');
         else emptyState?.classList.add('hidden');
+
+        if (loadMoreWrap) {
+          loadMoreWrap.classList.toggle('hidden', events.length < PAGE_LIMIT);
+        }
+        if (paginationInfo) {
+          paginationInfo.textContent = currentOffset > 0 ? `Menampilkan ${currentOffset} konser` : '';
+        }
       } catch {
+        if (append) return;
         // Fallback client-side filter over currently rendered cards if backend unreachable
         if (isDisposed) return;
         const term = effectiveQ.toLowerCase();
@@ -468,18 +513,27 @@ function getEventStatus(event: BackendEvent) {
         });
         if (visible === 0) emptyState?.classList.remove('hidden');
         else emptyState?.classList.add('hidden');
+        loadMoreWrap?.classList.add('hidden');
       } finally {
-        if (!isDisposed) grid!.classList.remove('opacity-60');
+        if (!isDisposed) {
+          grid!.classList.remove('opacity-60');
+          if (loadMoreBtn) {
+            loadMoreBtn.disabled = false;
+            loadMoreBtn.textContent = 'Muat Lebih Banyak Konser ↓';
+          }
+        }
       }
     }
 
+    loadMoreBtn?.addEventListener('click', () => reloadCatalog(true));
+
     searchInput?.addEventListener('input', () => {
       clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(reloadCatalog, 300);
+      debounceTimer = setTimeout(() => reloadCatalog(false), 300);
     });
 
-    citySelect?.addEventListener('change', reloadCatalog);
-    sortSelect?.addEventListener('change', reloadCatalog);
+    citySelect?.addEventListener('change', () => reloadCatalog(false));
+    sortSelect?.addEventListener('change', () => reloadCatalog(false));
 
     const activeTabCls = ['font-semibold', 'bg-electric-magenta', 'text-white', 'shadow-magenta-glow'];
     const inactiveTabCls = ['font-medium', 'bg-white', 'dark:bg-dark-plum', 'border', 'border-neutral-200', 'dark:border-white/10', 'text-neutral-600', 'dark:text-muted-gray'];
@@ -493,7 +547,7 @@ function getEventStatus(event: BackendEvent) {
         });
         btn.classList.remove(...inactiveTabCls);
         btn.classList.add(...activeTabCls);
-        reloadCatalog();
+        reloadCatalog(false);
       });
     });
 
@@ -507,7 +561,7 @@ function getEventStatus(event: BackendEvent) {
         activeTabCls.forEach((c) => b.classList.toggle(c, isAll));
         inactiveTabCls.forEach((c) => b.classList.toggle(c, !isAll));
       });
-      reloadCatalog();
+      reloadCatalog(false);
     });
 
     // Event delegation for wishlist toggle across dynamic re-renders
