@@ -25,11 +25,11 @@ import Footer from '../../components/landing/Footer.astro';
         <div class="space-y-1">
           <div class="flex items-center gap-2">
             <span class="w-2.5 h-2.5 rounded-full bg-electric-magenta animate-ping"></span>
-            <span class="text-xs font-mono font-bold tracking-widest text-electric-magenta uppercase">
+            <span data-i18n="ordersPage.badge" class="text-xs font-mono font-bold tracking-widest text-electric-magenta uppercase">
               RESERVASI KUOTA AKTIF
             </span>
           </div>
-          <h1 class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white tracking-wide">
+          <h1 data-i18n="ordersPage.title" class="font-display text-3xl sm:text-4xl text-neutral-950 dark:text-soft-white tracking-wide">
             SELESAIKAN PEMBAYARAN TIKET
           </h1>
           <p class="text-xs text-neutral-600 dark:text-muted-gray">
@@ -39,7 +39,7 @@ import Footer from '../../components/landing/Footer.astro';
 
         <!-- 15-Minute Countdown Clock Disc -->
         <div class="flex flex-col items-center justify-center p-4 rounded-2xl bg-neutral-50 dark:bg-void-black/80 border border-neutral-200 dark:border-white/15 min-w-[140px] text-center shadow-sm dark:shadow-lg">
-          <span class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray uppercase tracking-wider mb-1">SISA WAKTU BAYAR</span>
+          <span data-i18n="ordersPage.timerLabel" class="text-[10px] font-mono text-neutral-500 dark:text-muted-gray uppercase tracking-wider mb-1">SISA WAKTU BAYAR</span>
           <span id="order-countdown-timer" class="font-display text-4xl text-electric-magenta tracking-widest animate-pulse">
             15:00
           </span>
@@ -49,7 +49,7 @@ import Footer from '../../components/landing/Footer.astro';
 
       <!-- Order Summary Card -->
       <div class="p-7 sm:p-9 rounded-3xl bg-white dark:bg-dark-plum/80 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none backdrop-blur-xl space-y-6">
-        <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white border-b border-neutral-200 dark:border-white/10 pb-4">
+        <h2 data-i18n="ordersPage.summaryTitle" class="font-display text-2xl text-neutral-950 dark:text-soft-white border-b border-neutral-200 dark:border-white/10 pb-4">
           RINCIAN TIKET YANG DIPESAN
         </h2>
 
@@ -193,6 +193,28 @@ import Footer from '../../components/landing/Footer.astro';
       </div>
     </div>
 
+    <!-- Paid Order Stay-View / Resend Panel (when ?stay=1 is used or direct access) -->
+    <div id="order-paid-state" class="hidden text-center py-20 max-w-xl mx-auto">
+      <div class="w-20 h-20 rounded-full bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/40 flex items-center justify-center mx-auto mb-4 text-emerald-600 dark:text-emerald-400">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2 data-i18n="ordersPage.paidTitle" class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">PEMBAYARAN LUNAS</h2>
+      <p class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
+        Tiket konser Anda telah terbit. Buka kuitansi resmi atau kirim ulang E-Ticket ke email akun Anda.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <a id="order-open-receipt-link" href="/orders" data-i18n="ordersPage.openReceipt" class="px-6 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+          Buka Kuitansi Resmi →
+        </a>
+        <button id="order-resend-ticket-btn" type="button" data-i18n="ordersPage.resendBtn" class="px-6 py-3 rounded-full bg-emerald-50 dark:bg-emerald-500/15 border border-emerald-200 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 font-bold text-xs uppercase tracking-wider transition-all disabled:opacity-50">
+          Kirim Ulang E-Ticket
+        </button>
+      </div>
+      <p id="order-resend-feedback" class="hidden mt-4 px-4 py-2.5 rounded-xl border text-xs font-mono"></p>
+    </div>
+
     <!-- Order Not Found / Error / Unauthorized State -->
     <div id="order-error-state" class="hidden text-center py-20">
       <div class="w-20 h-20 rounded-full bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none flex items-center justify-center mx-auto mb-4 text-electric-magenta">
@@ -264,9 +286,15 @@ import Footer from '../../components/landing/Footer.astro';
     const checkStatusBtn = document.getElementById('check-status-btn') as HTMLButtonElement | null;
     const mockPayBtn = document.getElementById('mock-pay-btn') as HTMLButtonElement | null;
     const cancelBtn = document.getElementById('cancel-order-btn') as HTMLButtonElement | null;
+    const paidStateEl = document.getElementById('order-paid-state');
+    const openReceiptLink = document.getElementById('order-open-receipt-link') as HTMLAnchorElement | null;
+    const orderResendBtn = document.getElementById('order-resend-ticket-btn') as HTMLButtonElement | null;
+    const orderResendFeedback = document.getElementById('order-resend-feedback');
 
     let timerInterval: any = null;
     let pollingInterval: any = null;
+    let resendTimer: any = null;
+    let resendCooldown = 0;
     let pollCount = 0;
     const MAX_POLLS = 40; // 40 x 3s = 2 minutes
     let isDisposed = false;
@@ -392,12 +420,59 @@ import Footer from '../../components/landing/Footer.astro';
       }
     }
 
+    orderResendBtn?.addEventListener('click', async () => {
+      if (!orderCode || resendCooldown > 0) return;
+      orderResendBtn.disabled = true;
+      orderResendBtn.textContent = 'Mengirim...';
+      try {
+        await api.post(`/orders/${orderCode}/resend`, {});
+        if (orderResendFeedback) {
+          orderResendFeedback.textContent = 'E-Ticket berhasil dijadwalkan untuk dikirim ulang ke email Anda.';
+          orderResendFeedback.className = 'mt-4 px-4 py-2.5 rounded-xl border text-xs font-mono bg-emerald-50 dark:bg-emerald-500/15 border-emerald-200 dark:border-emerald-500/35 text-emerald-700 dark:text-emerald-300';
+          orderResendFeedback.classList.remove('hidden');
+        }
+        resendCooldown = 60;
+        clearInterval(resendTimer);
+        orderResendBtn.textContent = `Kirim Ulang (${resendCooldown}d)`;
+        resendTimer = setInterval(() => {
+          if (isDisposed) {
+            clearInterval(resendTimer);
+            return;
+          }
+          resendCooldown--;
+          if (resendCooldown <= 0) {
+            clearInterval(resendTimer);
+            orderResendBtn.disabled = false;
+            orderResendBtn.textContent = 'Kirim Ulang E-Ticket';
+          } else {
+            orderResendBtn.textContent = `Kirim Ulang (${resendCooldown}d)`;
+          }
+        }, 1000);
+      } catch (err: any) {
+        if (orderResendFeedback) {
+          orderResendFeedback.textContent = err?.message || 'Gagal mengirim ulang E-Ticket.';
+          orderResendFeedback.className = 'mt-4 px-4 py-2.5 rounded-xl border text-xs font-mono bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300';
+          orderResendFeedback.classList.remove('hidden');
+        }
+        orderResendBtn.disabled = false;
+        orderResendBtn.textContent = 'Kirim Ulang E-Ticket';
+      }
+    });
+
     function renderOrder(order: any) {
       skeleton?.classList.add('hidden');
       errorState?.classList.add('hidden');
 
+      const stayOnPage = new URLSearchParams(window.location.search).get('stay') === '1';
       if (order.status === 'paid') {
-        window.location.href = `/orders/${orderCode}/receipt`;
+        if (!stayOnPage) {
+          window.location.href = `/orders/${orderCode}/receipt`;
+          return;
+        }
+        content?.classList.add('hidden');
+        expiredState?.classList.add('hidden');
+        if (openReceiptLink) openReceiptLink.href = `/orders/${orderCode}/receipt`;
+        paidStateEl?.classList.remove('hidden');
         return;
       }
 
@@ -532,14 +607,14 @@ import Footer from '../../components/landing/Footer.astro';
         if (check?.status === 'paid') {
           clearInterval(pollingInterval);
           clearInterval(timerInterval);
-          window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+          window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
           window.location.href = `/orders/${orderCode}/receipt`;
           return;
         }
         if (check?.status === 'expired' || check?.status === 'cancelled' || check?.status === 'refunded') {
           clearInterval(pollingInterval);
           clearInterval(timerInterval);
-          window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+          window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
           renderClosedState(check.status, check);
           return;
         }
@@ -603,7 +678,7 @@ import Footer from '../../components/landing/Footer.astro';
 
       try {
         await api.post(`/payments/mock-pay/${orderCode}`);
-        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
         window.location.href = `/orders/${orderCode}/receipt`;
       } catch (err: any) {
         showFeedback(err?.message || 'Gagal memproses mock payment.', true);
@@ -627,7 +702,7 @@ import Footer from '../../components/landing/Footer.astro';
         await api.post(`/orders/${orderCode}/cancel`);
         clearInterval(timerInterval);
         clearInterval(pollingInterval);
-        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
         renderClosedState('cancelled');
       } catch (err: any) {
         showFeedback(err?.message || 'Gagal membatalkan pesanan.', true);
@@ -646,6 +721,7 @@ import Footer from '../../components/landing/Footer.astro';
       isDisposed = true;
       clearInterval(timerInterval);
       clearInterval(pollingInterval);
+      clearInterval(resendTimer);
       window.removeEventListener('afterglow-auth-changed', onAuthChanged);
     };
   }

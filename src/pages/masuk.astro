@@ -30,10 +30,10 @@ import Footer from '../components/landing/Footer.astro';
         </div>
 
         <div>
-          <span class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block font-mono">
+          <span data-i18n="auth.badge" class="text-xs font-bold tracking-[0.25em] text-electric-magenta uppercase block font-mono">
             AKSES GERBANG // PASSWORDLESS
           </span>
-          <h1 class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white tracking-wide">
+          <h1 data-i18n="auth.pageTitle" class="font-display text-4xl sm:text-5xl text-neutral-950 dark:text-soft-white tracking-wide">
             MASUK KE ARENA
           </h1>
         </div>
@@ -206,6 +206,21 @@ import Footer from '../components/landing/Footer.astro';
 <script>
   import { requestOtp, verifyOtp } from '../lib/auth';
 
+  function getSafeNextUrl(raw: string | null): string | null {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    if (!trimmed.startsWith('/') || trimmed.startsWith('//') || trimmed.startsWith('/\\') || trimmed.includes(':\\')) {
+      return null;
+    }
+    try {
+      const parsed = new URL(trimmed, window.location.origin);
+      if (parsed.origin !== window.location.origin) return null;
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      return null;
+    }
+  }
+
   function setupMasukPage() {
     const step1Form = document.getElementById('page-step1-form') as HTMLFormElement;
     const step2Form = document.getElementById('page-step2-form') as HTMLFormElement;
@@ -229,8 +244,13 @@ import Footer from '../components/landing/Footer.astro';
 
     let email = '';
     let username = '';
+    let currentDevOtp = '';
     let timerInterval: any = null;
     let secondsLeft = 60;
+
+    devAutofillBtn?.addEventListener('click', () => {
+      if (currentDevOtp) fillOtp(currentDevOtp);
+    });
 
     // Quick fill
     document.querySelectorAll<HTMLButtonElement>('[data-fill]').forEach((btn) => {
@@ -287,9 +307,11 @@ import Footer from '../components/landing/Footer.astro';
         if (sentEmailSpan) sentEmailSpan.textContent = email;
 
         if (res.otp && devPill && devOtpCode) {
+          currentDevOtp = res.otp;
           devOtpCode.textContent = res.otp;
           devPill.classList.remove('hidden');
-          devAutofillBtn?.addEventListener('click', () => fillOtp(res.otp!), { once: true });
+        } else {
+          currentDevOtp = '';
         }
 
         startTimer();
@@ -319,8 +341,8 @@ import Footer from '../components/landing/Footer.astro';
 
         setTimeout(() => {
           const params = new URLSearchParams(window.location.search);
-          const next = params.get('next') || '/';
-          window.location.href = next;
+          const safeNext = getSafeNextUrl(params.get('next'));
+          window.location.href = safeNext || '/';
         }, 1000);
       } catch (err: any) {
         showAlert(err.message || 'Kode OTP tidak valid.', true);
@@ -363,10 +385,15 @@ import Footer from '../components/landing/Footer.astro';
         const res = await requestOtp(email, username);
         showAlert('Kode OTP baru telah dikirim!', false);
         if (res.otp && devOtpCode) {
+          currentDevOtp = res.otp;
           devOtpCode.textContent = res.otp;
           devPill?.classList.remove('hidden');
+        } else {
+          currentDevOtp = '';
         }
         startTimer();
+        otpBoxes.forEach((b) => (b.value = ''));
+        otpBoxes[0]?.focus();
       } catch (err: any) {
         showAlert(err.message || 'Gagal mengirim ulang OTP.', true);
       }

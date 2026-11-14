@@ -15,11 +15,11 @@ const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab)
   <div class="relative pt-28 pb-24 px-4 sm:px-6 lg:px-12 max-w-6xl mx-auto w-full">
     <!-- Auth Guard -->
     <div id="account-auth-guard" class="hidden text-center py-24 rounded-3xl bg-white dark:bg-dark-plum/60 border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none">
-      <h1 class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">MASUK KE HUB AKUN</h1>
+      <h1 data-i18n="accountPage.guardTitle" class="font-display text-4xl text-neutral-950 dark:text-soft-white mb-2">MASUK KE HUB AKUN</h1>
       <p class="text-sm text-neutral-600 dark:text-muted-gray max-w-md mx-auto mb-6">
         Login untuk mengelola profil identitas tiket, memantau status order, wishlist konser, dan pengajuan refund.
       </p>
-      <button id="account-login-btn" type="button" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
+      <button id="account-login-btn" type="button" data-i18n="accountPage.loginBtn" class="px-7 py-3 rounded-full bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
         Masuk / Daftar OTP
       </button>
     </div>
@@ -63,16 +63,16 @@ const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab)
 
       <!-- Navigation Tabs -->
       <div class="flex flex-wrap gap-2 p-1.5 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none w-fit" id="account-tabs">
-        <button data-tab="profile" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+        <button data-tab="profile" data-i18n="accountPage.tabProfile" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
           Profil Saya
         </button>
-        <button data-tab="orders" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+        <button data-tab="orders" data-i18n="accountPage.tabOrders" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
           Riwayat Order
         </button>
-        <button data-tab="wishlist" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+        <button data-tab="wishlist" data-i18n="accountPage.tabWishlist" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
           Wishlist Konser
         </button>
-        <button data-tab="refunds" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
+        <button data-tab="refunds" data-i18n="accountPage.tabRefunds" class="acc-tab-btn px-4 py-2 rounded-xl text-xs font-mono font-bold uppercase transition-all">
           Status Refund
         </button>
       </div>
@@ -80,7 +80,7 @@ const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab)
       <!-- TAB 1: PROFILE -->
       <section id="panel-profile" class="acc-panel hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div class="lg:col-span-2 p-6 sm:p-8 rounded-3xl bg-white dark:bg-dark-plum/80 border border-neutral-200 dark:border-white/15 shadow-sm dark:shadow-none">
-          <h2 class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-1">PENGATURAN IDENTITAS AKUN</h2>
+          <h2 data-i18n="accountPage.profileHeading" class="font-display text-2xl text-neutral-950 dark:text-soft-white mb-1">PENGATURAN IDENTITAS AKUN</h2>
           <p class="text-xs text-neutral-600 dark:text-muted-gray mb-6">Pastikan nama dan nomor ponsel aktif untuk menerima notifikasi jadwal konser.</p>
 
           <form id="profile-update-form" class="space-y-5">
@@ -92,7 +92,7 @@ const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab)
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="profile-username-input" class="text-xs font-mono text-neutral-600 dark:text-muted-gray block mb-1.5">Nama Lengkap / Username</label>
-                <input id="profile-username-input" type="text" minlength="2" maxlength="80" required class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
+                <input id="profile-username-input" type="text" minlength="3" maxlength="50" required class="w-full px-4 py-3 rounded-xl bg-neutral-50 dark:bg-void-black border border-neutral-300 dark:border-white/15 text-sm text-neutral-950 dark:text-soft-white focus:outline-none focus:border-electric-magenta" />
               </div>
 
               <div>
@@ -405,7 +405,7 @@ const initialTab = ['profile', 'orders', 'wishlist', 'refunds'].includes(rawTab)
       btn.disabled = true;
       try {
         await api.post(`/orders/${code}/cancel`);
-        window.dispatchEvent(new CustomEvent('afterglow-active-order-changed'));
+        window.dispatchEvent(new CustomEvent('afterglow-order-updated'));
         await loadOrders();
       } catch (err: any) {
         alert(err?.message || 'Gagal membatalkan pesanan.');

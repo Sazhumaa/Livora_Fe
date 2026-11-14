@@ -58,10 +58,10 @@
       </div>
 
       <div>
-        <span class="text-[10px] font-bold tracking-[0.25em] text-electric-magenta uppercase block font-mono">
+        <span data-i18n="auth.badge" class="text-[10px] font-bold tracking-[0.25em] text-electric-magenta uppercase block font-mono">
           AKSES GERBANG // PASSWORDLESS
         </span>
-        <h2 id="auth-modal-title" class="font-display text-3xl tracking-wide text-neutral-950 dark:text-soft-white">
+        <h2 id="auth-modal-title" data-i18n="auth.modalTitle" class="font-display text-3xl tracking-wide text-neutral-950 dark:text-soft-white">
           MASUK ARENA KONSER
         </h2>
       </div>
@@ -247,10 +247,31 @@
 
   let currentEmail = '';
   let currentUsername = '';
+  let currentDevOtp = '';
   let resendTimerInterval: any = null;
   let remainingSeconds = 60;
+  let modalAbortController: AbortController | null = null;
+
+  function getSafeNextUrl(raw: string | null): string | null {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    if (!trimmed.startsWith('/') || trimmed.startsWith('//') || trimmed.startsWith('/\\') || trimmed.includes(':\\')) {
+      return null;
+    }
+    try {
+      const parsed = new URL(trimmed, window.location.origin);
+      if (parsed.origin !== window.location.origin) return null;
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch {
+      return null;
+    }
+  }
 
   function initAuthModal() {
+    modalAbortController?.abort();
+    modalAbortController = new AbortController();
+    const { signal } = modalAbortController;
+
     const modal = document.getElementById('auth-modal');
     const backdrop = document.getElementById('auth-modal-backdrop');
     const card = document.getElementById('auth-modal-card');
@@ -301,7 +322,11 @@
       if (e.key === 'Escape' && !modal.classList.contains('pointer-events-none')) {
         window.closeAuthModal();
       }
-    });
+    }, { signal });
+
+    devAutofillBtn?.addEventListener('click', () => {
+      if (currentDevOtp) fillOtpBoxes(currentDevOtp);
+    }, { signal });
 
     // Quick account fill buttons
     document.querySelectorAll<HTMLButtonElement>('[data-fill-account]').forEach((btn) => {
@@ -372,11 +397,11 @@
 
         // Dev mode OTP pill display
         if (res.otp && devPill && devOtpCode) {
+          currentDevOtp = res.otp;
           devOtpCode.textContent = res.otp;
           devPill.classList.remove('hidden');
-          devAutofillBtn?.addEventListener('click', () => {
-            fillOtpBoxes(res.otp!);
-          }, { once: true });
+        } else {
+          currentDevOtp = '';
         }
 
         startResendTimer();
@@ -406,11 +431,11 @@
 
         setTimeout(() => {
           window.closeAuthModal();
-          // Reload or navigate if ?next= is set
+          // Reload or navigate if ?next= is set (strict same-origin relative path)
           const params = new URLSearchParams(window.location.search);
-          const next = params.get('next');
-          if (next) {
-            window.location.href = next;
+          const safeNext = getSafeNextUrl(params.get('next'));
+          if (safeNext) {
+            window.location.href = safeNext;
           }
         }, 1200);
       } catch (err: any) {
@@ -458,8 +483,11 @@
         showAlert('Kode OTP baru telah dikirim!', false);
 
         if (res.otp && devOtpCode) {
+          currentDevOtp = res.otp;
           devOtpCode.textContent = res.otp;
           devPill?.classList.remove('hidden');
+        } else {
+          currentDevOtp = '';
         }
 
         startResendTimer();
@@ -521,5 +549,10 @@
     }
   }
 
+  document.addEventListener('astro:before-swap', () => {
+    modalAbortController?.abort();
+    modalAbortController = null;
+    clearInterval(resendTimerInterval);
+  });
   document.addEventListener('astro:page-load', initAuthModal);
 </script>

@@ -4,7 +4,15 @@
  */
 
 export const API_BASE_URL = (import.meta.env.PUBLIC_API_URL || 'http://localhost:3000').replace(/\/$/, '');
-const BASE_URL = API_BASE_URL;
+const INTERNAL_API_URL = (
+  import.meta.env.INTERNAL_API_URL ||
+  (typeof process !== 'undefined' ? process.env?.INTERNAL_API_URL : '') ||
+  API_BASE_URL
+).replace(/\/$/, '');
+
+function getFetchBaseUrl(): string {
+  return typeof window === 'undefined' ? INTERNAL_API_URL : API_BASE_URL;
+}
 
 export function resolveAssetUrl(
   path?: string | null,
@@ -15,7 +23,7 @@ export function resolveAssetUrl(
   if (trimmed.startsWith('http://') || trimmed.startsWith('https://') || trimmed.startsWith('data:')) {
     return trimmed;
   }
-  return `${BASE_URL}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
+  return `${API_BASE_URL}${trimmed.startsWith('/') ? '' : '/'}${trimmed}`;
 }
 
 export class ApiError extends Error {
@@ -51,13 +59,58 @@ export interface RequestOptions extends RequestInit {
   skipAuthRefresh?: boolean;
 }
 
+let refreshPromise: Promise<string | null> | null = null;
+
+async function refreshAccessTokenSingleFlight(): Promise<string | null> {
+  if (typeof window === 'undefined') return null;
+  if (refreshPromise) return refreshPromise;
+
+  const refreshToken = localStorage.getItem('afterglow_refresh_token');
+  if (!refreshToken) {
+    clearAuthTokens();
+    return null;
+  }
+
+  refreshPromise = (async () => {
+    try {
+      const refreshRes = await fetch(`${getFetchBaseUrl()}/auth/refresh`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+
+      const refreshJson: ApiResponse = await refreshRes.json().catch(() => ({ success: false } as any));
+
+      if (refreshRes.ok && refreshJson.success && refreshJson.data?.access_token) {
+        localStorage.setItem('afterglow_access_token', refreshJson.data.access_token);
+        if (refreshJson.data.refresh_token) {
+          localStorage.setItem('afterglow_refresh_token', refreshJson.data.refresh_token);
+        }
+        return refreshJson.data.access_token as string;
+      }
+
+      clearAuthTokens();
+      return null;
+    } catch {
+      clearAuthTokens();
+      return null;
+    } finally {
+      refreshPromise = null;
+    }
+  })();
+
+  return refreshPromise;
+}
+
 /**
  * Low-level HTTP requester with automatic token refresh on 401
  */
 export async function request<T = any>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { token, idempotencyKey, skipAuthRefresh = false, ...fetchOpts } = options;
 
-  const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+  const url = endpoint.startsWith('http')
+    ? endpoint
+    : `${getFetchBaseUrl()}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
 
   const headers = new Headers(fetchOpts.headers || {});
 
@@ -92,38 +145,18 @@ export async function request<T = any>(endpoint: string, options: RequestOptions
     );
   }
 
-  // Handle Token Expiry & Automatic Refresh (Status 401)
+  // Handle Token Expiry & Automatic Refresh (Status 401) with single-flight lock
   if (response.status === 401 && !skipAuthRefresh && typeof window !== 'undefined') {
-    const refreshToken = localStorage.getItem('afterglow_refresh_token');
-    if (refreshToken) {
-      try {
-        const refreshRes = await fetch(`${BASE_URL}/auth/refresh`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        });
+    const latestToken = localStorage.getItem('afterglow_access_token');
+    const nextToken =
+      latestToken && activeToken && latestToken !== activeToken
+        ? latestToken
+        : await refreshAccessTokenSingleFlight();
 
-        const refreshJson: ApiResponse = await refreshRes.json();
-
-        if (refreshRes.ok && refreshJson.success && refreshJson.data?.access_token) {
-          localStorage.setItem('afterglow_access_token', refreshJson.data.access_token);
-          if (refreshJson.data.refresh_token) {
-            localStorage.setItem('afterglow_refresh_token', refreshJson.data.refresh_token);
-          }
-
-          // Retry original request with newly refreshed token
-          headers.set('Authorization', `Bearer ${refreshJson.data.access_token}`);
-          const retryRes = await fetch(url, { ...fetchOpts, headers });
-          return parseResponse<T>(retryRes);
-        } else {
-          // Refresh token invalid or expired -> logout user
-          clearAuthTokens();
-        }
-      } catch {
-        clearAuthTokens();
-      }
-    } else {
-      clearAuthTokens();
+    if (nextToken) {
+      headers.set('Authorization', `Bearer ${nextToken}`);
+      const retryRes = await fetch(url, { ...fetchOpts, headers });
+      return parseResponse<T>(retryRes);
     }
   }
 
@@ -196,7 +229,9 @@ export const api = {
    * Download authenticated binary/CSV file with auto-refresh token fallback
    */
   downloadBlob: async (endpoint: string, fallbackFilename = 'export.csv'): Promise<void> => {
-    const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
+    const url = endpoint.startsWith('http')
+      ? endpoint
+      : `${getFetchBaseUrl()}${endpoint.startsWith('/') ? '' : '/'}${endpoint}`;
     const execute = (tokenOverride?: string | null) => {
       const headers = new Headers();
       const token = tokenOverride || (typeof window !== 'undefined' ? localStorage.getItem('afterglow_access_token') : null);
@@ -204,21 +239,16 @@ export const api = {
       return fetch(url, { method: 'GET', headers });
     };
 
-    let res = await execute();
+    const initialToken = typeof window !== 'undefined' ? localStorage.getItem('afterglow_access_token') : null;
+    let res = await execute(initialToken);
     if (res.status === 401 && typeof window !== 'undefined') {
-      const refreshToken = localStorage.getItem('afterglow_refresh_token');
-      if (refreshToken) {
-        const rRes = await fetch(`${BASE_URL}/auth/refresh`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ refresh_token: refreshToken }),
-        });
-        const rJson: ApiResponse = await rRes.json().catch(() => ({ success: false } as any));
-        if (rRes.ok && rJson.success && rJson.data?.access_token) {
-          localStorage.setItem('afterglow_access_token', rJson.data.access_token);
-          if (rJson.data.refresh_token) localStorage.setItem('afterglow_refresh_token', rJson.data.refresh_token);
-          res = await execute(rJson.data.access_token);
-        }
+      const latestToken = localStorage.getItem('afterglow_access_token');
+      const nextToken =
+        latestToken && initialToken && latestToken !== initialToken
+          ? latestToken
+          : await refreshAccessTokenSingleFlight();
+      if (nextToken) {
+        res = await execute(nextToken);
       }
     }
 

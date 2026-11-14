@@ -12,26 +12,26 @@ import Footer from '../../components/landing/Footer.astro';
     <!-- Header -->
     <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-10">
       <div>
-        <span class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
+        <span data-i18n="ticketsPage.badge" class="text-xs font-mono font-bold tracking-[0.25em] text-electric-magenta uppercase block mb-2">
           DOMPET DIGITAL // PASS RESMI
         </span>
-        <h1 class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
+        <h1 data-i18n="ticketsPage.title" class="font-display text-4xl sm:text-6xl text-neutral-950 dark:text-soft-white tracking-wide">
           TIKET KONSER SAYA
         </h1>
-        <p class="text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-xl">
+        <p data-i18n="ticketsPage.subtitle" class="text-sm text-neutral-600 dark:text-muted-gray mt-1 max-w-xl">
           Buka Boarding Pass QR resmi dan tunjukkan ke kru pemindai di pintu gerbang venue konser.
         </p>
       </div>
 
       <!-- Filter Tabs -->
       <div class="flex flex-wrap items-center gap-1.5 p-1 rounded-2xl bg-white dark:bg-dark-plum border border-neutral-200 dark:border-white/10 shadow-sm dark:shadow-none shrink-0 text-xs font-mono font-semibold" id="ticket-status-tabs">
-        <button data-tab="active" class="ticket-tab-btn px-4 py-2 rounded-xl bg-electric-magenta text-white shadow-magenta-glow">
+        <button data-tab="active" data-i18n="ticketsPage.tabActive" class="ticket-tab-btn px-4 py-2 rounded-xl bg-electric-magenta text-white shadow-magenta-glow">
           Siap Masuk
         </button>
-        <button data-tab="used" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
+        <button data-tab="used" data-i18n="ticketsPage.tabUsed" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
           Sudah Dipindai
         </button>
-        <button data-tab="cancelled" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
+        <button data-tab="cancelled" data-i18n="ticketsPage.tabCancelled" class="ticket-tab-btn px-4 py-2 rounded-xl text-neutral-600 dark:text-muted-gray hover:text-neutral-950 dark:hover:text-soft-white">
           Dibatalkan
         </button>
       </div>
@@ -153,7 +153,7 @@ import Footer from '../../components/landing/Footer.astro';
           <button id="print-pass-btn" type="button" class="py-3 px-4 rounded-xl bg-electric-magenta text-white font-bold text-xs uppercase tracking-wider hover:shadow-magenta-glow transition-all">
             Cetak / Save PDF
           </button>
-          <a id="pass-receipt-link" href="/orders" class="py-3 px-4 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white font-bold text-xs uppercase tracking-wider text-center transition-all">
+          <a id="pass-receipt-link" href="/account?tab=orders" data-i18n="ticketsPage.viewReceipt" class="py-3 px-4 rounded-xl bg-neutral-100 hover:bg-neutral-200 border border-neutral-200 text-neutral-900 dark:bg-white/10 dark:hover:bg-white/20 dark:border-transparent dark:text-soft-white font-bold text-xs uppercase tracking-wider text-center transition-all">
             Lihat Kuitansi
           </a>
         </div>

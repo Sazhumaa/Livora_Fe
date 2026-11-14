@@ -48,11 +48,11 @@ import Footer from '../../../components/landing/Footer.astro';
           <span class="font-display text-4xl text-neutral-950 dark:text-soft-white print:text-black tracking-wider block">
             AFTERGLOW
           </span>
-          <span class="text-xs font-mono text-neutral-600 dark:text-muted-gray print:text-neutral-600 block mt-0.5">
+          <span data-i18n="receiptPage.subtitle" class="text-xs font-mono text-neutral-600 dark:text-muted-gray print:text-neutral-600 block mt-0.5">
             PLATFORM TIKET KONSER RESMI BERLISENSI
           </span>
           <p class="text-[11px] text-neutral-500 dark:text-muted-gray print:text-neutral-500 font-mono mt-1">
-            NPWP: 01.345.678.9-012.000 • soundtix.id
+            NPWP: 01.345.678.9-012.000 • afterglow.id
           </p>
         </div>
 
@@ -62,7 +62,7 @@ import Footer from '../../../components/landing/Footer.astro';
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <div class="leading-tight">
-            <span class="text-[10px] font-mono tracking-widest uppercase block">STATUS TRANSAKSI</span>
+            <span data-i18n="receiptPage.statusLabel" class="text-[10px] font-mono tracking-widest uppercase block">STATUS TRANSAKSI</span>
             <span id="receipt-status-text" class="font-display text-2xl tracking-wider">LUNAS // PAID</span>
           </div>
         </div>
@@ -90,7 +90,7 @@ import Footer from '../../../components/landing/Footer.astro';
 
       <!-- Concert Info Banner -->
       <div class="py-6 border-b border-neutral-200 dark:border-white/10 print:border-black/20">
-        <span class="text-[10px] font-mono font-bold tracking-widest text-electric-magenta print:text-pink-700 uppercase block mb-1">
+        <span data-i18n="receiptPage.eventTag" class="text-[10px] font-mono font-bold tracking-widest text-electric-magenta print:text-pink-700 uppercase block mb-1">
           DETAIL EVENT KONSER
         </span>
         <h2 id="receipt-event-title" class="font-display text-3xl text-neutral-950 dark:text-soft-white print:text-black">
@@ -157,7 +157,7 @@ import Footer from '../../../components/landing/Footer.astro';
 
       <!-- Action Buttons (Hidden when printing) -->
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
-        <div class="flex items-center gap-3 w-full sm:w-auto">
+        <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
           <button 
             id="print-receipt-btn" 
             type="button" 
@@ -167,6 +167,14 @@ import Footer from '../../../components/landing/Footer.astro';
               <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4H7v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
             <span>Cetak Kuitansi</span>
+          </button>
+
+          <button
+            id="resend-ticket-btn"
+            type="button"
+            class="hidden flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-500/15 dark:hover:bg-emerald-500/25 dark:border-emerald-500/40 dark:text-emerald-300 text-xs font-bold uppercase tracking-wider transition-all disabled:opacity-50"
+          >
+            <span>Kirim Ulang E-Ticket</span>
           </button>
 
           <a 
@@ -190,6 +198,8 @@ import Footer from '../../../components/landing/Footer.astro';
           BUKA E-TIKET SAYA (QR SCAN) →
         </a>
       </div>
+
+      <p id="receipt-resend-feedback" class="hidden print:hidden mt-3 px-4 py-2.5 rounded-xl border text-xs font-mono text-center"></p>
 
     </div>
   </div>
@@ -235,8 +245,62 @@ import Footer from '../../../components/landing/Footer.astro';
     const ticketCodesEl = document.getElementById('receipt-ticket-codes');
     const calendarBtn = document.getElementById('receipt-calendar-btn') as HTMLAnchorElement | null;
     const printBtn = document.getElementById('print-receipt-btn');
+    const resendBtn = document.getElementById('resend-ticket-btn') as HTMLButtonElement | null;
+    const resendFeedback = document.getElementById('receipt-resend-feedback');
 
     let isDisposed = false;
+    let resendCooldownTimer: any = null;
+    let resendCooldownLeft = 0;
+
+    function setResendFeedback(msg: string, isError = false) {
+      if (!resendFeedback) return;
+      resendFeedback.textContent = msg;
+      resendFeedback.className = `print:hidden mt-3 px-4 py-2.5 rounded-xl border text-xs font-mono text-center ${
+        isError
+          ? 'bg-red-50 dark:bg-red-500/10 border-red-200 dark:border-red-500/30 text-red-700 dark:text-red-300'
+          : 'bg-emerald-50 dark:bg-emerald-500/15 border-emerald-200 dark:border-emerald-500/35 text-emerald-700 dark:text-emerald-300'
+      }`;
+      resendFeedback.classList.remove('hidden');
+    }
+
+    function startResendCooldown(seconds = 60) {
+      clearInterval(resendCooldownTimer);
+      resendCooldownLeft = seconds;
+      if (!resendBtn) return;
+      resendBtn.disabled = true;
+      const label = resendBtn.querySelector('span');
+      if (label) label.textContent = `Kirim Ulang (${resendCooldownLeft}d)`;
+      resendCooldownTimer = setInterval(() => {
+        if (isDisposed) {
+          clearInterval(resendCooldownTimer);
+          return;
+        }
+        resendCooldownLeft--;
+        if (resendCooldownLeft <= 0) {
+          clearInterval(resendCooldownTimer);
+          resendBtn.disabled = false;
+          if (label) label.textContent = 'Kirim Ulang E-Ticket';
+        } else if (label) {
+          label.textContent = `Kirim Ulang (${resendCooldownLeft}d)`;
+        }
+      }, 1000);
+    }
+
+    resendBtn?.addEventListener('click', async () => {
+      if (!orderCode || orderCode === 'demo' || resendCooldownLeft > 0) return;
+      resendBtn.disabled = true;
+      const label = resendBtn.querySelector('span');
+      if (label) label.textContent = 'Mengirim...';
+      try {
+        await api.post(`/orders/${orderCode}/resend`, {});
+        setResendFeedback('E-Ticket & kuitansi resmi telah masuk antrean kirim ulang ke email Anda.');
+        startResendCooldown(60);
+      } catch (err: any) {
+        setResendFeedback(err?.message || 'Gagal mengirim ulang E-Ticket. Coba lagi sebentar.', true);
+        if (label) label.textContent = 'Kirim Ulang E-Ticket';
+        resendBtn.disabled = false;
+      }
+    });
 
     printBtn?.addEventListener('click', () => window.print());
     loginBtn?.addEventListener('click', () => {
@@ -275,7 +339,7 @@ import Footer from '../../../components/landing/Footer.astro';
             tanggal_mulai: new Date(Date.now() + 7 * 86400000).toISOString(),
             alamat: 'Gelora Bung Karno Stadium, Jakarta',
           },
-          user: { id: 1, username: 'Buyer Demo', email: 'buyer@soundtix.id' },
+          user: { id: 1, username: 'Buyer Demo', email: 'buyer@afterglow.id' },
           items: [{ category_id: 1, nama_kategori: 'VIP PANGGUNG', qty: 1, harga_per_tiket: 1500000, subtotal: 1500000 }],
           pricing: { total_amount: 1500000, diskon_amount: 0, platform_fee: fee, final_amount: 1500000 + fee, kode_voucher: null },
           payment: { payment_method: 'mock', channel: 'INTERNAL_MOCK', payment_status: 'paid', amount: 1500000 + fee, paid_at: new Date().toISOString() },
@@ -420,6 +484,11 @@ import Footer from '../../../components/landing/Footer.astro';
           organization_name: 'AFTERGLOW Live',
         });
       }
+
+      if (resendBtn) {
+        const showResend = data.status === 'paid' && orderCode !== 'demo';
+        resendBtn.classList.toggle('hidden', !showResend);
+      }
     }
 
     const onAuthChanged = () => loadReceiptData();
@@ -428,6 +497,7 @@ import Footer from '../../../components/landing/Footer.astro';
 
     return () => {
       isDisposed = true;
+      clearInterval(resendCooldownTimer);
       window.removeEventListener('afterglow-auth-changed', onAuthChanged);
     };
   }
